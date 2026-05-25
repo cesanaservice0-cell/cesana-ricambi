@@ -289,21 +289,43 @@ function cerca(id, cb) {
   disRow(id, true);
   salva(marca, modello, rc);
 
+  var marcaLow = marca.toLowerCase();
+  var msg1 = (marcaLow === 'orla') ? 'Ricerca Verzolla...' : 'Ricerca Eurotec...';
+  setStato(id, 'run', msg1, 30);
+
   fetch(BASE + '/functions/cercaRicambio', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       marca: marca, modello: modello, ricambio: rc,
       richiesta_da: rif || 'Cesana Service',
-      note: syn ? 'Syncrogest: ' + syn : ''
+      syncrogest: syn || ''
     })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
-    if (data.error) throw new Error(data.error);
-    if (!data.ricerca_id) throw new Error('ID mancante dal server');
-    var marcaLow = marca.toLowerCase(); var msg1 = (marcaLow === 'orla') ? 'Ricerca Verzolla...' : 'Ricerca Eurotec...'; setStato(id, 'run', msg1, 20);
-    doPoll(id, data.ricerca_id, 0, cb);
+    if (!data.ok) throw new Error(data.error || 'Errore ricerca');
+    // Risposta diretta — niente polling!
+    setStato(id, 'ok', 'Completata!', 100);
+    // Costruisci oggetto rec compatibile con mostraRes
+    var rec = {
+      marca: marca,
+      modello: modello,
+      ricambio_cercato: rc,
+      stato: 'completata',
+      codice_eurotec: data.best ? data.best.codice : '',
+      descrizione: data.best ? data.best.descrizione : '',
+      prezzo_eurotec: data.best ? data.best.prezzo : '',
+      disp_eurotec: data.best ? data.best.disponibilita : '',
+      codice_lf: '-',
+      prezzo_lf: '-',
+      disp_lf: '-',
+      convenienza: data.fonte + ' — ' + (data.best ? data.best.codice + ' ' + data.best.prezzo : ''),
+      tutti_i_risultati: JSON.stringify({ fonte: data.fonte, risultati: data.risultati || [] })
+    };
+    mostraRes(id, rec);
+    disRow(id, false);
+    if (cb) cb();
   })
   .catch(function(e) {
     setStato(id, 'err', String(e.message || 'Errore connessione'), 100);
@@ -312,45 +334,7 @@ function cerca(id, cb) {
   });
 }
 
-function doPoll(id, rid, t, cb) {
-  setTimeout(function() {
-    t++;
-    var pct = Math.min(20 + Math.round(t / 60 * 65), 85);
-    var rowMarca = (g('mar'+id) ? g('mar'+id).value.trim().toLowerCase() : '');
-    if (rowMarca === 'orla') {
-      setStato(id, 'run', 'Ricerca Verzolla...', pct);
-    } else {
-      if (t < 5)       setStato(id, 'run', 'Ricerca Eurotec...', pct);
-      else if (t < 10) setStato(id, 'run', 'Ricerca LF Ricambi...', pct);
-      else             setStato(id, 'run', 'Confronto prezzi...', pct);
-    }
-
-    if (t > 65) {
-      setStato(id, 'err', 'Timeout (>6 min)', 100);
-      disRow(id, false);
-      if (cb) cb();
-      return;
-    }
-
-    fetch(BASE + '/api/apps/' + AID + '/entities/RicercaPrezzi/' + rid)
-    .then(function(r) { return r.json(); })
-    .then(function(rec) {
-      if (rec && rec.stato === 'completata') {
-        setStato(id, 'ok', 'Completata!', 100);
-        mostraRes(id, rec);
-        disRow(id, false);
-        if (cb) cb();
-      } else if (rec && rec.stato === 'errore') {
-        setStato(id, 'err', rec.note || 'Errore', 100);
-        disRow(id, false);
-        if (cb) cb();
-      } else {
-        doPoll(id, rid, t, cb);
-      }
-    })
-    .catch(function() { doPoll(id, rid, t, cb); });
-  }, 6000);
-}
+/* doPoll rimosso — risposta sincrona da cercaRicambio */
 
 function mostraRes(id, rec) {
   var el = g('res' + id); if (!el) return;
