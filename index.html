@@ -8,311 +8,477 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:Arial,sans-serif;background:#f1f5f9;min-height:100vh;}
 header{background:#1e3a8a;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
-.ntab{padding:7px 14px;border-radius:6px;border:none;color:#93c5fd;background:transparent;font-size:13px;cursor:pointer;}
-.ntab.on{background:#1e40af;color:#fff;}
-main{max-width:1300px;margin:0 auto;padding:16px 12px;}
+h1{font-size:16px;font-weight:700;}
+sub{color:#93c5fd;font-size:11px;display:block;}
+.nav button{padding:7px 14px;border-radius:6px;border:none;color:#93c5fd;background:transparent;font-size:13px;cursor:pointer;}
+.nav button.on{background:#1e40af;color:#fff;}
+main{max-width:1300px;margin:0 auto;padding:16px;}
 .bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
-.badd{padding:9px 18px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;}
-.bgo{padding:9px 18px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;}
-.brst{padding:9px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;}
-.badd:disabled,.bgo:disabled{opacity:.4;cursor:not-allowed;}
+.barl{display:flex;align-items:center;gap:10px;}
+button.add{padding:8px 16px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+button.add:hover{background:#1e40af;}
+button.go{padding:8px 18px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+button.go:hover{background:#1e293b;}
+button.go:disabled,button.add:disabled{opacity:.4;cursor:not-allowed;}
+button.rst{padding:8px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;}
 .cnt{display:flex;gap:14px;align-items:center;}
 .cni{text-align:center;}
 .cnn{font-size:20px;font-weight:800;}
 .cnl{font-size:10px;color:#94a3b8;text-transform:uppercase;}
-.card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;}
-.th{display:grid;grid-template-columns:36px 1fr 1fr 1fr 1fr 1.3fr 160px 30px;gap:5px;padding:8px 14px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;}
-.th span{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;}
-.rrow{border-bottom:1px solid #f1f5f9;}
+.card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.thead{display:grid;grid-template-columns:36px 1fr 1fr 1fr 1fr 1.2fr 150px 28px;gap:5px;padding:8px 14px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;}
+.thead span{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;}
+.rrow{border-bottom:1.5px solid #f8fafc;transition:background .2s;}
 .rrow:last-child{border-bottom:none;}
-.rf{display:grid;grid-template-columns:36px 1fr 1fr 1fr 1fr 1.3fr 160px 30px;gap:5px;align-items:center;padding:8px 14px;}
-input.inp{width:100%;padding:6px 8px;border:1.5px solid #cbd5e1;border-radius:6px;font-size:12px;outline:none;}
-input.inp:focus{border-color:#3b82f6;}
-input.inp:disabled{background:#f8fafc;color:#94a3b8;}
-.slbl{font-size:11px;font-weight:600;}
-.pw{height:5px;background:#e2e8f0;border-radius:9px;overflow:hidden;margin-top:3px;display:none;}
-.pb{height:100%;border-radius:9px;transition:width .4s;width:0%;}
-.bdel{width:26px;height:26px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:16px;cursor:pointer;}
+.rfields{display:grid;grid-template-columns:36px 1fr 1fr 1fr 1fr 1.2fr 150px 28px;gap:5px;align-items:center;padding:8px 14px;}
+.inp{width:100%;padding:6px 8px;border:1.5px solid #cbd5e1;border-radius:7px;font-size:12px;outline:none;background:#fff;}
+.inp:focus{border-color:#3b82f6;}
+.inp:disabled{background:#f8fafc;color:#94a3b8;}
+.slbl{font-size:11px;font-weight:600;white-space:nowrap;}
+.pw{height:5px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:3px;}
+.pb{height:100%;border-radius:999px;transition:width .4s;width:0%;}
+.del{width:26px;height:26px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:16px;cursor:pointer;}
+.del:hover{background:#fecaca;}
 .empty{text-align:center;padding:40px;color:#94a3b8;}
 .rres{display:none;padding:0 14px 10px;overflow-x:auto;}
 table.rt{width:100%;border-collapse:collapse;font-size:11px;}
 table.rt th{background:#1e3a8a;color:#fff;padding:5px 8px;font-size:10px;}
 table.rt td{padding:5px 8px;border-bottom:1px solid #f1f5f9;}
 table.rt tr:nth-child(even) td{background:#f8fafc;}
-.bwait{background:#fff;}.bqueue{background:#fffbeb;}.brun{background:#eff6ff;}.bok{background:#f0fdf4;}.berr{background:#fef2f2;}
-@keyframes sp{to{transform:rotate(360deg);}}
-.spin{display:inline-block;width:11px;height:11px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;}
+.bg-wait{background:#fff;}
+.bg-queue{background:#fffbeb;}
+.bg-run{background:#eff6ff;}
+.bg-ok{background:#f0fdf4;}
+.bg-err{background:#fef2f2;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner{display:inline-block;width:11px;height:11px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
 </style>
 </head>
 <body>
 <header>
   <div>
-    <div style="font-size:16px;font-weight:700;">&#128295; Cesana Service</div>
-    <div style="color:#93c5fd;font-size:11px;">Ricerca Ricambi</div>
+    <h1>&#128295; Cesana Service</h1>
+    <sub>Ricerca Ricambi</sub>
   </div>
-  <div>
-    <button class="ntab on" id="tR">&#128269; Ricerca</button>
-    <button class="ntab" id="tS">&#128203; Storico</button>
+  <div class="nav">
+    <button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
+    <button id="tS" onclick="tab('S')">&#128203; Storico</button>
   </div>
 </header>
+
 <main>
-  <div id="TR">
-    <div class="bar">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <button class="badd" id="btnAdd">+ Aggiungi riga</button>
-        <span style="font-size:12px;color:#64748b;">Compila le righe poi clicca <b>Avvia</b></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div class="cnt" id="cnt" style="display:none;">
-          <div class="cni"><div class="cnn" id="cT" style="color:#1d4ed8;">0</div><div class="cnl">Tot</div></div>
-          <div class="cni"><div class="cnn" id="cO" style="color:#16a34a;">0</div><div class="cnl">OK</div></div>
-          <div class="cni"><div class="cnn" id="cR" style="color:#f59e0b;">0</div><div class="cnl">Corso</div></div>
-          <div class="cni"><div class="cnn" id="cE" style="color:#dc2626;">0</div><div class="cnl">Err</div></div>
-        </div>
-        <button class="bgo" id="btnStart">&#9654; Avvia ricerche</button>
-        <button class="brst" id="btnReset">&#8635; Reset</button>
-      </div>
+<!-- TAB RICERCA -->
+<div id="TR">
+  <div class="bar">
+    <div class="barl">
+      <button class="add" id="btnAdd">+ Aggiungi riga</button>
+      <span style="font-size:12px;color:#64748b;">Compila le righe poi clicca <b>Avvia</b></span>
     </div>
-    <div class="card">
-      <div class="th">
-        <span>#</span><span>Riferimento</span><span>Syncrogest</span>
-        <span>Marca</span><span>Modello</span><span>Ricambio</span>
-        <span>Stato</span><span></span>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="cnt" id="cnt" style="display:none;">
+        <div class="cni"><div class="cnn" id="cTot" style="color:#1d4ed8;">0</div><div class="cnl">Tot</div></div>
+        <div class="cni"><div class="cnn" id="cOk"  style="color:#16a34a;">0</div><div class="cnl">OK</div></div>
+        <div class="cni"><div class="cnn" id="cRun" style="color:#f59e0b;">0</div><div class="cnl">Corso</div></div>
+        <div class="cni"><div class="cnn" id="cErr" style="color:#dc2626;">0</div><div class="cnl">Errori</div></div>
       </div>
-      <div id="RL"></div>
-      <div class="empty" id="EM">
-        <div style="font-size:36px;">&#128203;</div>
-        <div style="margin-top:8px;font-weight:500;">Nessuna riga</div>
-        <div style="font-size:12px;margin-top:4px;">Clicca <b>+ Aggiungi riga</b> per iniziare</div>
-      </div>
+      <button class="go" id="btnStart">&#9654; Avvia ricerche</button>
+      <button class="rst" id="btnReset">&#8635; Reset</button>
     </div>
   </div>
-  <div id="TS" style="display:none;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <b style="font-size:15px;">&#128203; Storico ricerche</b>
-      <input class="inp" id="stF" placeholder="Cerca..." style="width:200px;">
+  <div class="card">
+    <div class="thead">
+      <span>#</span><span>Riferimento</span><span>Syncrogest</span>
+      <span>Marca</span><span>Modello</span><span>Ricambio</span>
+      <span>Stato</span><span></span>
     </div>
-    <div id="SL"><div class="empty">Caricamento...</div></div>
+    <div id="list"></div>
+    <div class="empty" id="empty">
+      <div style="font-size:32px;">&#128203;</div>
+      <div style="margin-top:6px;font-weight:500;">Nessuna riga</div>
+      <div style="font-size:12px;margin-top:4px;">Clicca <b>+ Aggiungi riga</b> per iniziare</div>
+    </div>
   </div>
+</div>
+
+<!-- TAB STORICO -->
+<div id="TS" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+    <b style="font-size:15px;">&#128203; Storico ricerche</b>
+    <input class="inp" id="stF" placeholder="Cerca..." style="width:200px;" oninput="filtSt()">
+  </div>
+  <div id="stList"><div class="empty">Caricamento...</div></div>
+</div>
 </main>
+
 <script>
-var B='https://superagent-244159cc.base44.app';
-var A='6a132bbd6bdcb07f244159cc';
-var N=0,rows=[],busy=false,stData=[],mrc=[],mdo=[],ric=[];
+var BASE = 'https://superagent-244159cc.base44.app';
+var AID  = '6a132bbd6bdcb07f244159cc';
+var N = 0, rows = [], busy = false, stData = [];
+var mrc = [], mod = [], ric = [];
 
-function g(id){return document.getElementById(id);}
-function gv(id){var e=g(id);return e?e.value.trim():'';}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-// TABS
-g('tR').addEventListener('click',function(){showT('R');});
-g('tS').addEventListener('click',function(){showT('S');loadSt();});
-function showT(t){
-  g('TR').style.display=t==='R'?'block':'none';
-  g('TS').style.display=t==='S'?'block':'none';
-  g('tR').className='ntab'+(t==='R'?' on':'');
-  g('tS').className='ntab'+(t==='S'?' on':'');
-}
-
-g('btnAdd').addEventListener('click', addRow);
-g('btnStart').addEventListener('click', avvia);
-g('btnReset').addEventListener('click', function(){
-  if(busy)return;
-  g('RL').innerHTML='';rows=[];N=0;
-  g('EM').style.display='block';
-  g('cnt').style.display='none';
-});
-g('stF').addEventListener('input', filtSt);
+// Init
+document.getElementById('btnAdd').addEventListener('click', addRow);
+document.getElementById('btnStart').addEventListener('click', avvia);
+document.getElementById('btnReset').addEventListener('click', reset);
 loadSugg();
+console.log('INIT OK');
 
-function addRow(){
-  var id=++N;
-  rows.push({id:id,st:'idle'});
-  var d=document.createElement('div');
-  d.className='rrow bwait';
-  d.id='R'+id;
-  var h='<div class="rf">';
-  h+='<span style="color:#94a3b8;font-size:12px;font-weight:700">#'+id+'</span>';
-  h+='<input class="inp" id="f'+id+'" placeholder="es. Rossi">';
-  h+='<input class="inp" id="s'+id+'" placeholder="es. SG-001">';
-  h+='<input class="inp" id="m'+id+'" list="lm'+id+'" placeholder="Elettrobar"><datalist id="lm'+id+'"></datalist>';
-  h+='<input class="inp" id="o'+id+'" list="lo'+id+'" placeholder="Ocean 41"><datalist id="lo'+id+'"></datalist>';
-  h+='<input class="inp" id="r'+id+'" list="lr'+id+'" placeholder="resistenza vasca"><datalist id="lr'+id+'"></datalist>';
-  h+='<div><div class="slbl" id="lb'+id+'" style="color:#94a3b8">&#9744; In attesa</div>';
-  h+='<div class="pw" id="pw'+id+'"><div class="pb" id="pb'+id+'"></div></div></div>';
-  h+='<button class="bdel" id="dd'+id+'">&times;</button>';
-  h+='</div>';
-  h+='<div class="rres" id="rs'+id+'"></div>';
-  d.innerHTML=h;
-  g('RL').appendChild(d);
-  g('EM').style.display='none';
-  (function(rowId){
-    g('dd'+rowId).addEventListener('click',function(){if(!busy)delRow(rowId);});
-  })(id);
-  fillDL('lm'+id,mrc);
-  fillDL('lo'+id,mdo);
-  fillDL('lr'+id,ric);
-  upCnt();
-  setTimeout(function(){var e=g('f'+id);if(e)e.focus();},20);
+function tab(t) {
+  document.getElementById('TR').style.display = t === 'R' ? 'block' : 'none';
+  document.getElementById('TS').style.display = t === 'S' ? 'block' : 'none';
+  document.getElementById('tR').className = t === 'R' ? 'on' : '';
+  document.getElementById('tS').className = t === 'S' ? 'on' : '';
+  if (t === 'S') loadSt();
 }
 
-function delRow(id){
-  var el=g('R'+id);
-  if(el&&el.parentNode)el.parentNode.removeChild(el);
-  rows=rows.filter(function(r){return r.id!==id;});
-  if(!rows.length)g('EM').style.display='block';
+function addRow() {
+  var id = ++N;
+  rows.push({ id: id, st: 'idle' });
+
+  var d = document.createElement('div');
+  d.className = 'rrow bg-wait';
+  d.id = 'row' + id;
+
+  var html = '<div class="rfields">';
+  html += '<span style="color:#94a3b8;font-size:12px;font-weight:700;">#' + id + '</span>';
+  html += '<input class="inp" id="ref' + id + '" placeholder="es. Rossi">';
+  html += '<input class="inp" id="syn' + id + '" placeholder="es. SG-001">';
+  html += '<input class="inp" id="mar' + id + '" list="lmar' + id + '" placeholder="Elettrobar"><datalist id="lmar' + id + '"></datalist>';
+  html += '<input class="inp" id="mdo' + id + '" list="lmdo' + id + '" placeholder="Ocean 41"><datalist id="lmdo' + id + '"></datalist>';
+  html += '<input class="inp" id="rcs' + id + '" list="lrcs' + id + '" placeholder="resistenza vasca"><datalist id="lrcs' + id + '"></datalist>';
+  html += '<div><div class="slbl" id="slbl' + id + '" style="color:#94a3b8;">&#9744; In attesa</div>';
+  html += '<div class="pw" id="pw' + id + '" style="display:none"><div class="pb" id="pb' + id + '"></div></div></div>';
+  html += '<button class="del" id="del' + id + '">&times;</button>';
+  html += '</div>';
+  html += '<div class="rres" id="res' + id + '"></div>';
+  d.innerHTML = html;
+
+  document.getElementById('list').appendChild(d);
+  document.getElementById('empty').style.display = 'none';
+
+  document.getElementById('del' + id).addEventListener('click', function() {
+    if (!busy) delRow(id);
+  });
+
+  fillDL('lmar' + id, mrc);
+  fillDL('lmdo' + id, mod);
+  fillDL('lrcs' + id, ric);
+  upCnt();
+  document.getElementById('ref' + id).focus();
+}
+
+function delRow(id) {
+  var el = document.getElementById('row' + id);
+  if (el) el.parentNode.removeChild(el);
+  rows = rows.filter(function(r) { return r.id !== id; });
+  if (!rows.length) document.getElementById('empty').style.display = 'block';
   upCnt();
 }
 
-function fillDL(id,arr){
-  var dl=g(id);if(!dl)return;
-  dl.innerHTML='';
-  arr.forEach(function(x){
-    var o=document.createElement('option');
-    o.value=x.nome||x;
+function reset() {
+  if (busy) return;
+  document.getElementById('list').innerHTML = '';
+  rows = []; N = 0;
+  document.getElementById('empty').style.display = 'block';
+  document.getElementById('cnt').style.display = 'none';
+}
+
+function g(id) { return document.getElementById(id); }
+function gv(id) { var e = g(id); return e ? e.value.trim() : ''; }
+
+function fillDL(id, arr) {
+  var dl = g(id); if (!dl) return;
+  dl.innerHTML = '';
+  arr.forEach(function(x) {
+    var o = document.createElement('option');
+    o.value = x.nome || x;
     dl.appendChild(o);
   });
 }
 
-function setSt(id,tipo,txt,pct){
-  var row=g('R'+id),lbl=g('lb'+id),pw=g('pw'+id),pb=g('pb'+id);
-  if(!row||!lbl)return;
-  var r=rows.find(function(x){return x.id===id;});
-  if(r)r.st=tipo;
-  var map={idle:{c:'#94a3b8',bg:'bwait',bc:'#94a3b8'},queue:{c:'#d97706',bg:'bqueue',bc:'#f59e0b'},run:{c:'#1d4ed8',bg:'brun',bc:'#3b82f6'},ok:{c:'#16a34a',bg:'bok',bc:'#16a34a'},err:{c:'#dc2626',bg:'berr',bc:'#dc2626'}};
-  var cfg=map[tipo]||map.idle;
-  row.className='rrow '+cfg.bg;
-  lbl.style.color=cfg.c;
-  if(tipo==='run'){lbl.innerHTML='<span class="spin"></span> '+esc(txt);}
-  else{var icons={idle:'&#9744;',queue:'&#9203;',ok:'&#9989;',err:'&#10060;'};lbl.innerHTML=(icons[tipo]||'')+' '+esc(txt);}
-  if(pct!=null){pw.style.display='block';pb.style.background=cfg.bc;pb.style.width=pct+'%';}
-  else if(tipo==='idle'){pw.style.display='none';}
+function setStato(id, tipo, txt, pct) {
+  var row = g('row' + id);
+  var lbl = g('slbl' + id);
+  var pw  = g('pw' + id);
+  var pb  = g('pb' + id);
+  if (!row || !lbl) return;
+  var r = rows.find(function(x) { return x.id === id; });
+  if (r) r.st = tipo;
+  var map = {
+    idle:  { icon: '&#9744;',  col: '#94a3b8', bg: 'bg-wait',  bc: '#94a3b8' },
+    queue: { icon: '&#9203;',  col: '#d97706', bg: 'bg-queue', bc: '#f59e0b' },
+    run:   { icon: '',         col: '#1d4ed8', bg: 'bg-run',   bc: '#3b82f6' },
+    ok:    { icon: '&#9989;',  col: '#16a34a', bg: 'bg-ok',    bc: '#16a34a' },
+    err:   { icon: '&#10060;', col: '#dc2626', bg: 'bg-err',   bc: '#dc2626' }
+  };
+  var c = map[tipo] || map.idle;
+  row.className = 'rrow ' + c.bg;
+  lbl.style.color = c.col;
+  if (tipo === 'run') {
+    lbl.innerHTML = '<span class="spinner"></span> ' + txt;
+  } else {
+    lbl.innerHTML = c.icon + ' ' + txt;
+  }
+  if (pct != null) {
+    pw.style.display = 'block';
+    pb.style.background = c.bc;
+    pb.style.width = pct + '%';
+  } else if (tipo === 'idle') {
+    pw.style.display = 'none';
+  }
   upCnt();
 }
 
-function upCnt(){
-  var t=rows.length,ok=0,run=0,err=0;
-  rows.forEach(function(r){if(r.st==='ok')ok++;else if(r.st==='run'||r.st==='queue')run++;else if(r.st==='err')err++;});
-  g('cT').textContent=t;g('cO').textContent=ok;g('cR').textContent=run;g('cE').textContent=err;
-  g('cnt').style.display=t?'flex':'none';
+function upCnt() {
+  var t = rows.length;
+  var ok  = rows.filter(function(r) { return r.st === 'ok'; }).length;
+  var run = rows.filter(function(r) { return r.st === 'run' || r.st === 'queue'; }).length;
+  var err = rows.filter(function(r) { return r.st === 'err'; }).length;
+  g('cTot').textContent = t;
+  g('cOk').textContent  = ok;
+  g('cRun').textContent = run;
+  g('cErr').textContent = err;
+  g('cnt').style.display = t ? 'flex' : 'none';
 }
 
-function disR(id,dis){
-  ['f','s','m','o','r'].forEach(function(f){var e=g(f+id);if(e)e.disabled=dis;});
-  var b=g('dd'+id);if(b)b.disabled=dis;
-}
-
-function avvia(){
-  if(busy)return;
-  var da=[];
-  for(var i=0;i<rows.length;i++){
-    var id=rows[i].id,m=gv('m'+id),mo=gv('o'+id),r=gv('r'+id);
-    if(m&&mo&&r){da.push(id);}else if(m||mo||r){alert('Riga #'+id+' incompleta!');return;}
-  }
-  if(!da.length){alert('Aggiungi almeno una riga!');return;}
-  busy=true;g('btnStart').disabled=true;g('btnAdd').disabled=true;
-  da.forEach(function(id){setSt(id,'queue','In coda...',5);});
-  seq(da,0);
-}
-
-function seq(ids,i){
-  if(i>=ids.length){busy=false;g('btnStart').disabled=false;g('btnAdd').disabled=false;return;}
-  cerca(ids[i],function(){seq(ids,i+1);});
-}
-
-function cerca(id,cb){
-  var marca=gv('m'+id),modello=gv('o'+id),rc=gv('r'+id),rif=gv('f'+id),syn=gv('s'+id);
-  setSt(id,'run','Avvio...',10);disR(id,true);salva(marca,modello,rc);
-  fetch(B+'/functions/cercaRicambio',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({marca:marca,modello:modello,ricambio:rc,richiesta_da:rif||'Cesana',note:syn?'Syncrogest: '+syn:''})})
-  .then(function(r){return r.json();})
-  .then(function(data){
-    if(data.error)throw new Error(data.error);
-    if(!data.ricerca_id)throw new Error('ID mancante');
-    setSt(id,'run','Ricerca Eurotec...',20);poll(id,data.ricerca_id,0,cb);
-  })
-  .catch(function(e){setSt(id,'err',String(e.message||'Errore'),100);disR(id,false);if(cb)cb();});
-}
-
-function poll(id,rid,t,cb){
-  setTimeout(function(){
-    t++;var pct=Math.min(20+Math.round(t/60*65),85);
-    if(t<5)setSt(id,'run','Ricerca Eurotec...',pct);
-    else if(t<10)setSt(id,'run','Ricerca LF Ricambi...',pct);
-    else setSt(id,'run','Confronto prezzi...',pct);
-    if(t>65){setSt(id,'err','Timeout',100);disR(id,false);if(cb)cb();return;}
-    fetch(B+'/api/apps/'+A+'/entities/RicercaPrezzi/'+rid)
-    .then(function(r){return r.json();})
-    .then(function(rec){
-      if(rec&&rec.stato==='completata'&&rec.codice_eurotec){setSt(id,'ok','Completata!',100);mostraRes(id,rec);disR(id,false);if(cb)cb();}
-      else if(rec&&rec.stato==='errore'){setSt(id,'err',rec.note||'Errore',100);disR(id,false);if(cb)cb();}
-      else poll(id,rid,t,cb);
-    }).catch(function(){poll(id,rid,t,cb);});
-  },6000);
-}
-
-function mostraRes(id,rec){
-  var el=g('rs'+id);if(!el)return;
-  var rr=[];try{rr=JSON.parse(rec.tutti_i_risultati||'[]');}catch(e){}
-  if(!rr.length)rr=[{codice_originale:rec.codice_eurotec,descrizione:rec.descrizione||'',prezzo_eurotec:rec.prezzo_eurotec||'',disp_eurotec:rec.disp_eurotec||'0',lf:{codice_lf:rec.codice_lf||'',prezzo_netto:rec.prezzo_lf||'',disp_magazzino:rec.disp_lf||'0'}}];
-  var h='<table class="rt"><tr><th>Cod.Orig.</th><th>Descrizione</th><th>Prezzo Eurotec</th><th>Disp.E</th><th>Cod.LF</th><th>Prezzo LF</th><th>Disp.LF</th><th>Convenienza</th></tr>';
-  rr.forEach(function(r){
-    var pe=parseFloat(String(r.prezzo_eurotec||'').replace(',','.'))||0;
-    var pl=parseFloat(String((r.lf&&r.lf.prezzo_netto)||'').replace(',','.'))||0;
-    var conv='N/D',cbg='#f1f5f9',ccl='#64748b';
-    if(pe>0&&pl>0){if(pl<pe){conv='LF -'+(pe-pl).toFixed(2)+' EUR';cbg='#dcfce7';ccl='#16a34a';}else if(pe<pl){conv='Eurotec';cbg='#dbeafe';ccl='#1d4ed8';}else conv='Parita';}
-    var dE=parseInt(r.disp_eurotec||'0')>0,dL=parseInt((r.lf&&r.lf.disp_magazzino)||'0')>0;
-    h+='<tr><td style="font-family:monospace">'+esc(r.codice_originale||'-')+'</td><td>'+esc(r.descrizione||'-')+'</td>'+
-      '<td style="font-weight:600">'+esc(r.prezzo_eurotec?r.prezzo_eurotec+' EUR':'N/D')+'</td>'+
-      '<td style="color:'+(dE?'#16a34a':'#dc2626')+';font-weight:600">'+esc(r.disp_eurotec||'0')+'</td>'+
-      '<td style="font-family:monospace">'+esc((r.lf&&r.lf.codice_lf)||'-')+'</td>'+
-      '<td style="font-weight:600">'+esc((r.lf&&r.lf.prezzo_netto)||'N/D')+'</td>'+
-      '<td style="color:'+(dL?'#16a34a':'#94a3b8')+'">'+(dL?esc(String(r.lf.disp_magazzino))+' pz':'0')+'</td>'+
-      '<td style="font-weight:700;color:'+ccl+';background:'+cbg+';padding:3px 6px;border-radius:4px">'+esc(conv)+'</td></tr>';
+function disRow(id, d) {
+  ['ref','syn','mar','mdo','rcs'].forEach(function(f) {
+    var e = g(f + id); if (e) e.disabled = d;
   });
-  el.innerHTML=h+'</table>';el.style.display='block';
+  var b = g('del' + id); if (b) b.disabled = d;
 }
 
-function salva(m,mo,r){
-  function post(ent,body){fetch(B+'/api/apps/'+A+'/entities/'+ent,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});}
-  if(m&&!mrc.find(function(x){return(x.nome||x)===m;})){post('MarcaSalvata',{nome:m});mrc.push({nome:m});}
-  if(mo&&!mdo.find(function(x){return(x.nome||x)===mo;})){post('ModelloSalvato',{nome:mo,marca:m});mdo.push({nome:mo});}
-  if(r&&!ric.find(function(x){return(x.nome||x)===r;})){post('RicambioSalvato',{nome:r,marca:m,modello:mo});ric.push({nome:r});}
+function avvia() {
+  if (busy) return;
+  var da = [];
+  for (var i = 0; i < rows.length; i++) {
+    var id = rows[i].id;
+    var m = gv('mar' + id), mo = gv('mdo' + id), r = gv('rcs' + id);
+    if (m && mo && r) {
+      da.push(id);
+    } else if (m || mo || r) {
+      alert('Riga #' + id + ' incompleta! Serve Marca, Modello e Ricambio.');
+      return;
+    }
+  }
+  if (!da.length) { alert('Aggiungi almeno una riga completa.'); return; }
+  busy = true;
+  g('btnStart').disabled = true;
+  g('btnAdd').disabled   = true;
+  da.forEach(function(id) { setStato(id, 'queue', 'In coda...', 5); });
+  seq(da, 0);
 }
 
-function loadSugg(){
-  function get(ent,arr){fetch(B+'/api/apps/'+A+'/entities/'+ent+'?limit=200').then(function(r){return r.json();}).then(function(d){(Array.isArray(d)?d:(d.records||[])).forEach(function(x){arr.push(x);});}).catch(function(){});}
-  get('MarcaSalvata',mrc);get('ModelloSalvato',mdo);get('RicambioSalvato',ric);
+function seq(ids, i) {
+  if (i >= ids.length) {
+    busy = false;
+    g('btnStart').disabled = false;
+    g('btnAdd').disabled   = false;
+    return;
+  }
+  cerca(ids[i], function() { seq(ids, i + 1); });
 }
 
-function loadSt(){
-  g('SL').innerHTML='<div class="empty">Caricamento...</div>';
-  fetch(B+'/api/apps/'+A+'/entities/RicercaPrezzi?limit=300&sort=-created_date')
-  .then(function(r){return r.json();}).then(function(d){stData=Array.isArray(d)?d:(d.records||[]);filtSt();})
-  .catch(function(){g('SL').innerHTML='<div class="empty" style="color:#dc2626">Errore</div>';});
+function cerca(id, cb) {
+  var marca   = gv('mar' + id);
+  var modello = gv('mdo' + id);
+  var rc      = gv('rcs' + id);
+  var rif     = gv('ref' + id);
+  var syn     = gv('syn' + id);
+  setStato(id, 'run', 'Avvio...', 10);
+  disRow(id, true);
+  salva(marca, modello, rc);
+
+  fetch(BASE + '/functions/cercaRicambio', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      marca: marca, modello: modello, ricambio: rc,
+      richiesta_da: rif || 'Cesana Service',
+      note: syn ? 'Syncrogest: ' + syn : ''
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) throw new Error(data.error);
+    if (!data.ricerca_id) throw new Error('ID mancante dal server');
+    var marcaLow = marca.toLowerCase(); var msg1 = (marcaLow === 'orla') ? 'Ricerca Verzolla...' : 'Ricerca Eurotec...'; setStato(id, 'run', msg1, 20);
+    doPoll(id, data.ricerca_id, 0, cb);
+  })
+  .catch(function(e) {
+    setStato(id, 'err', String(e.message || 'Errore connessione'), 100);
+    disRow(id, false);
+    if (cb) cb();
+  });
 }
 
-function filtSt(){
-  var f=g('stF').value.toLowerCase();
-  var lista=stData.filter(function(r){return !f||(r.marca+' '+r.modello+' '+(r.ricambio_cercato||'')).toLowerCase().indexOf(f)>=0;});
-  if(!lista.length){g('SL').innerHTML='<div class="empty">Nessuna ricerca</div>';return;}
-  g('SL').innerHTML=lista.map(function(r){
-    var conv=r.convenienza||'',cbg='#f1f5f9',ccl='#64748b';
-    if(conv.indexOf('LF')>=0){cbg='#dcfce7';ccl='#16a34a';}else if(conv.indexOf('Eurotec')>=0){cbg='#dbeafe';ccl='#1d4ed8';}
-    var d=r.created_date?new Date(r.created_date).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-    return '<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:12px 16px;margin-bottom:8px;">'+
-      '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;">'+
-        '<div><b>'+esc(r.marca+' '+r.modello)+'</b> &mdash; <span style="color:#1d4ed8">'+esc(r.ricambio_cercato||'')+'</span>'+
-        '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">'+d+(r.richiesta_da?' &middot; '+esc(r.richiesta_da):'')+'</div></div>'+
-        (conv?'<span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:'+cbg+';color:'+ccl+'">'+esc(conv)+'</span>':'')+
-      '</div>'+
-      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #f1f5f9;font-size:12px;">'+
-        '<div><div style="color:#94a3b8;font-size:10px">Cod.Eurotec</div><b style="font-family:monospace">'+esc(r.codice_eurotec||'-')+'</b></div>'+
-        '<div><div style="color:#94a3b8;font-size:10px">Prezzo Eurotec</div><b>'+esc(r.prezzo_eurotec||'-')+'</b></div>'+
-        '<div><div style="color:#94a3b8;font-size:10px">Cod.LF</div><b style="font-family:monospace">'+esc(r.codice_lf||'-')+'</b></div>'+
-        '<div><div style="color:#94a3b8;font-size:10px">Prezzo LF</div><b>'+esc(r.prezzo_lf||'-')+'</b></div>'+
+function doPoll(id, rid, t, cb) {
+  setTimeout(function() {
+    t++;
+    var pct = Math.min(20 + Math.round(t / 60 * 65), 85);
+    var rowMarca = (g('mar'+id) ? g('mar'+id).value.trim().toLowerCase() : '');
+    if (rowMarca === 'orla') {
+      setStato(id, 'run', 'Ricerca Verzolla...', pct);
+    } else {
+      if (t < 5)       setStato(id, 'run', 'Ricerca Eurotec...', pct);
+      else if (t < 10) setStato(id, 'run', 'Ricerca LF Ricambi...', pct);
+      else             setStato(id, 'run', 'Confronto prezzi...', pct);
+    }
+
+    if (t > 65) {
+      setStato(id, 'err', 'Timeout (>6 min)', 100);
+      disRow(id, false);
+      if (cb) cb();
+      return;
+    }
+
+    fetch(BASE + '/api/apps/' + AID + '/entities/RicercaPrezzi/' + rid)
+    .then(function(r) { return r.json(); })
+    .then(function(rec) {
+      if (rec && rec.stato === 'completata') {
+        setStato(id, 'ok', 'Completata!', 100);
+        mostraRes(id, rec);
+        disRow(id, false);
+        if (cb) cb();
+      } else if (rec && rec.stato === 'errore') {
+        setStato(id, 'err', rec.note || 'Errore', 100);
+        disRow(id, false);
+        if (cb) cb();
+      } else {
+        doPoll(id, rid, t, cb);
+      }
+    })
+    .catch(function() { doPoll(id, rid, t, cb); });
+  }, 6000);
+}
+
+function mostraRes(id, rec) {
+  var el = g('res' + id); if (!el) return;
+  var marcaRow = g('mar' + id) ? g('mar' + id).value.trim().toLowerCase() : '';
+  var isOrla = (marcaRow === 'orla') || (rec.marca && rec.marca.toLowerCase() === 'orla');
+
+  // Orla: mostra tabella Verzolla semplificata
+  if (isOrla) {
+    var parsed = {};
+    try { parsed = JSON.parse(rec.tutti_i_risultati || '{}'); } catch(e) {}
+    var risultati = parsed.risultati || [];
+    if (!risultati.length && rec.codice_eurotec) {
+      risultati = [{ codice: rec.codice_eurotec, descrizione: rec.descrizione || '', disponibilita: rec.disp_eurotec || '', prezzo: rec.prezzo_eurotec || 'Da preventivare' }];
+    }
+    var h = '<table class=rt><tr><th>Codice Verzolla</th><th>Descrizione</th><th>Disponibilità</th><th>Prezzo</th></tr>';
+    risultati.forEach(function(r) {
+      var disp = r.disponibilita || '';
+      var dispCol = disp === 'Disponibile' ? '#16a34a' : disp === 'Non disponibile' ? '#dc2626' : '#f59e0b';
+      h += '<tr>' +
+        '<td style="font-family:monospace;font-weight:700">' + (r.codice || '-') + '</td>' +
+        '<td>' + (r.descrizione || '-') + '</td>' +
+        '<td style="color:' + dispCol + ';font-weight:600">' + disp + '</td>' +
+        '<td style="font-weight:700">' + (r.prezzo || 'N/D') + '</td>' +
+        '</tr>';
+    });
+    h += '</table>';
+    if (rec.convenienza) h += '<div style="margin-top:6px;font-size:11px;color:#64748b;">📋 ' + rec.convenienza + '</div>';
+    el.innerHTML = h;
+    el.style.display = 'block';
+    return;
+  }
+
+  var rr = [];
+  try { rr = JSON.parse(rec.tutti_i_risultati || '[]'); } catch(e) {}
+  if (!rr.length) rr = [{
+    codice_originale: rec.codice_eurotec, descrizione: rec.descrizione || '',
+    prezzo_eurotec: rec.prezzo_eurotec || '', disp_eurotec: rec.disp_eurotec || '0',
+    lf: { codice_lf: rec.codice_lf || '', prezzo_netto: rec.prezzo_lf || '', disp_magazzino: rec.disp_lf || '0' }
+  }];
+  var h = '<table class="rt"><tr><th>Cod.Orig.</th><th>Descrizione</th><th>Prezzo Eurotec</th><th>Disp.E</th><th>Cod.LF</th><th>Prezzo LF</th><th>Disp.LF</th><th>Convenienza</th></tr>';
+  rr.forEach(function(r) {
+    var pe = parseFloat(String(r.prezzo_eurotec || '').replace(',', '.')) || 0;
+    var pl = parseFloat(String((r.lf && r.lf.prezzo_netto) || '').replace(',', '.')) || 0;
+    var conv = 'N/D', cbg = '#f1f5f9', ccl = '#64748b';
+    if (pe > 0 && pl > 0) {
+      if (pl < pe) { conv = 'LF (-' + (pe - pl).toFixed(2) + ')'; cbg = '#dcfce7'; ccl = '#16a34a'; }
+      else if (pe < pl) { conv = 'Eurotec'; cbg = '#dbeafe'; ccl = '#1d4ed8'; }
+      else conv = 'Parita';
+    }
+    var dE = parseInt(r.disp_eurotec || '0') > 0;
+    var dL = parseInt((r.lf && r.lf.disp_magazzino) || '0') > 0;
+    h += '<tr>' +
+      '<td style="font-family:monospace">' + (r.codice_originale || '-') + '</td>' +
+      '<td>' + (r.descrizione || '-') + '</td>' +
+      '<td>' + (r.prezzo_eurotec ? r.prezzo_eurotec + ' EUR' : 'N/D') + '</td>' +
+      '<td style="color:' + (dE ? '#16a34a' : '#dc2626') + '">' + (r.disp_eurotec || '0') + '</td>' +
+      '<td style="font-family:monospace">' + ((r.lf && r.lf.codice_lf) || '-') + '</td>' +
+      '<td>' + ((r.lf && r.lf.prezzo_netto) || 'N/D') + '</td>' +
+      '<td style="color:' + (dL ? '#16a34a' : '#94a3b8') + '">' + (dL ? (r.lf.disp_magazzino + ' pz') : '0') + '</td>' +
+      '<td style="font-weight:700;color:' + ccl + ';background:' + cbg + ';padding:4px 8px;border-radius:4px;">' + conv + '</td>' +
+      '</tr>';
+  });
+  el.innerHTML = h + '</table>';
+  el.style.display = 'block';
+}
+
+function salva(m, mo, r) {
+  function post(ent, body) {
+    fetch(BASE + '/api/apps/' + AID + '/entities/' + ent, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+    }).catch(function() {});
+  }
+  if (m && !mrc.find(function(x) { return (x.nome || x) === m; })) { post('MarcaSalvata', { nome: m }); mrc.push({ nome: m }); }
+  if (mo && !mod.find(function(x) { return (x.nome || x) === mo; })) { post('ModelloSalvato', { nome: mo, marca: m }); mod.push({ nome: mo }); }
+  if (r && !ric.find(function(x) { return (x.nome || x) === r; })) { post('RicambioSalvato', { nome: r, marca: m, modello: mo }); ric.push({ nome: r }); }
+}
+
+function loadSugg() {
+  function get(ent, arr) {
+    fetch(BASE + '/api/apps/' + AID + '/entities/' + ent + '?limit=200')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      var list = Array.isArray(d) ? d : (d.records || []);
+      list.forEach(function(x) { arr.push(x); });
+    }).catch(function() {});
+  }
+  get('MarcaSalvata', mrc);
+  get('ModelloSalvato', mod);
+  get('RicambioSalvato', ric);
+}
+
+function loadSt() {
+  g('stList').innerHTML = '<div class="empty">Caricamento...</div>';
+  fetch(BASE + '/api/apps/' + AID + '/entities/RicercaPrezzi?limit=300&sort=-created_date')
+  .then(function(r) { return r.json(); })
+  .then(function(d) { stData = Array.isArray(d) ? d : (d.records || []); filtSt(); })
+  .catch(function() { g('stList').innerHTML = '<div class="empty" style="color:#dc2626">Errore caricamento storico</div>'; });
+}
+
+function filtSt() {
+  var f = g('stF').value.toLowerCase();
+  var lista = stData.filter(function(r) {
+    return !f || (r.marca + ' ' + r.modello + ' ' + (r.ricambio_cercato || '') + ' ' + (r.codice_eurotec || '')).toLowerCase().indexOf(f) >= 0;
+  });
+  if (!lista.length) { g('stList').innerHTML = '<div class="empty">Nessuna ricerca</div>'; return; }
+  g('stList').innerHTML = lista.map(function(r) {
+    var conv = r.convenienza || '';
+    var cbg = conv.indexOf('LF') >= 0 ? '#dcfce7' : conv.indexOf('Eurotec') >= 0 ? '#dbeafe' : '#f1f5f9';
+    var ccl = conv.indexOf('LF') >= 0 ? '#16a34a' : conv.indexOf('Eurotec') >= 0 ? '#1d4ed8' : '#64748b';
+    return '<div style="background:#fff;border-radius:10px;border:1px solid #e2e8f0;padding:12px 16px;margin-bottom:8px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;">' +
+        '<div><b>' + (r.marca || '') + ' ' + (r.modello || '') + '</b> — <span style="color:#1d4ed8">' + (r.ricambio_cercato || '') + '</span>' +
+        '<div style="font-size:11px;color:#94a3b8;margin-top:2px;">' + fmtD(r.created_date) + (r.richiesta_da ? ' · ' + r.richiesta_da : '') + '</div></div>' +
+        (conv ? '<span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;background:' + cbg + ';color:' + ccl + '">' + conv + '</span>' : '') +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid #f1f5f9;font-size:12px;">' +
+        '<div><div style="color:#94a3b8;font-size:10px;">Cod.Eurotec</div><b style="font-family:monospace">' + (r.codice_eurotec || '-') + '</b></div>' +
+        '<div><div style="color:#94a3b8;font-size:10px;">Prezzo Eurotec</div><b>' + (r.prezzo_eurotec || '-') + '</b></div>' +
+        '<div><div style="color:#94a3b8;font-size:10px;">Cod.LF</div><b style="font-family:monospace">' + (r.codice_lf || '-') + '</b></div>' +
+        '<div><div style="color:#94a3b8;font-size:10px;">Prezzo LF</div><b>' + (r.prezzo_lf || '-') + '</b></div>' +
       '</div></div>';
   }).join('');
+}
+
+function fmtD(d) {
+  if (!d) return '';
+  try { return new Date(d).toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+  catch(e) { return d; }
 }
 </script>
 </body>
