@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Cesana Service — Ricerca Ricambi v5.202605262116</title>
+<title>Cesana Service — Ricerca Ricambi v6</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:Arial,sans-serif;background:#f1f5f9;min-height:100vh;}
@@ -358,10 +358,12 @@ function cerca(id, cb){
 }
 
 function mostraRes(id, data, qty){
-  var el = g('res'+id); if(!el) return;
+  var el = g('res'+id); if(!el){ console.error('div res'+id+' non trovato'); return; }
   el.style.display = 'block';
-  // Il backend restituisce 1 solo risultato in data.best
-  var rr = data.best ? [data.best] : (data.risultati||[]);
+  // UN SOLO risultato — il backend manda data.best
+  var best = data.best || (data.risultati && data.risultati[0]) || null;
+  var rr = best ? [best] : [];
+  console.log('[mostraRes] id='+id+' best=', best, 'rr.length='+rr.length);
   if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato</div>'; return; }
 
   var isOrla = data.fonte==='Verzolla';
