@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>Cesana Service — Ricerca Ricambi v4</title>
+<title>Cesana Service — Ricerca Ricambi v5</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:Arial,sans-serif;background:#f1f5f9;min-height:100vh;}
@@ -23,28 +21,21 @@ button.add:hover{background:#1e40af;}
 button.go{padding:8px 18px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
 button.go:hover{background:#1e293b;}
 button.go:disabled,button.add:disabled{opacity:.4;cursor:not-allowed;}
-
-button.ordine{padding:8px 18px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:none;}
-button.ordine:hover{background:#15803d;}
-button.ordine:disabled{opacity:.4;cursor:not-allowed;}
 button.rst{padding:8px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;}
 .cnt{display:flex;gap:14px;align-items:center;}
 .cni{text-align:center;}
 .cnn{font-size:20px;font-weight:800;}
 .cnl{font-size:10px;color:#94a3b8;text-transform:uppercase;}
 .card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-
-/* ── RIGA: 2 livelli ── */
 .rrow{border-bottom:2px solid #f1f5f9;transition:background .2s;}
 .rrow:last-child{border-bottom:none;}
-
 /* Riga A: # | Rif | Syn | Marca | Modello | Matricola | Qty | X */
-.rA{display:grid;grid-template-columns:28px 1fr 90px 1fr 1.1fr 100px 52px 28px;gap:6px;align-items:end;padding:10px 14px 4px;}
-/* Riga B: (gap) | Ricambio | Stato | (gap X) */
-.rB{display:grid;grid-template-columns:28px 1fr 200px 28px;gap:6px;align-items:center;padding:4px 14px 10px;}
-
+.rA{display:grid;grid-template-columns:28px 1fr 90px 1fr 1.1fr 110px 56px 28px;gap:6px;align-items:end;padding:10px 14px 4px;}
+/* Riga B: (gap) | Ricambio | Stato | (gap) */
+.rB{display:grid;grid-template-columns:28px 1fr 220px 28px;gap:6px;align-items:center;padding:4px 14px 10px;}
 .lbl{font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:2px;letter-spacing:.4px;}
 .lbl.violet{color:#6366f1;}
+.lbl.green{color:#10b981;}
 .inp{width:100%;padding:6px 8px;border:1.5px solid #cbd5e1;border-radius:7px;font-size:12px;outline:none;background:#fff;transition:border .15s;}
 .inp:focus{border-color:#3b82f6;box-shadow:0 0 0 2px #dbeafe;}
 .inp.mat{border-color:#a5b4fc;background:#eef2ff;}
@@ -60,7 +51,7 @@ button.rst{padding:8px 14px;background:#fff;border:1.5px solid #e2e8f0;border-ra
 .del:hover{background:#fecaca;}
 .numcol{color:#94a3b8;font-size:12px;font-weight:700;text-align:center;padding-bottom:6px;}
 .empty{text-align:center;padding:40px;color:#94a3b8;}
-.rres{display:none;padding:0 14px 10px;overflow-x:auto;}
+.rres{display:none;padding:0 14px 12px;overflow-x:auto;}
 table.rt{width:100%;border-collapse:collapse;font-size:11px;}
 table.rt th{background:#1e3a8a;color:#fff;padding:5px 8px;font-size:10px;text-align:left;}
 table.rt td{padding:5px 8px;border-bottom:1px solid #f1f5f9;}
@@ -73,18 +64,18 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
 .bg-err{background:#fef2f2;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .spinner{display:inline-block;width:11px;height:11px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
-
-/* intestazione colonne */
-.thA{display:grid;grid-template-columns:28px 1fr 90px 1fr 1.1fr 100px 52px 28px;gap:6px;padding:7px 14px 3px;background:#f8fafc;border-bottom:1px solid #e8edf2;}
-.thB{display:grid;grid-template-columns:28px 1fr 200px 28px;gap:6px;padding:3px 14px 7px;background:#f8fafc;border-bottom:1px solid #e2e8f0;}
+.thA{display:grid;grid-template-columns:28px 1fr 90px 1fr 1.1fr 110px 56px 28px;gap:6px;padding:7px 14px 3px;background:#f8fafc;border-bottom:1px solid #e8edf2;}
+.thB{display:grid;grid-template-columns:28px 1fr 220px 28px;gap:6px;padding:3px 14px 7px;background:#f8fafc;border-bottom:1px solid #e2e8f0;}
 .thA span,.thB span{font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.4px;}
+.best-row td{background:#f0fdf4!important;font-weight:700;}
+.star{color:#f59e0b;}
 </style>
 </head>
 <body>
 <header>
   <div>
     <h1>&#128295; Cesana Service</h1>
-    <sub>Ricerca Ricambi — v4</sub>
+    <sub>Ricerca Ricambi — v5</sub>
   </div>
   <div class="nav">
     <button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
@@ -98,8 +89,8 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
     <div class="barl">
       <button class="add" id="btnAdd">+ Aggiungi riga</button>
       <span style="font-size:11px;color:#64748b;">
-        <span style="color:#6366f1;font-weight:700;">&#128197; Matricola</span> = listino preciso per quella macchina &nbsp;|&nbsp;
-        <span style="color:#10b981;font-weight:700;">Qty</span> = quantità da ordinare
+        <span style="color:#6366f1;font-weight:700;">&#128197; Matricola</span> = listino preciso &nbsp;|&nbsp;
+        <span style="color:#10b981;font-weight:700;">Qty</span> = quantità
       </span>
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
@@ -111,28 +102,19 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
       </div>
       <button class="go" id="btnStart">&#9654; Avvia</button>
       <button class="rst" id="btnReset">&#8635; Reset</button>
-      <button class="ordine" id="btnOrdine">&#128230; Invia Ordine</button>
     </div>
   </div>
 
   <div class="card">
     <div class="thA">
-      <span>#</span>
-      <span>Riferimento</span>
-      <span>Syncrogest</span>
-      <span>Marca</span>
-      <span>Modello</span>
+      <span>#</span><span>Riferimento</span><span>Syncrogest</span>
+      <span>Marca</span><span>Modello</span>
       <span style="color:#6366f1;">&#128197; Matricola</span>
-      <span style="color:#10b981;">Qty</span>
-      <span></span>
+      <span style="color:#10b981;">Qty</span><span></span>
     </div>
     <div class="thB">
-      <span></span>
-      <span>Ricambio cercato</span>
-      <span>Stato</span>
-      <span></span>
+      <span></span><span>Ricambio cercato</span><span>Stato</span><span></span>
     </div>
-
     <div id="list"></div>
     <div class="empty" id="empty">
       <div style="font-size:32px;">&#128203;</div>
@@ -153,313 +135,345 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
 </main>
 
 <script>
-var BASE='https://superagent-244159cc.base44.app';
-var AID='6a132bbd6bdcb07f244159cc';
-var N=0,rows=[],busy=false,stData=[];
-var mrc=[],mod=[],ric=[];
+var BASE    = 'https://superagent-244159cc.base44.app';
+var AID     = '6a132bbd6bdcb07f244159cc';
+var API_KEY = 'public-cesana-2026';
+var N=0, rows=[], busy=false, stData=[];
+var mrc=[], mod=[], ric=[];
 
-document.getElementById('btnAdd').addEventListener('click',addRow);
-document.getElementById('btnStart').addEventListener('click',avvia);
-document.getElementById('btnReset').addEventListener('click',reset);
+// ── HEADERS con API KEY ──────────────────────────────────────────────────────
+function hdr(){
+  return {
+    'Content-Type':'application/json',
+    'X-Cesana-Key': API_KEY
+  };
+}
+
+document.getElementById('btnAdd').addEventListener('click', addRow);
+document.getElementById('btnStart').addEventListener('click', avvia);
+document.getElementById('btnReset').addEventListener('click', reset);
 loadSugg();
+addRow(); // Parte con una riga già pronta
 
 function tab(t){
-  g('TR').style.display=t==='R'?'block':'none';
-  g('TS').style.display=t==='S'?'block':'none';
-  g('tR').className=t==='R'?'on':'';
-  g('tS').className=t==='S'?'on':'';
+  g('TR').style.display = t==='R' ? 'block' : 'none';
+  g('TS').style.display = t==='S' ? 'block' : 'none';
+  g('tR').className = t==='R' ? 'on' : '';
+  g('tS').className = t==='S' ? 'on' : '';
   if(t==='S') loadSt();
 }
 
 function addRow(){
-  var id=++N;
-  rows.push({id:id,st:'idle'});
-  var d=document.createElement('div');
-  d.className='rrow bg-wait';
-  d.id='row'+id;
-  d.innerHTML=
+  var id = ++N;
+  rows.push({id:id, st:'idle'});
+  var d = document.createElement('div');
+  d.className = 'rrow bg-wait';
+  d.id = 'row'+id;
+  d.innerHTML =
     '<div class="rA">'+
       '<div class="numcol">#'+id+'</div>'+
-      '<div><div class="lbl">Riferimento</div><input class="inp" id="ref'+id+'" placeholder="es. Rossi"></div>'+
-      '<div><div class="lbl">Syncrogest</div><input class="inp" id="syn'+id+'" placeholder="SG-001"></div>'+
-      '<div><div class="lbl">Marca</div><input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar"><datalist id="lmar'+id+'"></datalist></div>'+
-      '<div><div class="lbl">Modello</div><input class="inp" id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 41 CDE"><datalist id="lmdo'+id+'"></datalist></div>'+
-      '<div><div class="lbl violet">&#128197; Matricola <span style="font-weight:400;color:#a5b4fc">(facolt.)</span></div><input class="inp mat" id="mat'+id+'" placeholder="es. 918199"></div>'+
-      '<div><div class="lbl" style="color:#10b981;">Qty</div><input class="inp qty" id="qty'+id+'" type="number" min="1" value="1" placeholder="1"></div>'+
+      '<div><div class="lbl">Riferimento</div>'+
+        '<input class="inp" id="ref'+id+'" placeholder="es. Rossi / Intervento 22"></div>'+
+      '<div><div class="lbl">Syncrogest</div>'+
+        '<input class="inp" id="syn'+id+'" placeholder="SG-001"></div>'+
+      '<div><div class="lbl">Marca</div>'+
+        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Orla">'+
+        '<datalist id="lmar'+id+'"></datalist></div>'+
+      '<div><div class="lbl">Modello</div>'+
+        '<input class="inp" id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441 CDE">'+
+        '<datalist id="lmdo'+id+'"></datalist></div>'+
+      '<div><div class="lbl violet">&#128197; Matricola</div>'+
+        '<input class="inp mat" id="mat'+id+'" placeholder="facoltativa"></div>'+
+      '<div><div class="lbl green">Qty</div>'+
+        '<input class="inp qty" id="qty'+id+'" type="number" min="1" value="1"></div>'+
       '<button class="del" id="del'+id+'">&times;</button>'+
     '</div>'+
     '<div class="rB">'+
       '<div></div>'+
-      '<div><div class="lbl">Ricambio cercato</div><input class="inp" id="rcs'+id+'" list="lrcs'+id+'" placeholder="es. resistenza vasca, pompa lavaggio, scheda..."><datalist id="lrcs'+id+'"></datalist></div>'+
+      '<div><div class="lbl">Ricambio cercato</div>'+
+        '<input class="inp" id="rcs'+id+'" list="lrcs'+id+'" placeholder="es. resistenza vasca, pompa lavaggio, scheda...">'+
+        '<datalist id="lrcs'+id+'"></datalist></div>'+
       '<div>'+
         '<div class="slbl" id="slbl'+id+'" style="color:#94a3b8;">&#9744; In attesa</div>'+
-        '<div class="pw" id="pw'+id+'" style="display:none"><div class="pb" id="pb'+id+'"></div></div>'+
+        '<div class="pw"><div class="pb" id="pb'+id+'" style="width:0%;background:#e2e8f0;"></div></div>'+
       '</div>'+
       '<div></div>'+
     '</div>'+
     '<div class="rres" id="res'+id+'"></div>';
 
-  g('list').appendChild(d);
-  g('empty').style.display='none';
-  g('del'+id).addEventListener('click',function(){if(!busy)delRow(id);});
-  fillDL('lmar'+id,mrc);
-  fillDL('lmdo'+id,mod);
-  fillDL('lrcs'+id,ric);
-  upCnt();
-  g('ref'+id).focus();
+  document.getElementById('list').appendChild(d);
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('del'+id).addEventListener('click', function(){ if(!busy) delRow(id); });
+
+  // Autocomplete Marca→Modello→Ricambio
+  document.getElementById('mar'+id).addEventListener('change', function(){
+    var m = this.value.trim();
+    fillDL('lmdo'+id, mod.filter(function(x){ return !m || (x.marca||'').toLowerCase()===m.toLowerCase(); }));
+    fillDL('lrcs'+id, ric.filter(function(x){ return !m || (x.marca||'').toLowerCase()===m.toLowerCase(); }));
+  });
+  document.getElementById('mdo'+id).addEventListener('change', function(){
+    var mo = this.value.trim();
+    var ma = gv('mar'+id);
+    fillDL('lrcs'+id, ric.filter(function(x){ return (!ma || (x.marca||'').toLowerCase()===ma.toLowerCase()) && (!mo || (x.modello||'').toLowerCase()===mo.toLowerCase()); }));
+  });
+
+  fillDL('lmar'+id, mrc);
 }
 
 function delRow(id){
-  var el=g('row'+id);if(el)el.parentNode.removeChild(el);
-  rows=rows.filter(function(r){return r.id!==id;});
-  if(!rows.length)g('empty').style.display='block';
-  upCnt();
+  var el = document.getElementById('row'+id);
+  if(el) el.remove();
+  rows = rows.filter(function(r){ return r.id!==id; });
+  if(!rows.length) document.getElementById('empty').style.display = '';
 }
 
 function reset(){
-  if(busy)return;
-  g('list').innerHTML='';rows=[];N=0;
-  g('empty').style.display='block';
-  g('cnt').style.display='none';
+  if(busy) return;
+  rows.forEach(function(r){ delRow(r.id); });
+  rows = []; N = 0;
+  document.getElementById('empty').style.display = '';
+  document.getElementById('cnt').style.display = 'none';
 }
 
-function g(id){return document.getElementById(id);}
-function gv(id){var e=g(id);return e?e.value.trim():'';}
+function g(id){ return document.getElementById(id); }
+function gv(id){ var e=g(id); return e ? e.value.trim() : ''; }
 
-function fillDL(id,arr){
-  var dl=g(id);if(!dl)return;
-  dl.innerHTML='';
-  arr.forEach(function(x){var o=document.createElement('option');o.value=x.nome||x;dl.appendChild(o);});
+function fillDL(id, arr){
+  var dl = g(id); if(!dl) return; dl.innerHTML='';
+  arr.forEach(function(x){
+    var o=document.createElement('option');
+    o.value = x.nome||x;
+    dl.appendChild(o);
+  });
 }
 
-function setStato(id,tipo,txt,pct){
-  var row=g('row'+id),lbl=g('slbl'+id),pw=g('pw'+id),pb=g('pb'+id);
-  if(!row||!lbl)return;
-  var r=rows.find(function(x){return x.id===id;});if(r)r.st=tipo;
-  var map={
-    idle: {icon:'&#9744;', col:'#94a3b8',bg:'bg-wait', bc:'#94a3b8'},
-    queue:{icon:'&#9203;', col:'#d97706',bg:'bg-queue',bc:'#f59e0b'},
-    run:  {icon:'',        col:'#1d4ed8',bg:'bg-run',  bc:'#3b82f6'},
-    ok:   {icon:'&#9989;', col:'#16a34a',bg:'bg-ok',   bc:'#16a34a'},
-    err:  {icon:'&#10060;',col:'#dc2626',bg:'bg-err',  bc:'#dc2626'}
-  };
-  var c=map[tipo]||map.idle;
-  row.className='rrow '+c.bg;
-  lbl.style.color=c.col;
-  lbl.innerHTML=(tipo==='run')?'<span class="spinner"></span> '+txt:c.icon+' '+txt;
-  if(pct!=null){pw.style.display='block';pb.style.background=c.bc;pb.style.width=pct+'%';}
-  else if(tipo==='idle')pw.style.display='none';
+function setStato(id, tipo, txt, pct){
+  var el = g('slbl'+id), pb = g('pb'+id), rw = g('row'+id);
+  if(el){
+    var icons = {idle:'&#9744;',queue:'&#9203;',run:'<span class="spinner"></span>',ok:'&#9989;',err:'&#10060;'};
+    el.innerHTML = (icons[tipo]||'') + ' ' + txt;
+    el.style.color = {idle:'#94a3b8',queue:'#d97706',run:'#2563eb',ok:'#16a34a',err:'#dc2626'}[tipo]||'#333';
+  }
+  if(pb){
+    pb.style.width = pct+'%';
+    pb.style.background = {idle:'#e2e8f0',queue:'#fcd34d',run:'#60a5fa',ok:'#4ade80',err:'#f87171'}[tipo]||'#e2e8f0';
+  }
+  if(rw) rw.className = 'rrow '+({idle:'bg-wait',queue:'bg-queue',run:'bg-run',ok:'bg-ok',err:'bg-err'}[tipo]||'bg-wait');
+  var r = rows.find(function(x){return x.id===id;}); if(r) r.st=tipo;
   upCnt();
 }
 
 function upCnt(){
-  var t=rows.length,ok=0,run=0,err=0;
-  rows.forEach(function(r){if(r.st==='ok')ok++;else if(r.st==='run'||r.st==='queue')run++;else if(r.st==='err')err++;});
-  g('cTot').textContent=t;g('cOk').textContent=ok;g('cRun').textContent=run;g('cErr').textContent=err;
-  g('cnt').style.display=t?'flex':'none';
-  // Mostra pulsante ordine solo se ci sono ricerche completate
-  var btnO=g('btnOrdine');
-  if(btnO) btnO.style.display=ok>0?'inline-block':'none';
+  var tot=rows.length, ok=0, run=0, err=0;
+  rows.forEach(function(r){
+    if(r.st==='ok') ok++;
+    else if(r.st==='run'||r.st==='queue') run++;
+    else if(r.st==='err') err++;
+  });
+  g('cTot').textContent=tot; g('cOk').textContent=ok;
+  g('cRun').textContent=run; g('cErr').textContent=err;
+  g('cnt').style.display = tot ? 'flex' : 'none';
 }
 
-function disRow(id,dis){
-  ['ref','syn','mar','mdo','mat','qty','rcs'].forEach(function(f){var e=g(f+id);if(e)e.disabled=dis;});
-  var b=g('del'+id);if(b)b.disabled=dis;
+function disRow(id, dis){
+  ['ref','syn','mar','mdo','mat','qty','rcs'].forEach(function(f){
+    var e = g(f+id); if(e) e.disabled=dis;
+  });
 }
 
 function avvia(){
-  if(busy)return;
-  var da=[];
-  for(var i=0;i<rows.length;i++){
-    var id=rows[i].id,m=gv('mar'+id),mo=gv('mdo'+id),r=gv('rcs'+id);
-    if(m&&mo&&r)da.push(id);
-    else if(m||mo||r){alert('Riga #'+id+' incompleta! Servono Marca, Modello e Ricambio.');return;}
+  if(busy) return;
+  var da = rows.filter(function(r){
+    return r.st!=='run' && r.st!=='queue' && gv('mar'+r.id) && gv('mdo'+r.id) && gv('rcs'+r.id);
+  }).map(function(r){return r.id;});
+  if(!da.length){ alert('Compila almeno Marca, Modello e Ricambio in una riga!'); return; }
+  busy=true;
+  g('btnStart').disabled=true; g('btnAdd').disabled=true;
+  da.forEach(function(id){ setStato(id,'queue','In coda...',5); });
+  seq(da, 0);
+}
+
+function seq(ids, i){
+  if(i>=ids.length){
+    busy=false;
+    g('btnStart').disabled=false; g('btnAdd').disabled=false;
+    return;
   }
-  if(!da.length){alert('Aggiungi almeno una riga completa.');return;}
-  busy=true;g('btnStart').disabled=true;g('btnAdd').disabled=true;
-  da.forEach(function(id){setStato(id,'queue','In coda...',5);});
-  seq(da,0);
+  cerca(ids[i], function(){ seq(ids, i+1); });
 }
 
-function seq(ids,i){
-  if(i>=ids.length){busy=false;g('btnStart').disabled=false;g('btnAdd').disabled=false;return;}
-  cerca(ids[i],function(){seq(ids,i+1);});
-}
+function cerca(id, cb){
+  var marca     = gv('mar'+id);
+  var modello   = gv('mdo'+id);
+  var matricola = gv('mat'+id);
+  var qty       = gv('qty'+id)||'1';
+  var rc        = gv('rcs'+id);
+  var rif       = gv('ref'+id);
+  var syn       = gv('syn'+id);
 
-function cerca(id,cb){
-  var marca    =gv('mar'+id);
-  var modello  =gv('mdo'+id);
-  var matricola=gv('mat'+id);
-  var qty      =gv('qty'+id)||'1';
-  var rc       =gv('rcs'+id);
-  var rif      =gv('ref'+id);
-  var syn      =gv('syn'+id);
-  var modEff   =matricola||modello;
+  if(!marca||!modello||!rc){
+    setStato(id,'err','Compila Marca, Modello, Ricambio',100);
+    if(cb)cb(); return;
+  }
 
-  setStato(id,'run','Avvio...',10);
-  disRow(id,true);
-  salva(marca,modello,rc);
+  setStato(id,'run','Connessione Eurotec...',15);
+  disRow(id, true);
+  salva(marca, modello, rc);
 
-  var ml=marca.toLowerCase();
-  var msg=(ml==='orla')?'Ricerca Verzolla...':matricola?'Ricerca matricola '+matricola+'...':'Ricerca Eurotec...';
+  var ml = marca.toLowerCase();
+  var msg = ml==='orla' ? 'Ricerca Verzolla...' : matricola ? 'Ricerca matricola '+matricola+'...' : 'Ricerca Eurotec '+modello+'...';
   setStato(id,'run',msg,30);
 
-  fetch(BASE+'/functions/cercaRicambio',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({marca:marca,modello:modEff,ricambio:rc,richiesta_da:rif||'Cesana Service',syncrogest:syn||'',quantita:qty})
+  // ── CHIAMATA API con X-Cesana-Key ────────────────────────────────────────
+  fetch(BASE+'/functions/cercaRicambio', {
+    method: 'POST',
+    headers: hdr(),
+    body: JSON.stringify({
+      marca: marca,
+      modello: modello,
+      matricola: matricola||'',
+      ricambio: rc,
+      richiesta_da: rif||'Cesana Service',
+      syncrogest: syn||''
+    })
   })
-  .then(function(r){return r.json();})
+  .then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.json();
+  })
   .then(function(data){
     if(!data.ok) throw new Error(data.error||'Errore ricerca');
-    setStato(id,'ok','Completata!',100);
-    var rec={
-      marca:marca,modello:modEff,ricambio_cercato:rc,stato:'completata',
-      codice_eurotec:data.best?data.best.codice:'',
-      descrizione:data.best?data.best.descrizione:'',
-      prezzo_eurotec:data.best?data.best.prezzo:'',
-      disp_eurotec:data.fonte||'',
-      codice_lf:'-',prezzo_lf:'-',disp_lf:'-',
-      convenienza:data.fonte+' — '+(data.best?data.best.codice+' '+data.best.prezzo:''),
-      tutti_i_risultati:JSON.stringify({fonte:data.fonte,modello:data.modello_codice,risultati:data.tutti||data.risultati||[]}),
-      qty:qty
-    };
-    mostraRes(id,rec);
-    disRow(id,false);
+    setStato(id,'ok','Completata ✓',100);
+    mostraRes(id, data, qty);
+    disRow(id, false);
     if(cb)cb();
   })
   .catch(function(e){
-    setStato(id,'err',String(e.message||'Errore connessione'),100);
-    disRow(id,false);
+    setStato(id,'err','Errore: '+String(e.message||'connessione'),100);
+    disRow(id, false);
     if(cb)cb();
   });
 }
 
-function mostraRes(id,rec){
-  var el=g('res'+id);if(!el)return;
-  var ml=g('mar'+id)?g('mar'+id).value.trim().toLowerCase():'';
-  var isOrla=ml==='orla'||(rec.marca&&rec.marca.toLowerCase()==='orla');
-  var qty=rec.qty||'1';
+function mostraRes(id, data, qty){
+  var el = g('res'+id); if(!el) return;
+  el.style.display = 'block';
+  var rr = data.risultati||[];
+  if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato</div>'; return; }
+
+  var isOrla = data.fonte==='Verzolla';
+  var h = '';
 
   if(isOrla){
-    var parsed={};try{parsed=JSON.parse(rec.tutti_i_risultati||'{}');}catch(e){}
-    var rr=parsed.risultati||[];
-    if(!rr.length&&rec.codice_eurotec)rr=[{codice:rec.codice_eurotec,descrizione:rec.descrizione||'',disponibilita:rec.disp_eurotec||'',prezzo:rec.prezzo_eurotec||'N/D'}];
-    var h='<table class=rt><tr><th>Codice Verzolla</th><th>Descrizione</th><th>Disponibilità</th><th>Prezzo unitario</th><th>Qty</th></tr>';
+    h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponibilità</th><th>Prezzo unitario</th><th>Qty</th></tr>';
     rr.forEach(function(r){
-      var dc=r.disponibilita==='Disponibile'?'#16a34a':r.disponibilita==='Non disponibile'?'#dc2626':'#f59e0b';
-      h+='<tr><td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td><td>'+(r.descrizione||'-')+'</td><td style="color:'+dc+';font-weight:600">'+(r.disponibilita||'-')+'</td><td style="font-weight:700">'+(r.prezzo||'N/D')+'</td><td style="font-weight:700;color:#10b981">×'+qty+'</td></tr>';
+      var dc = r.disponibilita==='Disponibile'?'#16a34a':'#dc2626';
+      h += '<tr><td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
+           '<td>'+(r.descrizione||'-')+'</td>'+
+           '<td style="color:'+dc+';font-weight:600">'+(r.disponibilita||'-')+'</td>'+
+           '<td style="font-weight:700">'+(r.prezzo||'N/D')+'</td>'+
+           '<td style="font-weight:700;color:#10b981;">×'+qty+'</td></tr>';
     });
-    h+='</table>';
-    el.innerHTML=h;el.style.display='block';return;
+    h += '</table>';
+  } else {
+    h = '<table class="rt"><tr><th>★</th><th>Codice Eurotec</th><th>Descrizione</th><th>Prezzo unitario</th><th>Disp.</th><th>Qty</th></tr>';
+    rr.forEach(function(r, i){
+      var cls = i===0 ? ' class="best-row"' : '';
+      var star = r.consigliato ? '<span class="star">★</span>' : '';
+      var dispColor = (r.disponibilita && parseFloat(r.disponibilita.replace(',','.'))>0) ? '#16a34a' : '#94a3b8';
+      h += '<tr'+cls+'>'+
+           '<td>'+star+'</td>'+
+           '<td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
+           '<td>'+(r.descrizione||'-')+'</td>'+
+           '<td style="font-weight:700;color:#1d4ed8">'+(r.prezzo||'N/D')+'</td>'+
+           '<td style="color:'+dispColor+';font-weight:600">'+(r.disponibilita ? r.disponibilita+' pz' : '-')+'</td>'+
+           '<td style="font-weight:700;color:#10b981;">×'+qty+'</td>'+
+           '</tr>';
+    });
+    h += '</table>';
+    if(data.modello) h += '<div style="font-size:10px;color:#94a3b8;margin-top:4px;">Modello: '+data.modello+(data.matricola?' | Matricola: '+data.matricola:'')+'</div>';
   }
 
-  var parsed={};try{parsed=JSON.parse(rec.tutti_i_risultati||'{}');}catch(e){}
-  var rr=parsed.risultati||[];
-  var modLabel=parsed.modello||rec.modello||'';
-  var h='<div style="font-size:11px;color:#64748b;margin-bottom:5px;padding-top:2px;">&#128203; Listino: <b>'+modLabel+'</b></div>';
-  h+='<table class="rt"><tr><th>★</th><th>Codice Eurotec</th><th>Descrizione</th><th>Prezzo unitario</th><th>Qty</th></tr>';
-  if(rr.length){
-    rr.forEach(function(r,i){
-      var bg=i===0?'background:#eff6ff;':'';
-      var bw=i===0?'font-weight:700;':'';
-      var cons=r.consigliato?'<span style="color:#f59e0b">★</span>':'';
-      h+='<tr style="'+bg+'"><td>'+cons+'</td>'+
-        '<td style="font-family:monospace;'+bw+'">'+(r.codice||'-')+'</td>'+
-        '<td style="'+bw+'">'+(r.descrizione||'-')+'</td>'+
-        '<td style="font-weight:700;color:#1d4ed8">'+(r.prezzo||'N/D')+'</td>'+
-        '<td style="font-weight:700;color:#10b981;">×'+qty+'</td>'+
-        '</tr>';
-    });
-  } else {
-    h+='<tr><td colspan=5 style="color:#94a3b8;text-align:center">Nessun risultato</td></tr>';
-  }
-  h+='</table>';
-  el.innerHTML=h;el.style.display='block';
+  el.innerHTML = h;
 }
 
-function salva(m,mo,r){
-  function post(ent,body){fetch(BASE+'/api/apps/'+AID+'/entities/'+ent,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});}
-  if(m&&!mrc.find(function(x){return(x.nome||x)===m;})){post('MarcaSalvata',{nome:m});mrc.push({nome:m});}
-  if(mo&&!mod.find(function(x){return(x.nome||x)===mo;})){post('ModelloSalvato',{nome:mo,marca:m});mod.push({nome:mo});}
-  if(r&&!ric.find(function(x){return(x.nome||x)===r;})){post('RicambioSalvato',{nome:r,marca:m,modello:mo});ric.push({nome:r});}
+function salva(m, mo, r){
+  function post(ent, body){
+    fetch(BASE+'/api/apps/'+AID+'/entities/'+ent, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    }).catch(function(){});
+  }
+  if(m  && !mrc.find(function(x){return(x.nome||x)===m;}))  { post('MarcaSalvata',  {nome:m});            mrc.push({nome:m}); }
+  if(mo && !mod.find(function(x){return(x.nome||x)===mo;})) { post('ModelloSalvato',{nome:mo,marca:m});    mod.push({nome:mo,marca:m}); }
+  if(r  && !ric.find(function(x){return(x.nome||x)===r;}))  { post('RicambioSalvato',{nome:r,marca:m,modello:mo}); ric.push({nome:r,marca:m,modello:mo}); }
 }
 
 function loadSugg(){
-  function get(ent,arr){
-    fetch(BASE+'/api/apps/'+AID+'/entities/'+ent+'?limit=200')
+  function get(ent, arr){
+    fetch(BASE+'/api/apps/'+AID+'/entities/'+ent+'?limit=500')
     .then(function(r){return r.json();})
-    .then(function(d){var list=Array.isArray(d)?d:(d.records||[]);list.forEach(function(x){arr.push(x);});})
+    .then(function(d){
+      var list = Array.isArray(d)?d:(d.records||[]);
+      list.forEach(function(x){arr.push(x);});
+      // Aggiorna datalist già presenti
+      if(ent==='MarcaSalvata') rows.forEach(function(r){ fillDL('lmar'+r.id, mrc); });
+    })
     .catch(function(){});
   }
-  get('MarcaSalvata',mrc);get('ModelloSalvato',mod);get('RicambioSalvato',ric);
+  get('MarcaSalvata',  mrc);
+  get('ModelloSalvato', mod);
+  get('RicambioSalvato', ric);
 }
 
+// ── TAB STORICO ─────────────────────────────────────────────────────────────
 function loadSt(){
-  g('stList').innerHTML='<div class="empty">Caricamento...</div>';
-  fetch(BASE+'/api/apps/'+AID+'/entities/RicercaPrezzi?limit=300&sort=-created_date')
+  fetch(BASE+'/api/apps/'+AID+'/entities/RicercaPrezzi?limit=200&sort=-created_date')
   .then(function(r){return r.json();})
-  .then(function(d){stData=Array.isArray(d)?d:(d.records||[]);filtSt();})
-  .catch(function(){g('stList').innerHTML='<div class="empty" style="color:#dc2626">Errore caricamento</div>';});
+  .then(function(d){
+    stData = Array.isArray(d)?d:(d.records||[]);
+    renderSt(stData);
+  })
+  .catch(function(){ g('stList').innerHTML='<div class="empty">Errore caricamento storico</div>'; });
 }
 
 function filtSt(){
-  var f=g('stF').value.toLowerCase();
-  var lista=stData.filter(function(r){
-    return !f||(r.marca+' '+r.modello+' '+(r.ricambio_cercato||'')+' '+(r.codice_eurotec||'')).toLowerCase().indexOf(f)>=0;
-  });
-  if(!lista.length){g('stList').innerHTML='<div class="empty">Nessuna ricerca trovata</div>';return;}
-  var h='<div class="card"><table class="rt"><tr><th>Data</th><th>Marca</th><th>Modello</th><th>Ricambio</th><th>Codice</th><th>Descrizione</th><th>Prezzo</th><th>Stato</th></tr>';
-  lista.forEach(function(r){
-    var dt=r.created_date?new Date(r.created_date).toLocaleString('it-IT'):'';
-    var sc=r.stato==='completata'?'#16a34a':r.stato==='errore'?'#dc2626':'#f59e0b';
-    var icn=r.stato==='completata'?'✅':r.stato==='errore'?'❌':'⏳';
+  var q = gv('stF').toLowerCase();
+  renderSt(q ? stData.filter(function(r){
+    return [r.marca,r.modello,r.ricambio_cercato,r.descrizione,r.codice_eurotec].some(function(v){
+      return v && v.toLowerCase().includes(q);
+    });
+  }) : stData);
+}
+
+function renderSt(list){
+  if(!list.length){ g('stList').innerHTML='<div class="empty">Nessun risultato</div>'; return; }
+  var h='<div class="card"><table class="rt">'+
+    '<tr><th>Data</th><th>Riferimento</th><th>Marca</th><th>Modello</th><th>Ricambio</th><th>Codice</th><th>Descrizione</th><th>Prezzo</th><th>Disp.</th><th>Stato</th></tr>';
+  list.forEach(function(r){
+    var dt = r.created_date ? new Date(r.created_date).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}) : '-';
+    var sc = r.stato==='completata'?'#16a34a':r.stato==='errore'?'#dc2626':'#f59e0b';
+    var note = r.note||'';
+    var rif = note.match(/Syncrogest:\s*([^\|]+)/)?.[1]?.trim() || '-';
     h+='<tr>'+
-      '<td style="font-size:10px;white-space:nowrap">'+dt+'</td>'+
-      '<td>'+(r.marca||'')+'</td>'+
-      '<td>'+(r.modello||'')+'</td>'+
-      '<td>'+(r.ricambio_cercato||'')+'</td>'+
-      '<td style="font-family:monospace;font-weight:700">'+(r.codice_eurotec||'-')+'</td>'+
-      '<td>'+(r.descrizione||'-')+'</td>'+
-      '<td style="font-weight:700;color:#1d4ed8">'+(r.prezzo_eurotec||'-')+'</td>'+
-      '<td style="color:'+sc+';font-weight:600">'+icn+' '+r.stato+'</td>'+
+      '<td style="white-space:nowrap">'+dt+'</td>'+
+      '<td>'+rif+'</td>'+
+      '<td>'+escH(r.marca||'-')+'</td>'+
+      '<td>'+escH(r.modello||'-')+'</td>'+
+      '<td>'+escH(r.ricambio_cercato||'-')+'</td>'+
+      '<td style="font-family:monospace;font-weight:700">'+escH(r.codice_eurotec||'-')+'</td>'+
+      '<td>'+escH(r.descrizione||'-')+'</td>'+
+      '<td style="font-weight:700;color:#1d4ed8">'+escH(r.prezzo_eurotec||'-')+'</td>'+
+      '<td>'+escH(r.disp_eurotec||'-')+'</td>'+
+      '<td style="color:'+sc+';font-weight:600">'+escH(r.stato||'-')+'</td>'+
       '</tr>';
   });
-  h+='</table></div>';
-  g('stList').innerHTML=h;
+  h += '</table></div>';
+  g('stList').innerHTML = h;
 }
 
-document.getElementById('btnOrdine').addEventListener('click', inviaOrdine);
-
-function inviaOrdine() {
-  // Raccoglie tutte le righe completate con i loro risultati
-  var righe = [];
-  rows.forEach(function(r) {
-    if (r.st !== 'ok') return;
-    var id = r.id;
-    var marca = gv('mar'+id);
-    var modello = gv('mdo'+id);
-    var matricola = gv('mat'+id);
-    var qty = gv('qty'+id) || '1';
-    var rc = gv('rcs'+id);
-    var rif = gv('ref'+id);
-    var syn = gv('syn'+id);
-    // Prende il risultato mostrato
-    var resEl = g('res'+id);
-    var codice = '', descr = '', prezzo = '';
-    if (resEl) {
-      var codEl = resEl.querySelector('td[style*="monospace"]');
-      if (codEl) codice = codEl.textContent.trim();
-      var tds = resEl.querySelectorAll('td');
-      if (tds.length >= 3) descr = tds[2] ? tds[2].textContent.trim() : '';
-      if (tds.length >= 4) prezzo = tds[3] ? tds[3].textContent.trim() : '';
-    }
-    righe.push({riferimento:rif, syncrogest:syn, marca:marca, modello:modello, matricola:matricola, ricambio:rc, codice:codice, descrizione:descr, prezzo:prezzo, qty:qty});
-  });
-  if (!righe.length) { alert('Nessuna ricerca completata da ordinare.'); return; }
-  // Per ora mostra un riepilogo — funzionalità completa da definire
-  alert('🟡 Pulsante Ordine — funzionalità in arrivo!\n\nRighe pronte: ' + righe.length + '\n' + righe.map(function(r,i){ return (i+1)+'. ['+r.riferimento+'] '+r.marca+' '+r.modello+(r.matricola?' ('+r.matricola+')':'')+' — '+r.ricambio+' cod.'+r.codice+' ×'+r.qty; }).join('\n'));
-}
+function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
