@@ -358,7 +358,8 @@ function cerca(id, cb){
 function mostraRes(id, data, qty){
   var el = g('res'+id); if(!el) return;
   el.style.display = 'block';
-  var rr = data.risultati||[];
+  // Il backend restituisce 1 solo risultato in data.best
+  var rr = data.best ? [data.best] : (data.risultati||[]);
   if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato</div>'; return; }
 
   var isOrla = data.fonte==='Verzolla';
