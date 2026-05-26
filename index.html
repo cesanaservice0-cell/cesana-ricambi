@@ -23,6 +23,10 @@ button.add:hover{background:#1e40af;}
 button.go{padding:8px 18px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
 button.go:hover{background:#1e293b;}
 button.go:disabled,button.add:disabled{opacity:.4;cursor:not-allowed;}
+
+button.ordine{padding:8px 18px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:none;}
+button.ordine:hover{background:#15803d;}
+button.ordine:disabled{opacity:.4;cursor:not-allowed;}
 button.rst{padding:8px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;}
 .cnt{display:flex;gap:14px;align-items:center;}
 .cni{text-align:center;}
@@ -107,6 +111,7 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
       </div>
       <button class="go" id="btnStart">&#9654; Avvia</button>
       <button class="rst" id="btnReset">&#8635; Reset</button>
+      <button class="ordine" id="btnOrdine">&#128230; Invia Ordine</button>
     </div>
   </div>
 
@@ -252,6 +257,9 @@ function upCnt(){
   rows.forEach(function(r){if(r.st==='ok')ok++;else if(r.st==='run'||r.st==='queue')run++;else if(r.st==='err')err++;});
   g('cTot').textContent=t;g('cOk').textContent=ok;g('cRun').textContent=run;g('cErr').textContent=err;
   g('cnt').style.display=t?'flex':'none';
+  // Mostra pulsante ordine solo se ci sono ricerche completate
+  var btnO=g('btnOrdine');
+  if(btnO) btnO.style.display=ok>0?'inline-block':'none';
 }
 
 function disRow(id,dis){
@@ -419,6 +427,38 @@ function filtSt(){
   });
   h+='</table></div>';
   g('stList').innerHTML=h;
+}
+
+document.getElementById('btnOrdine').addEventListener('click', inviaOrdine);
+
+function inviaOrdine() {
+  // Raccoglie tutte le righe completate con i loro risultati
+  var righe = [];
+  rows.forEach(function(r) {
+    if (r.st !== 'ok') return;
+    var id = r.id;
+    var marca = gv('mar'+id);
+    var modello = gv('mdo'+id);
+    var matricola = gv('mat'+id);
+    var qty = gv('qty'+id) || '1';
+    var rc = gv('rcs'+id);
+    var rif = gv('ref'+id);
+    var syn = gv('syn'+id);
+    // Prende il risultato mostrato
+    var resEl = g('res'+id);
+    var codice = '', descr = '', prezzo = '';
+    if (resEl) {
+      var codEl = resEl.querySelector('td[style*="monospace"]');
+      if (codEl) codice = codEl.textContent.trim();
+      var tds = resEl.querySelectorAll('td');
+      if (tds.length >= 3) descr = tds[2] ? tds[2].textContent.trim() : '';
+      if (tds.length >= 4) prezzo = tds[3] ? tds[3].textContent.trim() : '';
+    }
+    righe.push({riferimento:rif, syncrogest:syn, marca:marca, modello:modello, matricola:matricola, ricambio:rc, codice:codice, descrizione:descr, prezzo:prezzo, qty:qty});
+  });
+  if (!righe.length) { alert('Nessuna ricerca completata da ordinare.'); return; }
+  // Per ora mostra un riepilogo — funzionalità completa da definire
+  alert('🟡 Pulsante Ordine — funzionalità in arrivo!\n\nRighe pronte: ' + righe.length + '\n' + righe.map(function(r,i){ return (i+1)+'. ['+r.riferimento+'] '+r.marca+' '+r.modello+(r.matricola?' ('+r.matricola+')':'')+' — '+r.ricambio+' cod.'+r.codice+' ×'+r.qty; }).join('\n'));
 }
 </script>
 </body>
