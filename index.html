@@ -375,19 +375,20 @@ function mostraRes(id, data, qty){
 
   if(isSelmi){
     var b=data.best||{};
-    var altriHTML='';
-    (data.risultati||[]).slice(1,4).forEach(function(r){
-      altriHTML+='<div style="font-size:11px;color:#666;margin-top:4px">'+escH(r.codice)+' — '+escH(r.descrizione)+' — <b>'+escH(r.prezzo)+'</b> <span style="color:#999;font-size:10px">(listino '+escH(r.prezzo_listino||'')+')</span></div>';
+    h = '<div class="badge-fonte selmi">SELMI</div>';
+    h += '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Gruppo</th><th>Prezzo netto</th><th>Listino</th><th>Qty</th></tr>';
+    (data.risultati||[b]).forEach(function(r,i){
+      var cls = i===0?' class="best-row"':'';
+      h += '<tr'+cls+'><td style="font-family:monospace;font-weight:700">'+escH(r.codice||'-')+'</td>'+
+           '<td>'+escH(r.descrizione||'-')+'</td>'+
+           '<td style="font-size:11px;color:#888">'+escH(r.gruppo||'-')+'</td>'+
+           '<td style="font-weight:700;color:#1d4ed8">'+escH(r.prezzo||'N/D')+'</td>'+
+           '<td style="color:#94a3b8;font-size:11px">'+escH(r.prezzo_listino||'-')+'</td>'+
+           '<td style="font-weight:700;color:#10b981;">×'+qty+'</td></tr>';
     });
-    setRes(id,
-      '<div class="badge-fonte selmi">SELMI</div>'+
-      '<div class="rc-nome">'+escH(b.descrizione)+'</div>'+
-      '<div class="rc-code">'+escH(b.codice)+'</div>'+
-      (b.gruppo?'<div style="font-size:11px;color:#888;margin:2px 0">Gruppo: '+escH(b.gruppo)+'</div>':'')+
-      '<div class="rc-price">'+escH(b.prezzo)+' <span class="rc-listino">(listino '+escH(b.prezzo_listino||'')+')</span></div>'+
-      altriHTML,
-      'ok'
-    );
+    h += '</table>';
+    h += '<div style="font-size:10px;color:#94a3b8;margin-top:4px;">Selmi '+escH(data.modello||'')+'</div>';
+    el.innerHTML = h;
     return;
   }
   if(isOrla){
