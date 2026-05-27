@@ -182,7 +182,7 @@ function addRow(){
       '<div><div class="lbl">Syncrogest</div>'+
         '<input class="inp" id="syn'+id+'" placeholder="SG-001"></div>'+
       '<div><div class="lbl">Marca</div>'+
-        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Orla">'+
+        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Selmi / Orla">'+
         '<datalist id="lmar'+id+'"></datalist></div>'+
       '<div><div class="lbl">Modello</div>'+
         '<input class="inp" id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441 CDE">'+
@@ -326,7 +326,7 @@ function cerca(id, cb){
   salva(marca, modello, rc);
 
   var ml = marca.toLowerCase();
-  var msg = ml==='orla' ? 'Ricerca Verzolla...' : matricola ? 'Ricerca matricola '+matricola+'...' : 'Ricerca Eurotec '+modello+'...';
+  var msg = ml==='orla' ? 'Ricerca Verzolla...' : ml==='selmi' ? 'Ricerca Selmi '+modello+'...' : matricola ? 'Ricerca matricola '+matricola+'...' : 'Ricerca Eurotec '+modello+'...';
   setStato(id,'run',msg,30);
 
   // ── CHIAMATA API con X-Cesana-Key ────────────────────────────────────────
@@ -370,8 +370,26 @@ function mostraRes(id, data, qty){
   if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato</div>'; return; }
 
   var isOrla = data.fonte==='Verzolla';
+  var isSelmi = data.fonte==='Selmi';
   var h = '';
 
+  if(isSelmi){
+    var b=data.best||{};
+    var altriHTML='';
+    (data.risultati||[]).slice(1,4).forEach(function(r){
+      altriHTML+='<div style="font-size:11px;color:#666;margin-top:4px">'+escH(r.codice)+' — '+escH(r.descrizione)+' — <b>'+escH(r.prezzo)+'</b> <span style="color:#999;font-size:10px">(listino '+escH(r.prezzo_listino||'')+')</span></div>';
+    });
+    setRes(id,
+      '<div class="badge-fonte selmi">SELMI</div>'+
+      '<div class="rc-nome">'+escH(b.descrizione)+'</div>'+
+      '<div class="rc-code">'+escH(b.codice)+'</div>'+
+      (b.gruppo?'<div style="font-size:11px;color:#888;margin:2px 0">Gruppo: '+escH(b.gruppo)+'</div>':'')+
+      '<div class="rc-price">'+escH(b.prezzo)+' <span class="rc-listino">(listino '+escH(b.prezzo_listino||'')+')</span></div>'+
+      altriHTML,
+      'ok'
+    );
+    return;
+  }
   if(isOrla){
     h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponibilità</th><th>Prezzo unitario</th><th>Qty</th></tr>';
     rr.forEach(function(r){
