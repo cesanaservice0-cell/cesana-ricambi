@@ -437,13 +437,14 @@ function loadSugg(){
 
 // ── TAB STORICO ─────────────────────────────────────────────────────────────
 function loadSt(){
-  fetch(BASE+'/api/apps/'+AID+'/entities/RicercaPrezzi?limit=200&sort=-created_date')
+  g('stList').innerHTML='<div class="empty">Caricamento...</div>';
+  fetch(BASE+'/functions/cercaRicambio?limit=300', { headers: hdr() })
   .then(function(r){return r.json();})
   .then(function(d){
-    stData = Array.isArray(d)?d:(d.records||[]);
+    stData = Array.isArray(d) ? d : (d.records || []);
     renderSt(stData);
   })
-  .catch(function(){ g('stList').innerHTML='<div class="empty">Errore caricamento storico</div>'; });
+  .catch(function(e){ g('stList').innerHTML='<div class="empty">Errore caricamento storico: '+e.message+'</div>'; });
 }
 
 function filtSt(){
