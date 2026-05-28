@@ -125,7 +125,7 @@ button.order:disabled{opacity:.4;cursor:not-allowed;}
       </div>
       <button class="go" id="btnStart">&#9654; Avvia</button>
       <button class="rst" id="btnReset">&#8635; Reset</button>
-      <button class="order" id="btnOrdine">&#128722; Invia Ordine Selmi</button>
+      <button class="order" id="btnOrdine" style="display:none">&#128722; Invia Ordine Selmi</button>
     </div>
   </div>
 
@@ -276,6 +276,7 @@ function reset(){
   rows = []; N = 0;
   document.getElementById('empty').style.display = '';
   document.getElementById('cnt').style.display = 'none';
+  aggiornaBottoneOrdine();
 }
 
 function g(id){ return document.getElementById(id); }
@@ -555,8 +556,8 @@ function raccogliItemsSelmi(){
     if(r.selmiData){
       items.push(Object.assign({}, r.selmiData, {
         qty: parseInt(gv('qty'+r.id)||'1', 10) || 1,
-        rif: gv('ref'+r.id),
-        syn: gv('syn'+r.id)
+        riferimento: gv('ref'+r.id)||'',
+        syncrogest: gv('syn'+r.id)||''
       }));
     }
   });
@@ -613,7 +614,7 @@ function inviaOrdineSelmi(){
   .then(function(data){
     btn.textContent = '\u2705 Conferma e Invia';
     if(data.ok){
-      status.textContent = data.messaggio || '\u2705 Ordine inviato con successo!';
+      status.textContent = data.ordine_messaggio || data.messaggio || '✅ Ordine salvato in bozza su Selmi!';
       status.style.color = '#059669';
       // Chiudi modal dopo 2.5 secondi
       setTimeout(function(){
@@ -621,7 +622,7 @@ function inviaOrdineSelmi(){
         aggiornaBottoneOrdine();
       }, 2500);
     } else {
-      status.textContent = data.error || data.messaggio || '\u274C Errore durante l\'invio ordine';
+      status.textContent = data.error || data.ordine_messaggio || data.messaggio || '❌ Errore durante l\'invio ordine';
       status.style.color = '#dc2626';
       btn.disabled = false;
     }
