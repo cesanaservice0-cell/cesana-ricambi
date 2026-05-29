@@ -701,50 +701,83 @@ function esportaExcel(){
 
 // ── ORDINE ORLA via Outlook ──────────────────────────────────────────────────
 function inviaOrdineOrla(id){
-  var btn = g('btnOrdOrla'+id);
-  if(!btn) return;
-  var rowObj = rows.find(function(r){ return r.id===id; });
-  if(!btn || btn.disabled) return;
+  // Raccoglie TUTTE le righe Orla/Verzolla con risultato trovato
+  var orlaRows = rows.filter(function(r){
+    var m = (gv('mar'+r.id)||'').toLowerCase();
+    return (m==='orla'||m==='verzolla') && r._best;
+  });
 
-  btn.disabled = true;
-  btn.textContent = '⏳ Invio in corso...';
-  btn.style.background = '#6b7280';
+  if(orlaRows.length === 0){
+    alert('Nessun ricambio Orla trovato da ordinare.');
+    return;
+  }
 
-  // Prende il codice/descrizione dal risultato trovato, se disponibile
-  var best = rowObj && rowObj._best ? rowObj._best : null;
-  var ricambioDesc = best ? (best.descrizione || best.codice || gv('rcs'+id) || '') : (gv('rcs'+id) || '');
+  // Valida ogni riga: tutti i 5 campi obbligatori
+  var mancanti = [];
+  orlaRows.forEach(function(r){
+    var campi = [];
+    if(!gv('ref'+r.id)) campi.push('RIFERIMENTO');
+    if(!gv('syn'+r.id)) campi.push('SYNCROGEST');
+    if(!gv('mdo'+r.id)) campi.push('MODELLO');
+    var best = r._best;
+    var desc = best ? (best.descrizione || best.codice || gv('rcs'+r.id) || '') : gv('rcs'+r.id) || '';
+    if(!desc) campi.push('RICAMBIO');
+    if(!gv('qty'+r.id)) campi.push('QUANTITÀ');
+    if(campi.length > 0) mancanti.push('Riga '+r.id+': mancano '+campi.join(', '));
+  });
 
-  var payload = {
-    action:      'inviaOrla',
-    riferimento: gv('ref'+id) || '',
-    syncrogest:  gv('syn'+id) || '',
-    marca:       gv('mar'+id) || 'Orla',
-    modello:     gv('mdo'+id) || '',
-    ricambio:    ricambioDesc,
-    qty:         parseInt(gv('qty'+id)||'1',10)||1
-  };
+  if(mancanti.length > 0){
+    alert('Impossibile inviare — campi mancanti:\n\n' + mancanti.join('\n'));
+    return;
+  }
+
+  // Costruisce array righe ordinate per RIFERIMENTO
+  var righe = orlaRows.map(function(r){
+    var best = r._best;
+    return {
+      riferimento: gv('ref'+r.id) || '',
+      syncrogest:  gv('syn'+r.id) || '',
+      modello:     gv('mdo'+r.id) || '',
+      ricambio:    best ? (best.descrizione || best.codice || gv('rcs'+r.id) || '') : (gv('rcs'+r.id) || ''),
+      qty:         parseInt(gv('qty'+r.id)||'1',10)||1
+    };
+  }).sort(function(a,b){ return a.riferimento.localeCompare(b.riferimento); });
+
+  // Disabilita TUTTI i pulsanti Orla durante l'invio
+  orlaRows.forEach(function(r){
+    var b = g('btnOrdOrla'+r.id);
+    if(b){ b.disabled=true; b.textContent='⏳ Invio...'; b.style.background='#6b7280'; }
+  });
 
   fetch(BASE+'/functions/selmiOrdine', {
     method: 'POST',
     headers: {'Content-Type':'application/json','X-Cesana-Key': API_KEY},
-    body: JSON.stringify(payload)
+    body: JSON.stringify({ action: 'inviaOrla', righe: righe })
   })
   .then(function(r){ return r.json(); })
   .then(function(d){
-    if(d.ok){
-      btn.textContent = '✅ Email inviata!';
-      btn.style.background = '#16a34a';
-      setTimeout(function(){ btn.textContent='✉️ Invia Ordine Orla'; btn.style.background='#7c3aed'; btn.disabled=false; }, 4000);
-    } else {
-      btn.textContent = '❌ Errore: '+(d.error||'sconosciuto');
-      btn.style.background = '#dc2626';
-      setTimeout(function(){ btn.textContent='✉️ Invia Ordine Orla'; btn.style.background='#7c3aed'; btn.disabled=false; }, 5000);
-    }
+    orlaRows.forEach(function(r){
+      var b = g('btnOrdOrla'+r.id);
+      if(!b) return;
+      if(d.ok){
+        b.textContent = '✅ Email inviata!';
+        b.style.background = '#16a34a';
+        setTimeout(function(){ b.textContent='✉️ Invia Ordine Orla'; b.style.background='#7c3aed'; b.disabled=false; }, 5000);
+      } else {
+        b.textContent = '❌ '+(d.error||'Errore');
+        b.style.background = '#dc2626';
+        setTimeout(function(){ b.textContent='✉️ Invia Ordine Orla'; b.style.background='#7c3aed'; b.disabled=false; }, 5000);
+      }
+    });
   })
-  .catch(function(e){
-    btn.textContent = '❌ Errore rete';
-    btn.style.background = '#dc2626';
-    setTimeout(function(){ btn.textContent='✉️ Invia Ordine Orla'; btn.style.background='#7c3aed'; btn.disabled=false; }, 5000);
+  .catch(function(){
+    orlaRows.forEach(function(r){
+      var b = g('btnOrdOrla'+r.id);
+      if(!b) return;
+      b.textContent = '❌ Errore rete';
+      b.style.background = '#dc2626';
+      setTimeout(function(){ b.textContent='✉️ Invia Ordine Orla'; b.style.background='#7c3aed'; b.disabled=false; }, 5000);
+    });
   });
 }
 
