@@ -461,8 +461,8 @@ function mostraRes(id, data, qty){
         '&#128722; Invia Ordine Selmi</button></div>';
   } else if(marcaRow==='orla'||marcaRow==='verzolla'){
     btnArea = '<div class="row-order-area">'+
-      '<button class="row-order-btn" style="background:#7c3aed;" disabled title="Metodo ordine Orla non ancora configurato">'+
-        '&#128722; Ordine Orla (da configurare)</button></div>';
+      '<button class="row-order-btn orla-btn" style="background:#7c3aed;" id="btnOrdOrla'+id+'" onclick="inviaOrdineOrla('+id+')">'+
+        '&#9993;&#65039; Invia Ordine Orla</button></div>';
   } else if(marcaRow==='elettrobar'){
     btnArea = '<div class="row-order-area">'+
       '<button class="row-order-btn" style="background:#0ea5e9;" disabled title="Metodo ordine Elettrobar non ancora configurato">'+
@@ -698,6 +698,51 @@ function esportaExcel(){
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+// ── ORDINE ORLA via Outlook ──────────────────────────────────────────────────
+function inviaOrdineOrla(id){
+  var btn = g('btnOrdOrla'+id);
+  if(!btn) return;
+  var rowObj = rows.find(function(r){ return r.id===id; });
+  if(!btn || btn.disabled) return;
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Invio in corso...';
+  btn.style.background = '#6b7280';
+
+  var payload = {
+    riferimento: gv('ref'+id) || '',
+    syncrogest:  gv('syn'+id) || '',
+    marca:       gv('mar'+id) || 'Orla',
+    modello:     gv('mdo'+id) || '',
+    ricambio:    gv('rcs'+id) || '',
+    qty:         parseInt(gv('qty'+id)||'1',10)||1
+  };
+
+  fetch(BASE+'/functions/orlaOrdine', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','X-Cesana-Key': API_KEY},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if(d.ok){
+      btn.textContent = '✅ Email inviata!';
+      btn.style.background = '#16a34a';
+      setTimeout(function(){ btn.textContent='✉️ Invia Ordine Orla'; btn.style.background='#7c3aed'; btn.disabled=false; }, 4000);
+    } else {
+      btn.textContent = '❌ Errore: '+(d.error||'sconosciuto');
+      btn.style.background = '#dc2626';
+      setTimeout(function(){ btn.textContent='✉️ Invia Ordine Orla'; btn.style.background='#7c3aed'; btn.disabled=false; }, 5000);
+    }
+  })
+  .catch(function(e){
+    btn.textContent = '❌ Errore rete';
+    btn.style.background = '#dc2626';
+    setTimeout(function(){ btn.textContent='✉️ Invia Ordine Orla'; btn.style.background='#7c3aed'; btn.disabled=false; }, 5000);
+  });
+}
+
 </script>
 </body>
 </html>
