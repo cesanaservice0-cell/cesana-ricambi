@@ -457,7 +457,7 @@ function mostraRes(id, data, qty){
   if(marcaRow==='selmi' && best && best.idProduct){
     btnArea = '<div class="row-order-area">'+
       '<button class="row-order-btn" style="background:#059669;" '+
-        'onclick="inviaOrdineSelmiRiga(''+id+'')" id="btnOrd'+id+'">'+
+        'onclick="inviaOrdineSelmiRiga('+id+')" id="btnOrd'+id+'">'+
         '&#128722; Invia Ordine Selmi</button></div>';
   } else if(marcaRow==='orla'||marcaRow==='verzolla'){
     btnArea = '<div class="row-order-area">'+
