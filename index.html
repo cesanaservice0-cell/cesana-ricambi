@@ -71,9 +71,10 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
 .thA span,.thB span{font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.4px;}
 .best-row td{background:#f0fdf4!important;font-weight:700;}
 .star{color:#f59e0b;}
-button.order{padding:8px 18px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:none;}
-button.order:hover{background:#047857;}
-button.order:disabled{opacity:.4;cursor:not-allowed;}
+.row-order-btn{padding:6px 14px;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;display:inline-block;}
+.row-order-btn:hover{opacity:.85;}
+.row-order-btn:disabled{opacity:.4;cursor:not-allowed;}
+.row-order-area{padding:0 14px 12px;}
 .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center;}
 .modal-overlay.show{display:flex;}
 .modal-box{background:#fff;border-radius:14px;padding:28px 28px 20px;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);}
@@ -98,7 +99,7 @@ button.order:disabled{opacity:.4;cursor:not-allowed;}
 <header>
   <div>
     <h1>&#128295; Cesana Service</h1>
-    <sub>Ricerca Ricambi — v5</sub>
+    <sub>Ricerca Ricambi — v7</sub>
   </div>
   <div class="nav">
     <button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
@@ -125,7 +126,6 @@ button.order:disabled{opacity:.4;cursor:not-allowed;}
       </div>
       <button class="go" id="btnStart">&#9654; Avvia</button>
       <button class="rst" id="btnReset">&#8635; Reset</button>
-      <button class="order" id="btnOrdine" style="display:none">&#128722; Invia Ordine Selmi</button>
     </div>
   </div>
 
@@ -164,9 +164,10 @@ button.order:disabled{opacity:.4;cursor:not-allowed;}
 <div class="modal-overlay" id="ordineModal">
   <div class="modal-box">
     <h2>&#128722; Invia Ordine Selmi</h2>
-    <div style="font-size:12px;color:#64748b;margin-bottom:10px;">Prodotti Selmi trovati che verranno aggiunti al carrello:</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:10px;">Prodotto che verrà aggiunto al carrello Selmi:</div>
     <div class="items" id="ordineItems"></div>
-    <div style="font-size:12px;color:#64748b;margin-bottom:6px;">Note ordine (opzionale):</div>
+    <div id="ordineRifInfo" style="font-size:11px;color:#6366f1;margin-bottom:8px;min-height:16px;"></div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:6px;">Informazioni aggiuntive (pre-compilate automaticamente):</div>
     <textarea class="modal-note" id="ordineNote" rows="2" placeholder="es. Urgente / Riferimento intervento..."></textarea>
     <div id="ordineStatus" style="font-size:12px;min-height:20px;margin-bottom:10px;font-weight:600;"></div>
     <div class="modal-actions">
@@ -394,7 +395,6 @@ function cerca(id, cb){
     if(rr && data.fonte && data.fonte.toLowerCase()==='selmi' && data.best && data.best.idProduct){
       rr.selmiData = Object.assign({}, data.best);
     }
-    aggiornaBottoneOrdine();
     disRow(id, false);
     if(cb)cb();
   })
@@ -408,13 +408,13 @@ function cerca(id, cb){
 function mostraRes(id, data, qty){
   var el = g('res'+id); if(!el){ console.error('div res'+id+' non trovato'); return; }
   el.style.display = 'block';
-  // UN SOLO risultato — il backend manda data.best
   var best = data.best || (data.risultati && data.risultati[0]) || null;
   var rr = best ? [best] : [];
-  console.log('[mostraRes] id='+id+' best=', best, 'rr.length='+rr.length);
   if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato</div>'; return; }
 
-  var isOrla = data.fonte==='Verzolla';
+  var fonte = (data.fonte||'').toLowerCase();
+  var isOrla = fonte==='verzolla';
+  var isSelmi = fonte==='selmi';
   var h = '';
 
   if(isOrla){
@@ -429,17 +429,19 @@ function mostraRes(id, data, qty){
     });
     h += '</table>';
   } else {
-    h = '<table class="rt"><tr><th>★</th><th>Codice Eurotec</th><th>Descrizione</th><th>Prezzo unitario</th><th>Disp.</th><th>Qty</th></tr>';
+    var thCode = isSelmi ? 'Codice Selmi' : 'Codice Eurotec';
+    h = '<table class="rt"><tr><th>★</th><th>'+thCode+'</th><th>Descrizione</th><th>Prezzo unitario</th><th>Disp.</th><th>Qty</th></tr>';
     rr.forEach(function(r, i){
       var cls = i===0 ? ' class="best-row"' : '';
       var star = r.consigliato ? '<span class="star">★</span>' : '';
-      var dispColor = (r.disponibilita && parseFloat(r.disponibilita.replace(',','.'))>0) ? '#16a34a' : '#94a3b8';
+      var dispColor = (r.disponibilita && parseFloat((r.disponibilita||'0').replace(',','.'))>0) ? '#16a34a' : '#94a3b8';
+      var dispTxt = isSelmi ? (r.disponibilita||'Selmi') : (r.disponibilita ? r.disponibilita+' pz' : '-');
       h += '<tr'+cls+'>'+
            '<td>'+star+'</td>'+
            '<td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
            '<td>'+(r.descrizione||'-')+'</td>'+
            '<td style="font-weight:700;color:#1d4ed8">'+(r.prezzo||'N/D')+'</td>'+
-           '<td style="color:'+dispColor+';font-weight:600">'+(r.disponibilita ? r.disponibilita+' pz' : '-')+'</td>'+
+           '<td style="color:'+dispColor+';font-weight:600">'+dispTxt+'</td>'+
            '<td style="font-weight:700;color:#10b981;">×'+qty+'</td>'+
            '</tr>';
     });
@@ -447,7 +449,27 @@ function mostraRes(id, data, qty){
     if(data.modello) h += '<div style="font-size:10px;color:#94a3b8;margin-top:4px;">Modello: '+data.modello+(data.matricola?' | Matricola: '+data.matricola:'')+'</div>';
   }
 
-  el.innerHTML = h;
+  // ── Pulsante "Invia Ordine" per riga, marca-specifico ──────────────────
+  var rowObj = rows.find(function(r){ return r.id===id; });
+  var btnArea = '';
+  var marcaRow = rowObj ? (gv('mar'+id)||'').toLowerCase() : '';
+
+  if(marcaRow==='selmi' && best && best.idProduct){
+    btnArea = '<div class="row-order-area">'+
+      '<button class="row-order-btn" style="background:#059669;" '+
+        'onclick="inviaOrdineSelmiRiga(''+id+'')" id="btnOrd'+id+'">'+
+        '&#128722; Invia Ordine Selmi</button></div>';
+  } else if(marcaRow==='orla'||marcaRow==='verzolla'){
+    btnArea = '<div class="row-order-area">'+
+      '<button class="row-order-btn" style="background:#7c3aed;" disabled title="Metodo ordine Orla non ancora configurato">'+
+        '&#128722; Ordine Orla (da configurare)</button></div>';
+  } else if(marcaRow==='elettrobar'){
+    btnArea = '<div class="row-order-area">'+
+      '<button class="row-order-btn" style="background:#0ea5e9;" disabled title="Metodo ordine Elettrobar non ancora configurato">'+
+        '&#128722; Ordine Elettrobar (da configurare)</button></div>';
+  }
+
+  el.innerHTML = h + btnArea;
 }
 
 function salva(m, mo, r){
@@ -530,69 +552,48 @@ function renderSt(list){
 function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 
-// ── LOGICA ORDINE SELMI ──────────────────────────────────────────────────────
-var selmiPendingItems = [];
+// ── LOGICA ORDINE PER RIGA ──────────────────────────────────────────────────
+var currentOrdineRowId = null;
 
-function aggiornaBottoneOrdine(){
-  // Conta i risultati Selmi trovati
-  var items = raccogliItemsSelmi();
-  var btn = g('btnOrdine');
-  if(!btn) return;
-  if(items.length > 0){
-    btn.style.display = 'inline-block';
-    btn.textContent = '\u{1F6D2} Invia Ordine Selmi (' + items.length + ')';
-  } else {
-    btn.style.display = 'none';
-  }
-}
-
-function raccogliItemsSelmi(){
-  var items = [];
-  rows.forEach(function(r){
-    if(r.st !== 'ok') return;
-    var marca = (gv('mar'+r.id)||'').toLowerCase();
-    if(marca !== 'selmi') return;
-    // Il risultato è salvato in r.selmiData
-    if(r.selmiData){
-      items.push(Object.assign({}, r.selmiData, {
-        qty: parseInt(gv('qty'+r.id)||'1', 10) || 1,
-        riferimento: gv('ref'+r.id)||'',
-        syncrogest: gv('syn'+r.id)||''
-      }));
-    }
-  });
-  return items;
-}
-
-document.getElementById('btnOrdine').addEventListener('click', apriModaleOrdine);
-document.getElementById('ordineCancel').addEventListener('click', function(){
-  g('ordineModal').classList.remove('show');
-});
-document.getElementById('ordineConfirm').addEventListener('click', inviaOrdineSelmi);
-
-function apriModaleOrdine(){
-  selmiPendingItems = raccogliItemsSelmi();
-  if(!selmiPendingItems.length){
-    alert('Nessun prodotto Selmi trovato. Prima esegui una ricerca Selmi.');
+// Selmi: apre modal per la riga specifica
+function inviaOrdineSelmiRiga(id){
+  var rowObj = rows.find(function(r){ return r.id===id; });
+  if(!rowObj || !rowObj.selmiData){
+    alert('Dati ricambio non trovati. Riavvia la ricerca.');
     return;
   }
-  // Popola lista prodotti
-  var h = '';
-  selmiPendingItems.forEach(function(item){
-    h += '<div class="item-row">'+
-      '<span class="item-code">'+(item.codice||'?')+'</span>'+
-      '<span class="item-desc">'+(item.descrizione||'-')+'</span>'+
-      '<span class="item-qty">\u00D7'+(item.qty||1)+'</span>'+
-    '</div>';
+  currentOrdineRowId = id;
+  var item = Object.assign({}, rowObj.selmiData, {
+    qty: parseInt(gv('qty'+id)||'1', 10) || 1,
+    riferimento: gv('ref'+id)||'',
+    syncrogest: gv('syn'+id)||''
   });
+  var h = '<div class="item-row">'+
+    '<span class="item-code">'+(item.codice||'?')+'</span>'+
+    '<span class="item-desc">'+(item.descrizione||'-')+'</span>'+
+    '<span class="item-qty">×'+(item.qty||1)+'</span>'+
+  '</div>';
+  // Mostra info aggiuntive nel modal
+  var infoExtra = '';
+  if(item.riferimento) infoExtra += 'Rif: <b>'+escH(item.riferimento)+'</b> &nbsp;';
+  if(item.syncrogest)  infoExtra += 'SG: <b>'+escH(item.syncrogest)+'</b>';
   g('ordineItems').innerHTML = h;
-  g('ordineNote').value = '';
+  g('ordineRifInfo').innerHTML = infoExtra;
+  g('ordineNote').value = [item.codice, item.riferimento, item.syncrogest].filter(Boolean).join(' | ');
   g('ordineStatus').textContent = '';
   g('ordineStatus').style.color = '';
   g('ordineConfirm').disabled = false;
+  g('ordineConfirm').textContent = '✅ Conferma e Invia';
   g('ordineModal').classList.add('show');
 }
 
+document.getElementById('ordineCancel').addEventListener('click', function(){
+  g('ordineModal').classList.remove('show');
+  currentOrdineRowId = null;
+});
+document.getElementById('ordineConfirm').addEventListener('click', inviaOrdineSelmi);
+
+// Selmi: invia ordine per la riga corrente
 function inviaOrdineSelmi(){
   var btn = g('ordineConfirm');
   var status = g('ordineStatus');
@@ -601,14 +602,23 @@ function inviaOrdineSelmi(){
   status.textContent = '\u23F3 Connessione a selmispareparts.it...';
   status.style.color = '#1d4ed8';
 
+  var id = currentOrdineRowId;
+  var rowObj = id ? rows.find(function(r){ return r.id===id; }) : null;
+  var item = rowObj && rowObj.selmiData ? Object.assign({}, rowObj.selmiData, {
+    qty: parseInt(gv('qty'+id)||'1', 10) || 1,
+    riferimento: gv('ref'+id)||'',
+    syncrogest: gv('syn'+id)||''
+  }) : null;
+  if(!item){ alert('Errore: dati riga non trovati.'); return; }
+
   var note = g('ordineNote').value.trim();
-  var rifs = selmiPendingItems.map(function(i){ return i.rif||''; }).filter(Boolean);
-  var noteFinale = note || ('Ordine automatico Cesana Service' + (rifs.length ? ' | Rif: ' + rifs.join(', ') : ''));
+  // Informazioni aggiuntive: CODICE + RIFERIMENTO + SYNCROGEST (inseriti automaticamente)
+  var noteFinale = note || [item.codice, item.riferimento, item.syncrogest].filter(Boolean).join(' | ');
 
   fetch(BASE+'/functions/selmiOrdine', {
     method: 'POST',
     headers: hdr(),
-    body: JSON.stringify({ items: selmiPendingItems, note: noteFinale })
+    body: JSON.stringify({ items: [item], note: noteFinale })
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
@@ -619,8 +629,7 @@ function inviaOrdineSelmi(){
       // Chiudi modal dopo 2.5 secondi
       setTimeout(function(){
         g('ordineModal').classList.remove('show');
-        aggiornaBottoneOrdine();
-      }, 2500);
+          }, 2500);
     } else {
       status.textContent = data.error || data.ordine_messaggio || data.messaggio || '❌ Errore durante l\'invio ordine';
       status.style.color = '#dc2626';
