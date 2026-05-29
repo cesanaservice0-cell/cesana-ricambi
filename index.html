@@ -710,16 +710,21 @@ function inviaOrdineOrla(id){
   btn.textContent = '⏳ Invio in corso...';
   btn.style.background = '#6b7280';
 
+  // Prende il codice/descrizione dal risultato trovato, se disponibile
+  var best = rowObj && rowObj._best ? rowObj._best : null;
+  var ricambioDesc = best ? (best.descrizione || best.codice || gv('rcs'+id) || '') : (gv('rcs'+id) || '');
+
   var payload = {
+    action:      'inviaOrla',
     riferimento: gv('ref'+id) || '',
     syncrogest:  gv('syn'+id) || '',
     marca:       gv('mar'+id) || 'Orla',
     modello:     gv('mdo'+id) || '',
-    ricambio:    gv('rcs'+id) || '',
+    ricambio:    ricambioDesc,
     qty:         parseInt(gv('qty'+id)||'1',10)||1
   };
 
-  fetch(BASE+'/functions/orlaOrdine', {
+  fetch(BASE+'/functions/selmiOrdine', {
     method: 'POST',
     headers: {'Content-Type':'application/json','X-Cesana-Key': API_KEY},
     body: JSON.stringify(payload)
