@@ -432,10 +432,20 @@ function mostraRes(id, data, qty){
     });
     h += '</table>';
   } else if(isLF){
-    h = '<div style="padding:10px;background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;font-size:13px;">';
-    h += '<strong style="color:#92400e;">&#128269; LF Ricambi (REPA)</strong><br>';
-    h += '<span style="color:#78350f;">Clicca "Aggiungi al Carrello LF" per fare login e aggiungere il ricambio direttamente al carrello.</span>';
-    h += '</div>';
+    // LF Ricambi: tabella con Codice, Descrizione, Disponibilità, Prezzo
+    h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponibilità</th><th>Prezzo Netto</th><th>Qty</th></tr>';
+    rr.forEach(function(r){
+      var dispNum = parseInt((r.disponibilita||'0').replace(/\D/g,'')) || 0;
+      var dc = dispNum>0 ? '#16a34a' : '#dc2626';
+      var dispTxt = r.disponibilita || (dispNum>0 ? 'Disponibile' : 'Verificare');
+      h += '<tr class="best-row">'+
+           '<td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
+           '<td>'+(r.descrizione||'-')+'</td>'+
+           '<td style="color:'+dc+';font-weight:600">'+dispTxt+'</td>'+
+           '<td style="font-weight:700;color:#0369a1">'+(r.prezzo||'N/D')+'</td>'+
+           '<td style="font-weight:700;color:#10b981;">\u00d7'+qty+'</td></tr>';
+    });
+    h += '</table>';
   } else if(isSama){
     // SuperSama: tabella con Codice, Descrizione, Disponibilità, Prezzo, Fonte
     h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponib.</th><th>Prezzo</th><th>Fonte</th><th>Qty</th></tr>';
