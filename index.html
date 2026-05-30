@@ -395,6 +395,7 @@ function cerca(id, cb){
     if(rr && data.fonte && data.fonte.toLowerCase()==='selmi' && data.best && data.best.idProduct){
       rr.selmiData = Object.assign({}, data.best);
     }
+    if(rr && data.best){ rr._best = Object.assign({}, data.best); }
     disRow(id, false);
     if(cb)cb();
   })
@@ -480,12 +481,9 @@ function mostraRes(id, data, qty){
       '<button class="row-order-btn orla-btn" style="background:#7c3aed;" id="btnOrdOrla'+id+'" onclick="inviaOrdineOrla('+id+')">'+
         '&#9993;&#65039; Invia Ordine Orla</button></div>';
   } else if(isSama || marcaRow==='lf ricambi / supersama' || marcaRow==='lf' || marcaRow==='sama' || marcaRow==='supersama' || marcaRow==='repa'){
-    if(best && best.url){
-      btnArea = '<div class="row-order-area">'+
-        '<a class="row-order-btn" style="background:#7c3aed;text-decoration:none;display:inline-block;padding:8px 16px;" '+
-           'href="'+best.url+'" target="_blank">'+
-           '🛒 Ordina su SuperSama</a></div>';
-    }
+    btnArea = '<div class="row-order-area">'+
+      '<button class="row-order-btn" style="background:#7c3aed;" id="btnOrd'+id+'" onclick="inviaOrdineSuperSama('+id+')">'+
+      '&#128722; Invia Ordine SuperSama</button></div>';
   } else if(marcaRow==='elettrobar'){
     btnArea = '<div class="row-order-area">'+
       '<button class="row-order-btn" style="background:#0ea5e9;" disabled title="Metodo ordine Elettrobar non ancora configurato">'+
@@ -805,6 +803,43 @@ function inviaOrdineOrla(id){
       b.style.background = '#dc2626';
       setTimeout(function(){ b.textContent='✉️ Invia Ordine Orla'; b.style.background='#7c3aed'; b.disabled=false; }, 5000);
     });
+  });
+}
+
+function inviaOrdineSuperSama(id) {
+  var rowObj = rows.find(function(r){ return r.id === id; });
+  if (!rowObj || !rowObj._best) { alert("Nessun risultato SuperSama per questa riga."); return; }
+  var best = rowObj._best;
+  var rif = gv('ref' + id) || '';
+  var syn = gv('syn' + id) || '';
+  var mdo = gv('mdo' + id) || '';
+  var qty = parseInt(gv('qty' + id) || '1') || 1;
+  if (!rif) { alert("Inserisci il RIFERIMENTO prima di inviare l'ordine."); return; }
+  var btn = document.getElementById('btnOrd' + id);
+  if (btn) { btn.disabled = true; btn.textContent = 'Invio in corso...'; }
+  fetch(BASE + '/functions/selmiOrdine', {
+    method: 'POST',
+    headers: hdr(),
+    body: JSON.stringify({
+      action: 'inviaSuperSama',
+      riferimento: rif, syncrogest: syn, modello: mdo,
+      ricambio: best.descrizione || '', codice: best.codice || '',
+      prezzo: best.prezzo || '', qty: qty, url_prodotto: best.url || ''
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if (d.ok) {
+      if (btn) { btn.textContent = 'Ordine inviato!'; btn.style.background = '#16a34a'; }
+      alert("Email ordine inviata a SuperSama (info@supersamastore.it)");
+    } else {
+      if (btn) { btn.disabled = false; btn.textContent = 'Invia Ordine SuperSama'; }
+      alert("Errore: " + (d.error || "Risposta non valida"));
+    }
+  })
+  .catch(function(e){
+    if (btn) { btn.disabled = false; btn.textContent = 'Invia Ordine SuperSama'; }
+    alert("Errore di rete: " + e.message);
   });
 }
 
