@@ -221,7 +221,7 @@ function addRow(){
       '<div><div class="lbl">Syncrogest</div>'+
         '<input class="inp" id="syn'+id+'" placeholder="SG-001"></div>'+
       '<div><div class="lbl">Marca</div>'+
-        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Orla">'+
+        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Orla / LF Ricambi">'+
         '<datalist id="lmar'+id+'"></datalist></div>'+
       '<div><div class="lbl">Modello</div>'+
         '<input class="inp" id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441 CDE">'+
@@ -415,6 +415,7 @@ function mostraRes(id, data, qty){
   var fonte = (data.fonte||'').toLowerCase();
   var isOrla = fonte==='verzolla';
   var isSelmi = fonte==='selmi';
+  var isSama = fonte==='supersama';
   var h = '';
 
   if(isOrla){
@@ -425,6 +426,21 @@ function mostraRes(id, data, qty){
            '<td>'+(r.descrizione||'-')+'</td>'+
            '<td style="color:'+dc+';font-weight:600">'+(r.disponibilita||'-')+'</td>'+
            '<td style="font-weight:700">'+(r.prezzo||'N/D')+'</td>'+
+           '<td style="font-weight:700;color:#10b981;">×'+qty+'</td></tr>';
+    });
+    h += '</table>';
+  } else if(isSama){
+    // SuperSama: tabella con Codice, Descrizione, Disponibilità, Prezzo, Fonte
+    h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponib.</th><th>Prezzo</th><th>Fonte</th><th>Qty</th></tr>';
+    rr.forEach(function(r){
+      var dc = r.disponibile!==false ? '#16a34a' : '#dc2626';
+      var dispTxt = r.disponibile!==false ? 'Disponibile' : 'Non disp.';
+      h += '<tr class="best-row">'+
+           '<td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
+           '<td>'+(r.descrizione||'-')+'</td>'+
+           '<td style="color:'+dc+';font-weight:600">'+dispTxt+'</td>'+
+           '<td style="font-weight:700;color:#1d4ed8">'+(r.prezzo||'N/D')+'</td>'+
+           '<td><a href="'+(r.url||'#')+'" target="_blank" style="color:#7c3aed;font-weight:600;font-size:11px">🔗 SuperSama</a></td>'+
            '<td style="font-weight:700;color:#10b981;">×'+qty+'</td></tr>';
     });
     h += '</table>';
@@ -463,6 +479,13 @@ function mostraRes(id, data, qty){
     btnArea = '<div class="row-order-area">'+
       '<button class="row-order-btn orla-btn" style="background:#7c3aed;" id="btnOrdOrla'+id+'" onclick="inviaOrdineOrla('+id+')">'+
         '&#9993;&#65039; Invia Ordine Orla</button></div>';
+  } else if(isSama || marcaRow==='lf ricambi / supersama' || marcaRow==='lf' || marcaRow==='sama' || marcaRow==='supersama' || marcaRow==='repa'){
+    if(best && best.url){
+      btnArea = '<div class="row-order-area">'+
+        '<a class="row-order-btn" style="background:#7c3aed;text-decoration:none;display:inline-block;padding:8px 16px;" '+
+           'href="'+best.url+'" target="_blank">'+
+           '🛒 Ordina su SuperSama</a></div>';
+    }
   } else if(marcaRow==='elettrobar'){
     btnArea = '<div class="row-order-area">'+
       '<button class="row-order-btn" style="background:#0ea5e9;" disabled title="Metodo ordine Elettrobar non ancora configurato">'+
@@ -486,6 +509,10 @@ function salva(m, mo, r){
 }
 
 function loadSugg(){
+  // Marche hardcoded sempre presenti
+  ['Elettrobar','Selmi','Orla','LF Ricambi / SuperSama'].forEach(function(nome){
+    if(!mrc.find(function(x){return(x.nome||x)===nome;})) mrc.push({nome:nome});
+  });
   function get(ent, arr){
     fetch(BASE+'/api/apps/'+AID+'/entities/'+ent+'?limit=500')
     .then(function(r){return r.json();})
