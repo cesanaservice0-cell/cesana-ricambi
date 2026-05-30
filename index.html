@@ -221,7 +221,7 @@ function addRow(){
       '<div><div class="lbl">Syncrogest</div>'+
         '<input class="inp" id="syn'+id+'" placeholder="SG-001"></div>'+
       '<div><div class="lbl">Marca</div>'+
-        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Orla / LF Ricambi">'+
+        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Selmi / Orla / LF / SuperSama">'+
         '<datalist id="lmar'+id+'"></datalist></div>'+
       '<div><div class="lbl">Modello</div>'+
         '<input class="inp" id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441 CDE">'+
@@ -417,6 +417,7 @@ function mostraRes(id, data, qty){
   var isOrla = fonte==='verzolla';
   var isSelmi = fonte==='selmi';
   var isSama = fonte==='supersama';
+  var isLF = fonte==='lf ricambi' || data.lfMode===true;
   var h = '';
 
   if(isOrla){
@@ -430,6 +431,11 @@ function mostraRes(id, data, qty){
            '<td style="font-weight:700;color:#10b981;">×'+qty+'</td></tr>';
     });
     h += '</table>';
+  } else if(isLF){
+    h = '<div style="padding:10px;background:#fef3c7;border:1px solid #f59e0b;border-radius:6px;font-size:13px;">';
+    h += '<strong style="color:#92400e;">&#128269; LF Ricambi (REPA)</strong><br>';
+    h += '<span style="color:#78350f;">Clicca "Aggiungi al Carrello LF" per fare login e aggiungere il ricambio direttamente al carrello.</span>';
+    h += '</div>';
   } else if(isSama){
     // SuperSama: tabella con Codice, Descrizione, Disponibilità, Prezzo, Fonte
     h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponib.</th><th>Prezzo</th><th>Fonte</th><th>Qty</th></tr>';
@@ -480,7 +486,11 @@ function mostraRes(id, data, qty){
     btnArea = '<div class="row-order-area">'+
       '<button class="row-order-btn orla-btn" style="background:#7c3aed;" id="btnOrdOrla'+id+'" onclick="inviaOrdineOrla('+id+')">'+
         '&#9993;&#65039; Invia Ordine Orla</button></div>';
-  } else if(isSama || marcaRow==='lf ricambi / supersama' || marcaRow==='lf' || marcaRow==='sama' || marcaRow==='supersama' || marcaRow==='repa'){
+  } else if(isLF || marcaRow==='lf' || marcaRow==='lf ricambi' || marcaRow==='repa' || marcaRow==='lf ricambi / repa'){
+    btnArea = '<div class="row-order-area">'+
+      '<button class="row-order-btn" style="background:#0369a1;" id="btnOrd'+id+'" onclick="aggiungiCarrelloLF('+id+')">'+
+      '&#128722; Aggiungi al Carrello LF</button></div>';
+  } else if(isSama || marcaRow==='supersama' || marcaRow==='sama' || marcaRow==='super sama'){
     btnArea = '<div class="row-order-area">'+
       '<button class="row-order-btn" style="background:#7c3aed;" id="btnOrd'+id+'" onclick="inviaOrdineSuperSama('+id+')">'+
       '&#128722; Invia Ordine SuperSama</button></div>';
@@ -508,7 +518,7 @@ function salva(m, mo, r){
 
 function loadSugg(){
   // Marche hardcoded sempre presenti
-  ['Elettrobar','Selmi','Orla','LF Ricambi / SuperSama'].forEach(function(nome){
+  ['Elettrobar','Selmi','Orla','LF Ricambi / REPA','SuperSama'].forEach(function(nome){
     if(!mrc.find(function(x){return(x.nome||x)===nome;})) mrc.push({nome:nome});
   });
   function get(ent, arr){
