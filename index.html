@@ -93,6 +93,14 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
 .btn-confirm:hover{background:#047857;}
 .btn-confirm:disabled{opacity:.5;cursor:not-allowed;}
 
+
+.foto-area{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;}
+.foto-thumb{width:52px;height:52px;object-fit:cover;border-radius:6px;border:1px solid #334155;cursor:pointer;}
+.foto-add{width:52px;height:52px;border-radius:6px;border:2px dashed #475569;background:#1e293b;color:#94a3b8;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s;}
+.foto-add:hover{border-color:#7c3aed;color:#a78bfa;}
+.foto-label{font-size:10px;color:#64748b;margin-top:2px;}
+.lbl.orange{color:#fb923c;font-weight:700;}
+.inp.codlf{font-family:monospace;font-size:12px;letter-spacing:1px;}
 </style>
 </head>
 <body>
@@ -237,11 +245,18 @@ function addRow(){
       '<div><div class="lbl">Ricambio cercato</div>'+
         '<input class="inp" id="rcs'+id+'" list="lrcs'+id+'" placeholder="es. resistenza vasca, pompa lavaggio, scheda...">'+
         '<datalist id="lrcs'+id+'"></datalist></div>'+
+      '<div><div class="lbl orange">&#128246; Codice LF/REPA (opz.)</div>'+
+        '<input class="inp codlf" id="clf'+id+'" placeholder="es. 5164351 — ricerca diretta per codice"></div>'+
       '<div>'+
         '<div class="slbl" id="slbl'+id+'" style="color:#94a3b8;">&#9744; In attesa</div>'+
         '<div class="pw"><div class="pb" id="pb'+id+'" style="width:0%;background:#e2e8f0;"></div></div>'+
       '</div>'+
       '<div></div>'+
+    '</div>'+
+    '<div class="foto-area" id="fotos'+id+'">'+
+      '<label class="foto-add" title="Aggiungi foto ricambio (max 3)" onclick="addFoto('+id+')">&#128247;</label>'+
+      '<span class="foto-label">Foto ricambio (max 3)</span>'+
+      '<input type="file" id="finp'+id+'" accept="image/*" style="display:none" multiple onchange="handleFoto('+id+',this)">'+
     '</div>'+
     '<div class="rres" id="res'+id+'"></div>';
 
@@ -355,9 +370,15 @@ function cerca(id, cb){
   var rc        = gv('rcs'+id);
   var rif       = gv('ref'+id);
   var syn       = gv('syn'+id);
+  var codiceLF  = gv('clf'+id);  // codice diretto LF/REPA
 
-  if(!marca||!modello||!rc){
-    setStato(id,'err','Compila Marca, Modello, Ricambio',100);
+  // Per LF/REPA: se c'è codice diretto, non serve descrizione
+  var marcaLow = (marca||'').toLowerCase();
+  var isLFMarca = marcaLow==='lf' || marcaLow==='lf ricambi' || marcaLow==='repa' || marcaLow==='lf ricambi / repa';
+  var rcOk = rc || (isLFMarca && codiceLF);
+
+  if(!marca||!modello||!rcOk){
+    setStato(id,'err','Compila Marca, Modello, Ricambio (o Codice LF)',100);
     if(cb)cb(); return;
   }
 
@@ -377,9 +398,11 @@ function cerca(id, cb){
       marca: marca,
       modello: modello,
       matricola: matricola||'',
-      ricambio: rc,
+      ricambio: rc || codiceLF,
+      codice_lf: codiceLF||'',
       richiesta_da: rif||'Cesana Service',
-      syncrogest: syn||''
+      syncrogest: syn||'',
+      foto_base64: (rows.find(function(x){return x.id===id;})||{}).foto_base64||[]
     })
   })
   .then(function(r){
@@ -411,7 +434,12 @@ function mostraRes(id, data, qty){
   el.style.display = 'block';
   var best = data.best || (data.risultati && data.risultati[0]) || null;
   var rr = best ? [best] : [];
-  if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato</div>'; return; }
+  if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato trovato.</div>'; return; }
+  // REGOLA: prezzo SEMPRE visibile — se N/D mostra info
+  rr = rr.map(function(r){
+    if(!r.prezzo || r.prezzo==='N/D' || r.prezzo==='') r.prezzo = 'Vedere portale fornitore';
+    return r;
+  });
 
   var fonte = (data.fonte||'').toLowerCase();
   var isOrla = fonte==='verzolla';
@@ -902,6 +930,64 @@ function aggiungiCarrelloLF(id) {
   });
 }
 
+
+// ── GESTIONE FOTO ─────────────────────────────────────────────────────────────
+function addFoto(id){
+  var inp = document.getElementById('finp'+id);
+  if(inp) inp.click();
+}
+function handleFoto(id, inp){
+  var files = Array.from(inp.files||[]);
+  var rowObj = rows.find(function(r){ return r.id===id; });
+  if(!rowObj) return;
+  if(!rowObj.foto_base64) rowObj.foto_base64 = [];
+  if(!rowObj.foto_urls)   rowObj.foto_urls   = [];
+  var slot = 3 - rowObj.foto_base64.length;
+  if(slot<=0){ alert('Massimo 3 foto per riga.'); inp.value=''; return; }
+  files.slice(0, slot).forEach(function(f){
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var b64 = ev.target.result; // data:image/...;base64,...
+      rowObj.foto_base64.push(b64);
+      rowObj.foto_urls.push(b64);
+      renderFoto(id);
+    };
+    reader.readAsDataURL(f);
+  });
+  inp.value = '';
+}
+function renderFoto(id){
+  var area = document.getElementById('fotos'+id);
+  if(!area) return;
+  var rowObj = rows.find(function(r){ return r.id===id; });
+  if(!rowObj) return;
+  var urls = rowObj.foto_urls||[];
+  var h = '';
+  urls.forEach(function(u, i){
+    h += '<div style="position:relative;display:inline-block;">' +
+         '<img src="'+u+'" class="foto-thumb" onclick="viewFoto(''+encodeURIComponent(u)+'')">' +
+         '<span onclick="removeFoto('+id+','+i+')" style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:16px;">&#215;</span>' +
+         '</div>';
+  });
+  if(urls.length<3){
+    h += '<label class="foto-add" title="Aggiungi foto (max 3)" onclick="addFoto('+id+')">&#128247;</label>';
+  }
+  h += '<span class="foto-label">'+urls.length+'/3 foto</span>';
+  h += '<input type="file" id="finp'+id+'" accept="image/*" style="display:none" multiple onchange="handleFoto('+id+',this)">';
+  area.innerHTML = h;
+}
+function removeFoto(id, idx){
+  var rowObj = rows.find(function(r){ return r.id===id; });
+  if(!rowObj) return;
+  rowObj.foto_base64.splice(idx,1);
+  rowObj.foto_urls.splice(idx,1);
+  renderFoto(id);
+}
+function viewFoto(enc){
+  var url = decodeURIComponent(enc);
+  var w = window.open('','_blank');
+  w.document.write('<body style="margin:0;background:#000"><img src="'+url+'" style="max-width:100%;max-height:100vh;display:block;margin:auto"></body>');
+}
 </script>
 </body>
 </html>
