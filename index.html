@@ -853,6 +853,45 @@ function inviaOrdineSuperSama(id) {
   });
 }
 
+function aggiungiCarrelloLF(id) {
+  var rowObj = rows.find(function(r){ return r.id === id; });
+  var rif = gv('ref' + id) || '';
+  var mdo = gv('mdo' + id) || '';
+  var rcs = gv('rcs' + id) || '';
+  var qty = parseInt(gv('qty' + id) || '1') || 1;
+  var codice = (rowObj && rowObj._best && rowObj._best.codice) ? rowObj._best.codice : rcs;
+  if (!codice) { alert('Inserisci il codice ricambio prima di aggiungere al carrello.'); return; }
+  var btn = document.getElementById('btnOrd' + id);
+  if (btn) { btn.disabled = true; btn.textContent = 'Aggiunta in corso...'; }
+  fetch(BASE + '/functions/lfOrdine', {
+    method: 'POST',
+    headers: hdr(),
+    body: JSON.stringify({ codice: codice, qty: qty, riferimento: rif, modello: mdo })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if (d.ok) {
+      if (btn) { btn.textContent = 'Apri Carrello LF'; btn.style.background = '#16a34a'; btn.disabled = false; }
+      btn.onclick = function(){ window.open(d.carrelloUrl, '_blank'); };
+      alert('Prodotto aggiunto al carrello LF!\nClicca "Apri Carrello LF" per completare l\'acquisto.');
+    } else {
+      if (btn) { btn.disabled = false; btn.textContent = 'Aggiungi al Carrello LF'; }
+      var url = d.prodottoUrl || d.fallbackUrl || d.carrelloUrl || '';
+      if (url) {
+        if (confirm('Aggiunta automatica non riuscita.\nVuoi aprire LF Ricambi manualmente?')) {
+          window.open(url, '_blank');
+        }
+      } else {
+        alert('Errore: ' + (d.error || 'Impossibile aggiungere al carrello'));
+      }
+    }
+  })
+  .catch(function(e){
+    if (btn) { btn.disabled = false; btn.textContent = 'Aggiungi al Carrello LF'; }
+    alert('Errore di rete: ' + e.message);
+  });
+}
+
 </script>
 </body>
 </html>
