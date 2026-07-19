@@ -97,6 +97,7 @@ tr:hover{background:#f8fafc;}
 <button id="tT" onclick="tab('T')">&#128172; Chat</button>
 <button id="tF" onclick="tab('F')">&#127981; Fornitori</button>
 <button id="tM" onclick="tab('M')">&#9993; Mail Standard</button>
+<button id="tE" onclick="tab('E')">&#128230; Email Ricambi</button>
 </div>
 </header>
 <main>
@@ -218,6 +219,20 @@ tr:hover{background:#f8fafc;}
 <div id="mailStatus" style="margin-top:10px;"></div>
 </div>
 </div>
+<div id="TE" style="display:none;">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+<h3 class="section-title" style="margin:0;">&#128230; Email Ricambi per Fornitore</h3>
+<div style="display:flex;gap:8px;align-items:center;">
+<span id="emailLastUpdate" style="font-size:11px;color:var(--slate);"></span>
+<button class="btn btn-blue" id="btnRefreshEmail" style="font-size:12px;padding:6px 12px;">&#128260; Aggiorna</button>
+</div>
+</div>
+<p style="font-size:13px;color:var(--slate);margin-bottom:14px;">Tutte le email della casella ricambi, divise per fornitore. Si aggiornano automaticamente. Escluse le email Iperal.</p>
+<input id="emailFilter" placeholder="Filtra per oggetto, mittente..." style="max-width:350px;margin-bottom:14px;" oninput="renderEmails()">
+<div id="emailList">Caricamento...</div>
+</div>
+</div>
 <div id="TT" style="display:none;">
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
@@ -275,14 +290,14 @@ function fmtDate(d){return d?new Date(d).toLocaleString('it-IT',{day:'2-digit',m
 
 // Tab navigation
 function tab(t){
-['TR','TS','TC','TT','TF','TM'].forEach(function(s){g(s).style.display='none';});
-['tR','tS','tC','tT','tF','tM'].forEach(function(b){g(b).className='';});
+['TR','TS','TC','TT','TF','TM','TE'].forEach(function(s){g(s).style.display='none';});
+['tR','tS','tC','tT','tF','tM','tE'].forEach(function(b){g(b).className='';});
 g('T'+t).style.display='block';
 g('t'+t).className='on';
 if(t==='S')loadSt();
 if(t==='C')loadContatti();
 if(t==='T')loadChat();
-if(t==='F')loadFornitori();if(t==='M')loadMailLayout();
+if(t==='F')loadFornitori();if(t==='M')loadMailLayout();if(t==='E')loadEmailRicambi();
 }
 
 // === RICERCA ===
@@ -673,6 +688,61 @@ g('prevCorpo').innerHTML=corpo||'<em style="color:var(--slate);">Vuoto</em>';
 g('prevFirma').innerHTML=firma||'<em style="color:var(--slate);">Vuoto</em>';
 }
 
+// === EMAIL RICAMBI ===
+var emailData=[];
+var emailGrouped={};
+var emailFornitori=[];
+var emailTimer=null;
+
+function loadEmailRicambi(){
+g('emailList').innerHTML='<div class="empty">Caricamento...</div>';
+fetch(BASE+'/functions/dashboardApi?action=list_email_ricambi').then(function(r){return r.json();}).then(function(d){
+if(d.ok){
+emailData=d.emails||[];
+emailGrouped=d.grouped||{};
+emailFornitori=d.fornitori||[];
+g('emailLastUpdate').textContent='Ultimo agg: '+new Date().toLocaleTimeString('it-IT');
+renderEmails();
+}else{
+g('emailList').innerHTML='<div class="empty">Errore caricamento.</div>';
+}
+}).catch(function(e){g('emailList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
+// Auto-refresh every 60s
+if(emailTimer)clearInterval(emailTimer);
+emailTimer=setInterval(loadEmailRicambi,60000);
+}
+
+function renderEmails(){
+var filter=(g('emailFilter').value||'').toLowerCase();
+if(!emailFornitori.length){g('emailList').innerHTML='<div class="empty">Nessuna email.</div>';return;}
+var h='';
+emailFornitori.forEach(function(f){
+var emails=emailGrouped[f]||[];
+var filtered=filter?emails.filter(function(e){
+return(e.subject||'').toLowerCase().indexOf(filter)>-1||(e.from_name||'').toLowerCase().indexOf(filter)>-1||(e.from_email||'').toLowerCase().indexOf(filter)>-1;
+}):emails;
+if(!filtered.length)return;
+h+='<div style="margin-bottom:16px;">';
+h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding:8px 12px;background:var(--blue-l);border-radius:8px;">';
+h+='<div style="font-weight:700;font-size:14px;color:var(--blue);">'+esc(f)+'</div>';
+h+='<span style="font-size:12px;color:var(--slate);">'+filtered.length+' email</span>';
+h+='</div>';
+filtered.forEach(function(e){
+var dt=new Date(e.received_date||'').toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+var att=e.has_attachments?'<span style="color:var(--blue);font-size:14px;" title="Allegati">&#128206;</span> ':'';
+h+='<div style="display:flex;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;background:#fff;">';
+h+='<div style="flex:1;min-width:0;">';
+h+='<div style="font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+att+esc(e.subject||'(senza oggetto)')+'</div>';
+h+='<div style="font-size:11px;color:var(--slate);margin-top:2px;">Da: '+esc(e.from_name||e.from_email||'?')+' &middot; '+esc(dt)+'</div>';
+h+='<div style="font-size:12px;color:var(--slate);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc((e.body_preview||'').substring(0,120))+'</div>';
+h+='</div>';
+h+='</div>';
+});
+h+='</div>';
+});
+g('emailList').innerHTML=h||'<div class="empty">Nessuna email trovata.</div>';
+}
+
 // === CHAT ===
 function loadChat(){
 g('chatList').innerHTML='<div class="empty">Caricamento...</div>';
@@ -789,6 +859,7 @@ g('btnAdd').addEventListener('click',addRow);
 g('btnStart').addEventListener('click',avvia);
 g('btnReset').addEventListener('click',reset);
 g('btnAddTec').addEventListener('click',function(){showTecForm();g('tecRuolo').value='tecnico';});
+g('btnRefreshEmail')&&g('btnRefreshEmail').addEventListener('click',loadEmailRicambi);
 g('btnSaveMail')&&g('btnSaveMail').addEventListener('click',saveMailLayout);
 g('btnLoadMail')&&g('btnLoadMail').addEventListener('click',loadMailLayout);
 g('btnPreviewMail')&&g('btnPreviewMail').addEventListener('click',previewMail);
