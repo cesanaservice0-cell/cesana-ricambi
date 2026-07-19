@@ -107,11 +107,12 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
 <header>
   <div>
     <h1>&#128295; Cesana Service</h1>
-    <sub>Ricerca Ricambi — v7</sub>
+    <sub>Ricerca Ricambi — v8</sub>
   </div>
   <div class="nav">
     <button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
     <button id="tS" onclick="tab('S')">&#128203; Storico</button>
+    <button id="tC" onclick="tab('C')">&#128222; Contatti</button>
   </div>
 </header>
 
@@ -184,6 +185,40 @@ table.rt tr:nth-child(even) td{background:#f8fafc;}
     </div>
   </div>
 </div>
+<div id="TC" style="display:none">
+  <div class="bar"><div class="barl"><h3>&#128222; Contatti WhatsApp</h3></div></div>
+  
+  <div style="max-width:800px;margin:20px auto;padding:0 16px;">
+    
+    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
+      <h4 style="color:#1e3a8a;margin-bottom:12px;font-size:15px;">&#127970; Ufficio Cesana (fissi)</h4>
+      <div id="ufficioList" style="display:grid;gap:8px;"></div>
+    </div>
+    
+    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h4 style="color:#1e3a8a;font-size:15px;">&#128736; Tecnici (gestione)</h4>
+        <button id="btnAddTec" style="background:#6366f1;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">+ Aggiungi tecnico</button>
+      </div>
+      <div id="tecList" style="display:grid;gap:8px;"></div>
+    </div>
+    
+    <div id="tecForm" style="display:none;background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);border:2px solid #6366f1;">
+      <h4 style="color:#1e3a8a;margin-bottom:12px;font-size:15px;" id="tecFormTitle">Nuovo tecnico</h4>
+      <div style="display:grid;gap:10px;">
+        <input id="tecNome" placeholder="Nome completo" style="padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;">
+        <input id="tecUid" placeholder="Syncrogest UID (es. 5378)" style="padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;">
+        <input id="tecWhatsapp" placeholder="WhatsApp (es. +393331234567)" style="padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;">
+        <div style="display:flex;gap:8px;">
+          <button id="btnSaveTec" style="background:#10b981;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">Salva</button>
+          <button id="btnCancelTec" style="background:#e5e7eb;color:#333;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;">Annulla</button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
 </main>
 
 <script>
@@ -210,9 +245,12 @@ addRow(); // Parte con una riga già pronta
 function tab(t){
   g('TR').style.display = t==='R' ? 'block' : 'none';
   g('TS').style.display = t==='S' ? 'block' : 'none';
+  g('TC').style.display = t==='C' ? 'block' : 'none';
   g('tR').className = t==='R' ? 'on' : '';
   g('tS').className = t==='S' ? 'on' : '';
+  g('tC').className = t==='C' ? 'on' : '';
   if(t==='S') loadSt();
+  if(t==='C') loadContatti();
 }
 
 function addRow(){
@@ -988,6 +1026,128 @@ function viewFoto(enc){
   var w = window.open('','_blank');
   w.document.write('<body style="margin:0;background:#000"><img src="'+url+'" style="max-width:100%;max-height:100vh;display:block;margin:auto"></body>');
 }
+
+// ── TAB CONTATTI ─────────────────────────────────────────────────────────────
+var editingTecId = null;
+var ufficioContacts = [
+  {nome:'Paola', whatsapp:'+39 375 875 6949', ruolo:'Approvazione ordini >100€'},
+  {nome:'Sara', whatsapp:'+39 345 148 5097', ruolo:'Alert pagamento anticipato'}
+];
+
+function loadContatti(){
+  renderUfficio();
+  loadTecnici();
+}
+
+function renderUfficio(){
+  var h = '';
+  ufficioContacts.forEach(function(c){
+    h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f8fafc;border-radius:8px;">';
+    h += '<div><span style="font-weight:600;color:#1e3a8a;">'+c.nome+'</span>';
+    h += '<span style="color:#64748b;margin-left:8px;font-size:12px;">('+c.ruolo+')</span></div>';
+    h += '<span style="font-family:monospace;font-size:14px;color:#10b981;">'+c.whatsapp+'</span>';
+    h += '</div>';
+  });
+  g('ufficioList').innerHTML = h;
+}
+
+function loadTecnici(){
+  g('tecList').innerHTML = '<div style="color:#64748b;padding:12px;">Caricamento...</div>';
+  fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico?limit=100')
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var list = Array.isArray(d)?d:(d.records||[]);
+    renderTecnici(list);
+  })
+  .catch(function(e){
+    g('tecList').innerHTML = '<div style="color:#ef4444;padding:12px;">Errore: '+e.message+'</div>';
+  });
+}
+
+function renderTecnici(list){
+  if(!list.length){
+    g('tecList').innerHTML = '<div style="color:#64748b;padding:12px;">Nessun tecnico. Clicca "Aggiungi tecnico" per inserirne uno.</div>';
+    return;
+  }
+  var h = '';
+  list.forEach(function(t){
+    var wa = t.whatsapp_number || '<span style="color:#ef4444;">❌ mancante</span>';
+    h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f8fafc;border-radius:8px;">';
+    h += '<div>';
+    h += '<span style="font-weight:600;">'+(t.nome||'senza nome')+'</span>';
+    if(t.syncrogest_uid) h += '<span style="color:#64748b;margin-left:8px;font-size:12px;">UID: '+t.syncrogest_uid+'</span>';
+    h += '</div>';
+    h += '<div style="display:flex;align-items:center;gap:8px;">';
+    h += '<span style="font-family:monospace;font-size:14px;">'+wa+'</span>';
+    h += '<button onclick="editTec(\''+t.id+'\','+JSON.stringify(t.nome||'').replace(/"/g,'&quot;')+',\''+(t.syncrogest_uid||'')+'\','+JSON.stringify(t.whatsapp_number||'').replace(/"/g,'&quot;')+')" style="background:#e5e7eb;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;">✏️</button>';
+    h += '<button onclick="delTec(\''+t.id+'\','+JSON.stringify(t.nome||'').replace(/"/g,'&quot;')+')" style="background:#fee2e2;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;">🗑️</button>';
+    h += '</div>';
+    h += '</div>';
+  });
+  g('tecList').innerHTML = h;
+}
+
+function showTecForm(){
+  g('tecForm').style.display = 'block';
+  g('tecFormTitle').textContent = 'Nuovo tecnico';
+  g('tecNome').value = '';
+  g('tecUid').value = '';
+  g('tecWhatsapp').value = '';
+  editingTecId = null;
+}
+
+function editTec(id, nome, uid, wa){
+  g('tecForm').style.display = 'block';
+  g('tecFormTitle').textContent = 'Modifica tecnico';
+  g('tecNome').value = nome;
+  g('tecUid').value = uid;
+  g('tecWhatsapp').value = wa;
+  editingTecId = id;
+  g('tecForm').scrollIntoView({behavior:'smooth'});
+}
+
+function saveTec(){
+  var nome = gv('tecNome').trim();
+  var uid = gv('tecUid').trim();
+  var wa = gv('tecWhatsapp').trim();
+  if(!nome){ alert('Inserisci il nome'); return; }
+  
+  var body = {nome:nome, syncrogest_uid:uid, whatsapp_number:wa};
+  var url = BASE+'/api/apps/'+AID+'/entities/Tecnico';
+  var method = 'POST';
+  
+  if(editingTecId){
+    url += '/'+editingTecId;
+    method = 'PUT';
+  }
+  
+  fetch(url, {
+    method: method,
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  })
+  .then(function(r){return r.json();})
+  .then(function(){
+    g('tecForm').style.display = 'none';
+    loadTecnici();
+  })
+  .catch(function(e){ alert('Errore: '+e.message); });
+}
+
+function delTec(id, nome){
+  if(!confirm('Eliminare il tecnico "'+nome+'"?')) return;
+  fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico/'+id, {
+    method: 'DELETE',
+    headers: {'Content-Type':'application/json'}
+  })
+  .then(function(){ loadTecnici(); })
+  .catch(function(e){ alert('Errore: '+e.message); });
+}
+
+document.getElementById('btnAddTec').addEventListener('click', showTecForm);
+document.getElementById('btnSaveTec').addEventListener('click', saveTec);
+document.getElementById('btnCancelTec').addEventListener('click', function(){ g('tecForm').style.display='none'; });
+
 </script>
 </body>
 </html>
