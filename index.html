@@ -13,7 +13,7 @@ header .logo{display:flex;align-items:center;gap:12px;}
 header h1{font-size:20px;font-weight:700;}
 header .logo span{font-size:28px;}
 header sub{font-size:11px;opacity:.8;display:block;margin-top:2px;}
-.nav{display:flex;gap:4px;margin-top:14px;}
+.nav{display:flex;gap:4px;margin-top:14px;flex-wrap:wrap;}
 .nav button{background:rgba(255,255,255,.1);color:#fff;border:none;padding:10px 18px;border-radius:8px 8px 0 0;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s;}
 .nav button:hover{background:rgba(255,255,255,.2);}
 .nav button.on{background:var(--bg);color:#1e3a8a;}
@@ -21,35 +21,32 @@ main{padding:20px 24px;max-width:1400px;margin:0 auto;}
 .card{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--border);}
 .section-title{font-size:16px;font-weight:700;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 .btn{padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;}
-.btn-blue{background:var(--blue-l);color:#fff;}.btn-blue:hover{background:#2563eb;}
-.btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#15803d;}
-.btn-red{background:var(--red);color:#fff;}.btn-red:hover{background:#b91c1c;}
-.btn-gray{background:#e5e7eb;color:#374151;}.btn-gray:hover{background:#d1d5db;}
-.btn-purple{background:var(--purple);color:#fff;}.btn-purple:hover{background:#6d28d9;}
+.btn-blue{background:var(--blue-l);color:#fff;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-gray{background:#e5e7eb;color:#374151;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-input,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border .15s;}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;}
 input:focus{border-color:var(--blue-l);box-shadow:0 0 0 3px rgba(59,130,246,.15);}
 table{width:100%;border-collapse:collapse;font-size:13px;}
-th{text-align:left;padding:10px 12px;background:#f8fafc;border-bottom:2px solid var(--border);color:var(--slate);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.5px;}
+th{text-align:left;padding:10px 12px;background:#f8fafc;border-bottom:2px solid var(--border);color:var(--slate);font-weight:600;text-transform:uppercase;font-size:11px;}
 td{padding:10px 12px;border-bottom:1px solid var(--border);}
 tr:hover{background:#f8fafc;}
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
 .badge-ok{background:#dcfce7;color:var(--green);}
 .badge-wait{background:#fef3c7;color:var(--amber);}
 .badge-err{background:#fee2e2;color:var(--red);}
-.badge-run{background:#dbeafe;color:var(--blue-l);}
 .empty{text-align:center;padding:40px;color:var(--slate-l);font-size:14px;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid #dbeafe;border-top-color:var(--blue-l);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.rrow{border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);background:#fff;transition:all .2s;}
+.rrow{border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);background:#fff;}
 .bg-wait{border-left:4px solid var(--slate-l);}
 .bg-queue{border-left:4px solid var(--amber);background:#fffbeb;}
 .bg-run{border-left:4px solid var(--blue-l);background:#eff6ff;}
 .bg-ok{border-left:4px solid var(--green);background:#f0fdf4;}
 .bg-err{border-left:4px solid var(--red);background:#fef2f2;}
 .lbl{font-size:10px;color:var(--slate);font-weight:600;text-transform:uppercase;margin-bottom:3px;}
-.rA{display:grid;grid-template-columns:40px 1fr 120px 1fr 1fr 140px 60px 36px;gap:8px;align-items:end;}
-.rB{display:grid;grid-template-columns:40px 1fr 1fr 200px 60px;gap:8px;margin-top:8px;align-items:end;}
+.rA{display:grid;grid-template-columns:40px 1fr 120px 1fr 1fr 80px 36px;gap:8px;align-items:end;}
+.rB{display:grid;grid-template-columns:1fr 1fr 200px 60px;gap:8px;margin-top:8px;align-items:end;}
 .numcol{font-size:18px;font-weight:700;color:var(--slate-l);padding-top:8px;}
 .del{background:#fee2e2;color:var(--red);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;font-weight:700;}
 .del:hover{background:var(--red);color:#fff;}
@@ -58,10 +55,7 @@ tr:hover{background:#f8fafc;}
 .rres{margin-top:10px;display:none;}
 .rt{width:100%;font-size:12px;margin-top:4px;}
 .rt th{font-size:10px;}
-.star{color:var(--amber);}
 .best-row{background:#eff6ff;}
-.row-order-area{margin-top:10px;text-align:right;}
-.row-order-btn{padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;}
 .foto-area{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
 .foto-add{font-size:24px;cursor:pointer;padding:4px 10px;border:2px dashed var(--border);border-radius:8px;background:#f8fafc;}
 .foto-label{font-size:11px;color:var(--slate);}
@@ -76,16 +70,16 @@ tr:hover{background:#f8fafc;}
 .chat-msg.sent .chat-bubble{background:var(--blue-l);color:#fff;border-bottom-right-radius:4px;}
 .chat-msg.received .chat-bubble{background:#f1f5f9;color:#1e293b;border-bottom-left-radius:4px;}
 .chat-meta{font-size:10px;color:var(--slate-l);margin-top:4px;}
-.contact-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border);margin-bottom:6px;transition:all .15s;}
+.contact-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border);margin-bottom:6px;}
 .contact-row:hover{border-color:var(--blue-l);}
 .contact-info{display:flex;align-items:center;gap:10px;}
-.contact-avatar{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
+.contact-avatar{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
 .contact-phone{font-family:monospace;font-size:14px;color:var(--green);font-weight:600;}
 .contact-phone.missing{color:var(--red);}
 .contact-actions{display:flex;gap:4px;}
-.contact-actions button{padding:6px 8px;border:none;border-radius:6px;cursor:pointer;font-size:14px;background:#e5e7eb;}
+.contact-actions button{padding:6px 8px;border:none;border-radius:6px;cursor:pointer;font-size:13px;background:#e5e7eb;color:#374151;}
 .contact-actions button:hover{background:#d1d5db;}
-.contact-actions .del-btn{background:#fee2e2;}
+.contact-actions .del-btn{background:#fee2e2;color:var(--red);}
 .contact-actions .del-btn:hover{background:var(--red);color:#fff;}
 .form-group{margin-bottom:12px;}
 .form-group label{display:block;font-size:12px;font-weight:600;color:var(--slate);margin-bottom:4px;}
@@ -95,13 +89,13 @@ tr:hover{background:#f8fafc;}
 </head>
 <body>
 <header>
-<div class="logo"><span>🔧</span><div><h1>Cesana Service</h1><sub>Gaetano — Ricerca & Ordine Ricambi v10</sub></div></div>
+<div class="logo"><span>&#128295;</span><div><h1>Cesana Service</h1><sub>Gaetano - Ricerca &amp; Ordine Ricambi v11</sub></div></div>
 <div class="nav">
-<button class="on" id="tR" onclick="tab('R')">🔍 Ricerca</button>
-<button id="tS" onclick="tab('S')">📋 Storico</button>
-<button id="tC" onclick="tab('C')">📞 Contatti</button>
-<button id="tT" onclick="tab('T')">💬 Chat</button>
-    <button id="tF" onclick="tab('F')">🏭 Fornitori</button>
+<button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
+<button id="tS" onclick="tab('S')">&#128203; Storico</button>
+<button id="tC" onclick="tab('C')">&#128222; Contatti</button>
+<button id="tT" onclick="tab('T')">&#128172; Chat</button>
+<button id="tF" onclick="tab('F')">&#127981; Fornitori</button>
 </div>
 </header>
 <main>
@@ -113,12 +107,12 @@ tr:hover{background:#f8fafc;}
 <div class="stat-card"><div class="num" style="color:var(--red)" id="cErr">0</div><div class="lbl">Errori</div></div>
 </div>
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-<h3 class="section-title" style="margin:0;">🔍 Ricerca Ricambi</h3>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+<h3 class="section-title" style="margin:0;">&#128269; Ricerca Ricambi</h3>
 <div style="display:flex;gap:8px;">
 <button class="btn btn-blue" id="btnAdd">+ Riga</button>
-<button class="btn btn-green" id="btnStart">▶ Avvia ricerca</button>
-<button class="btn btn-gray" id="btnReset">↻ Reset</button>
+<button class="btn btn-green" id="btnStart">&#9654; Avvia</button>
+<button class="btn btn-gray" id="btnReset">&#8635; Reset</button>
 </div>
 </div>
 <div id="list"></div>
@@ -127,31 +121,31 @@ tr:hover{background:#f8fafc;}
 </div>
 <div id="TS" style="display:none;">
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-<h3 class="section-title" style="margin:0;">📋 Storico Ricerche</h3>
-<input id="stF" placeholder="🔍 Filtra..." style="max-width:350px;" oninput="filtSt()">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+<h3 class="section-title" style="margin:0;">&#128203; Storico</h3>
+<input id="stF" placeholder="Filtra..." style="max-width:350px;" oninput="filtSt()">
 </div>
 <div id="stList"></div>
 </div>
 </div>
 <div id="TC" style="display:none;">
 <div class="card">
-<h3 class="section-title">🏢 Ufficio Cesana</h3>
+<h3 class="section-title">&#127970; Ufficio Cesana</h3>
 <p style="font-size:13px;color:var(--slate);margin-bottom:14px;">Contatti fissi per notifiche ordini, conferme sopra soglia e alert pagamento.</p>
 <div id="ufficioList"></div>
 </div>
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-<h3 class="section-title" style="margin:0;">👷 Tecnici</h3>
-<button class="btn btn-blue" id="btnAddTec">+ Aggiungi tecnico</button>
+<h3 class="section-title" style="margin:0;">&#128119; Tecnici</h3>
+<button class="btn btn-blue" id="btnAddTec">+ Aggiungi</button>
 </div>
 <div id="tecList"></div>
 <div id="tecForm" style="display:none;margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid var(--blue-l);">
 <h4 style="font-size:14px;color:var(--blue);margin-bottom:12px;" id="tecFormTitle">Nuovo tecnico</h4>
-<div class="form-group"><label>Nome completo</label><input id="tecNome" placeholder="es. Mario Rossi"></div>
+<div class="form-group"><label>Nome</label><input id="tecNome" placeholder="Mario Rossi"></div>
 <div class="form-row">
-<div class="form-group"><label>Syncrogest UID</label><input id="tecUid" placeholder="es. 5378"></div>
-<div class="form-group"><label>WhatsApp</label><input id="tecWhatsapp" placeholder="+39 333 1234567"></div>
+<div class="form-group"><label>Syncrogest UID</label><input id="tecUid" placeholder="5378"></div>
+<div class="form-group"><label>WhatsApp</label><input id="tecWhatsapp" placeholder="+39 333..."></div>
 </div>
 <div style="display:flex;gap:8px;">
 <button class="btn btn-green" id="btnSaveTec">Salva</button>
@@ -162,9 +156,9 @@ tr:hover{background:#f8fafc;}
 </div>
 <div id="TT" style="display:none;">
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-<h3 class="section-title" style="margin:0;">💬 Conversazioni</h3>
-<select id="chatFilter" onchange="renderChat()" style="max-width:300px;"><option value="">Tutti i contatti</option></select>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+<h3 class="section-title" style="margin:0;">&#128172; Conversazioni</h3>
+<select id="chatFilter" onchange="renderChat()" style="max-width:300px;"><option value="">Tutti</option></select>
 </div>
 <div id="chatList"></div>
 </div>
@@ -172,20 +166,20 @@ tr:hover{background:#f8fafc;}
 <div id="TF" style="display:none;">
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-<h3 class="section-title" style="margin:0;">🏭 Fornitori</h3>
-<button class="btn btn-blue" id="btnAddFor">+ Aggiungi fornitore</button>
+<h3 class="section-title" style="margin:0;">&#127981; Fornitori</h3>
+<button class="btn btn-blue" id="btnAddFor">+ Aggiungi</button>
 </div>
 <div id="forList"></div>
 <div id="forForm" style="display:none;margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid var(--blue-l);">
 <h4 style="font-size:14px;color:var(--blue);margin-bottom:12px;" id="forFormTitle">Nuovo fornitore</h4>
-<div class="form-group"><label>Nome fornitore</label><input id="forNome" placeholder="es. LF Ricambi / REPA"></div>
+<div class="form-group"><label>Nome</label><input id="forNome" placeholder="LF Ricambi / REPA"></div>
 <div class="form-row">
-<div class="form-group"><label>Sito web (ricerca)</label><input id="forUrl" placeholder="https://..."></div>
-<div class="form-group"><label>Email contatti/ordini</label><input id="forEmail" placeholder="ordini@fornitore.it"></div>
+<div class="form-group"><label>Sito web</label><input id="forUrl" placeholder="https://..."></div>
+<div class="form-group"><label>Email</label><input id="forEmail" placeholder="ordini@..."></div>
 </div>
 <div class="form-row">
-<div class="form-group"><label>Username portale (opz.)</label><input id="forUser" placeholder="se richiede login"></div>
-<div class="form-group"><label>Note</label><input id="forNote" placeholder="note varie"></div>
+<div class="form-group"><label>Username (opz.)</label><input id="forUser"></div>
+<div class="form-group"><label>Note</label><input id="forNote"></div>
 </div>
 <div style="display:flex;gap:8px;align-items:center;">
 <button class="btn btn-green" id="btnSaveFor">Salva</button>
@@ -195,7 +189,6 @@ tr:hover{background:#f8fafc;}
 </div>
 </div>
 </div>
-
 </main>
 <script>
 var BASE='https://superagent-244159cc.base44.app';
@@ -203,165 +196,483 @@ var AID='6a132bbd6bdcb07f244159cc';
 var API_KEY='public-cesana-2026';
 var N=0,rows=[],busy=false,stData=[];
 var mrc=[],mod=[],ric=[];
-var chatData=[],editingTecId=null;
+var chatData=[],editingTecId=null,editingForId=null;
 var ufficioContacts=[
-{nome:'Paola',whatsapp:'+39 375 875 6949',ruolo:'Approvazione ordini >100€'},
+{nome:'Paola',whatsapp:'+39 375 875 6949',ruolo:'Approvazione ordini >100&euro;'},
 {nome:'Sara',whatsapp:'+39 345 148 5097',ruolo:'Alert pagamento anticipato'}
 ];
+
 function hdr(){return{'Content-Type':'application/json','X-Cesana-Key':API_KEY};}
 function g(id){return document.getElementById(id);}
 function gv(id){var e=g(id);return e?e.value.trim():'';}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmtDate(d){return d?new Date(d).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'-';}
-document.getElementById('btnAdd').addEventListener('click',addRow);
-document.getElementById('btnStart').addEventListener('click',avvia);
-document.getElementById('btnReset').addEventListener('click',reset);
-document.getElementById('btnAddTec').addEventListener('click',showTecForm);
-document.getElementById('btnSaveTec').addEventListener('click',saveTec);
-document.getElementById('btnCancelTec').addEventListener('click',function(){g('tecForm').style.display='none';});
-loadSugg();addRow();
+
+// Tab navigation
 function tab(t){
 ['TR','TS','TC','TT','TF'].forEach(function(s){g(s).style.display='none';});
 ['tR','tS','tC','tT','tF'].forEach(function(b){g(b).className='';});
-g('T'+t).style.display='block';g('t'+t).className='on';
-if(t==='S')loadSt();if(t==='C')loadContatti();if(t==='T')loadChat();if(t==='F')loadFornitori();
+g('T'+t).style.display='block';
+g('t'+t).className='on';
+if(t==='S')loadSt();
+if(t==='C')loadContatti();
+if(t==='T')loadChat();
+if(t==='F')loadFornitori();
 }
+
+// === RICERCA ===
 function addRow(){
-var id=++N;rows.push({id:id,st:'idle'});
-var d=document.createElement('div');d.className='rrow bg-wait';d.id='row'+id;
-d.innerHTML='<div class="rA"><div class="numcol">#'+id+'</div>'+
-'<div><div class="lbl">Riferimento</div><input id="ref'+id+'" placeholder="Cliente/intervento"></div>'+
+var id=++N;
+rows.push({id:id,st:'idle'});
+var d=document.createElement('div');
+d.className='rrow bg-wait';
+d.id='row'+id;
+var html='<div class="rA">'+
+'<div class="numcol">#'+id+'</div>'+
+'<div><div class="lbl">Riferimento</div><input id="ref'+id+'" placeholder="Cliente"></div>'+
 '<div><div class="lbl">Syncrogest</div><input id="syn'+id+'" placeholder="SG-001"></div>'+
 '<div><div class="lbl">Marca</div><input id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar/Selmi/Orla/LF"><datalist id="lmar'+id+'"></datalist></div>'+
-'<div><div class="lbl">Modello</div><input id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441 CDE"><datalist id="lmdo'+id+'"></datalist></div>'+
+'<div><div class="lbl">Modello</div><input id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441"><datalist id="lmdo'+id+'"></datalist></div>'+
 '<div><div class="lbl">Matricola</div><input id="mat'+id+'" placeholder="opz."></div>'+
-'<div><div class="lbl">Qty</div><input id="qty'+id+'" type="number" min="1" value="1"></div>'+
-'<button class="del" onclick="delRow('+id+')">&times;</button></div>'+
-'<div class="rB"><div></div>'+
-'<div><div class="lbl">Ricambio</div><input id="rcs'+id+'" list="lrcs'+id+'" placeholder="resistenza,pompa,scheda..."><datalist id="lrcs'+id+'"></datalist></div>'+
+'<div><div class="lbl">Qty</div><input id="qty'+id+'" type="number" min="1" value="1" style="width:60px;"></div>'+
+'<button class="del" data-del="'+id+'">&times;</button>'+
+'</div>';
+html+='<div class="rB">'+
+'<div><div class="lbl">Ricambio</div><input id="rcs'+id+'" list="lrcs'+id+'" placeholder="resistenza,pompa..."><datalist id="lrcs'+id+'"></datalist></div>'+
 '<div><div class="lbl">Codice LF/REPA</div><input id="clf'+id+'" placeholder="opz."></div>'+
 '<div><div class="lbl" id="slbl'+id+'" style="color:var(--slate-l);">In attesa</div><div class="pw"><div class="pb" id="pb'+id+'" style="width:0%;background:#e2e8f0;"></div></div></div>'+
-'<div></div></div>'+
-'<div class="foto-area"><label class="foto-add" onclick="g(\'finp'+id+'\').click()">📷</label><span class="foto-label">Foto (max 3)</span><input type="file" id="finp'+id+'" accept="image/*" style="display:none" multiple onchange="handleFoto('+id+',this)"></div>'+
-'<div class="rres" id="res'+id+'"></div>';
-g('list').appendChild(d);g('empty').style.display='none';
-g('mar'+id).addEventListener('change',function(){var m=this.value;fillDL('lmdo'+id,mod.filter(function(x){return!m||(x.marca||'').toLowerCase()===m.toLowerCase();}));fillDL('lrcs'+id,ric.filter(function(x){return!m||(x.marca||'').toLowerCase()===m.toLowerCase();}));});
-g('mdo'+id).addEventListener('change',function(){var mo=this.value,ma=gv('mar'+id);fillDL('lrcs'+id,ric.filter(function(x){return(!ma||(x.marca||'').toLowerCase()===ma.toLowerCase())&&(!mo||(x.modello||'').toLowerCase()===mo.toLowerCase();}));});
+'<div></div>'+
+'</div>';
+html+='<div class="foto-area" id="fotos'+id+'"><label class="foto-add" data-foto="'+id+'">&#128247;</label><span class="foto-label">Foto (max 3)</span><input type="file" id="finp'+id+'" accept="image/*" style="display:none" multiple></div>';
+html+='<div class="rres" id="res'+id+'"></div>';
+d.innerHTML=html;
+d.querySelector('[data-del="'+id+'"]').addEventListener('click',function(){delRow(id);});
+d.querySelector('[data-foto="'+id+'"]').addEventListener('click',function(){g('finp'+id).click();});
+g('finp'+id).addEventListener('change',function(){handleFoto(id,this);});
+g('mar'+id).addEventListener('change',function(){
+var m=this.value;
+fillDL('lmdo'+id,mod.filter(function(x){return!m||(x.marca||'').toLowerCase()===m.toLowerCase();}));
+fillDL('lrcs'+id,ric.filter(function(x){return!m||(x.marca||'').toLowerCase()===m.toLowerCase();}));
+});
+g('mdo'+id).addEventListener('change',function(){
+var mo=this.value,ma=gv('mar'+id);
+fillDL('lrcs'+id,ric.filter(function(x){return(!ma||(x.marca||'').toLowerCase()===ma.toLowerCase())&&(!mo||(x.modello||'').toLowerCase()===mo.toLowerCase());}));
+});
+g('list').appendChild(d);
+g('empty').style.display='none';
 fillDL('lmar'+id,mrc);
 }
+
 function handleFoto(id,input){
-var rowObj=rows.find(function(r){return r.id===id;});if(!rowObj){rowObj={id:id};rows.push(rowObj);}
-if(!rowObj.foto_base64)rowObj.foto_base64=[];if(!rowObj.foto_urls)rowObj.foto_urls=[];
+var rowObj=rows.find(function(r){return r.id===id;});
+if(!rowObj){rowObj={id:id};rows.push(rowObj);}
+if(!rowObj.foto_base64)rowObj.foto_base64=[];
+if(!rowObj.foto_urls)rowObj.foto_urls=[];
 var files=Array.from(input.files).slice(0,3-rowObj.foto_base64.length);
-files.forEach(function(f){var reader=new FileReader();reader.onload=function(e){rowObj.foto_base64.push(e.target.result.split(',')[1]);rowObj.foto_urls.push(e.target.result);renderFoto(id);};reader.readAsDataURL(f);});
+files.forEach(function(f){
+var reader=new FileReader();
+reader.onload=function(e){
+rowObj.foto_base64.push(e.target.result.split(',')[1]);
+rowObj.foto_urls.push(e.target.result);
+renderFoto(id);
+};
+reader.readAsDataURL(f);
+});
 }
-function renderFoto(id){var rowObj=rows.find(function(r){return r.id===id;});if(!rowObj||!rowObj.foto_urls)return;var area=g('fotos'+id)||g('row'+id).querySelector('.foto-area');var thumbs=area.querySelectorAll('.foto-thumb');thumbs.forEach(function(t){t.remove();});rowObj.foto_urls.forEach(function(url){var img=document.createElement('img');img.className='foto-thumb';img.src=url;img.onclick=function(){window.open(url,'_blank');};area.appendChild(img);});}
-function delRow(id){var el=g('row'+id);if(el)el.remove();rows=rows.filter(function(r){return r.id!==id;});if(!rows.length)g('empty').style.display='';}
-function reset(){if(busy)return;rows.forEach(function(r){delRow(r.id);});rows=[];N=0;g('empty').style.display='';g('cnt').style.display='none';}
-function fillDL(id,arr){var dl=g(id);if(!dl)return;dl.innerHTML='';arr.forEach(function(x){var o=document.createElement('option');o.value=x.nome||x;dl.appendChild(o);});}
-function setStato(id,tipo,txt,pct){var el=g('slbl'+id),pb=g('pb'+id),rw=g('row'+id);if(el){el.innerHTML=txt;el.style.color={idle:'var(--slate-l)',queue:'var(--amber)',run:'var(--blue-l)',ok:'var(--green)',err:'var(--red)'}[tipo]||'#333';}if(pb){pb.style.width=pct+'%';pb.style.background={idle:'#e2e8f0',queue:'#fcd34d',run:'#60a5fa',ok:'#4ade80',err:'#f87171'}[tipo]||'#e2e8f0';}if(rw)rw.className='rrow '+({idle:'bg-wait',queue:'bg-queue',run:'bg-run',ok:'bg-ok',err:'bg-err'}[tipo]||'bg-wait');var r=rows.find(function(x){return x.id===id;});if(r)r.st=tipo;upCnt();}
-function upCnt(){var tot=rows.length,ok=0,run=0,err=0;rows.forEach(function(r){if(r.st==='ok')ok++;else if(r.st==='run'||r.st==='queue')run++;else if(r.st==='err')err++;});g('cTot').textContent=tot;g('cOk').textContent=ok;g('cRun').textContent=run;g('cErr').textContent=err;g('cnt').style.display=tot?'flex':'none';}
-function disRow(id,dis){['ref','syn','mar','mdo','mat','qty','rcs','clf'].forEach(function(f){var e=g(f+id);if(e)e.disabled=dis;});}
-function avvia(){if(busy)return;var da=rows.filter(function(r){return r.st!=='run'&&r.st!=='queue'&&gv('mar'+r.id)&&gv('mdo'+r.id)&&(gv('rcs'+r.id)||(gv('clf'+r.id)&&gv('mar'+r.id).toLowerCase().includes('lf')));}).map(function(r){return r.id;});if(!da.length){alert('Compila Marca, Modello e Ricambio!');return;}busy=true;g('btnStart').disabled=true;g('btnAdd').disabled=true;da.forEach(function(id){setStato(id,'queue','In coda...',5);});seq(da,0);}
-function seq(ids,i){if(i>=ids.length){busy=false;g('btnStart').disabled=false;g('btnAdd').disabled=false;return;}cerca(ids[i],function(){seq(ids,i+1);});}
+
+function renderFoto(id){
+var rowObj=rows.find(function(r){return r.id===id;});
+if(!rowObj||!rowObj.foto_urls)return;
+var area=g('fotos'+id);
+if(!area)return;
+area.querySelectorAll('.foto-thumb').forEach(function(t){t.remove();});
+rowObj.foto_urls.forEach(function(url){
+var img=document.createElement('img');
+img.className='foto-thumb';img.src=url;
+img.onclick=function(){window.open(url,'_blank');};
+area.appendChild(img);
+});
+}
+
+function delRow(id){
+var el=g('row'+id);
+if(el)el.remove();
+rows=rows.filter(function(r){return r.id!==id;});
+if(!rows.length)g('empty').style.display='';
+}
+
+function reset(){
+if(busy)return;
+while(rows.length>0)delRow(rows[0].id);
+N=0;
+g('empty').style.display='';
+g('cnt').style.display='none';
+}
+
+function fillDL(id,arr){
+var dl=g(id);
+if(!dl)return;
+dl.innerHTML='';
+arr.forEach(function(x){
+var o=document.createElement('option');
+o.value=x.nome||x;
+dl.appendChild(o);
+});
+}
+
+function setStato(id,tipo,txt,pct){
+var el=g('slbl'+id),pb=g('pb'+id),rw=g('row'+id);
+if(el){
+el.textContent=txt;
+el.style.color={idle:'var(--slate-l)',queue:'var(--amber)',run:'var(--blue-l)',ok:'var(--green)',err:'var(--red)'}[tipo]||'#333';
+}
+if(pb){
+pb.style.width=pct+'%';
+pb.style.background={idle:'#e2e8f0',queue:'#fcd34d',run:'#60a5fa',ok:'#4ade80',err:'#f87171'}[tipo]||'#e2e8f0';
+}
+if(rw)rw.className='rrow '+({idle:'bg-wait',queue:'bg-queue',run:'bg-run',ok:'bg-ok',err:'bg-err'}[tipo]||'bg-wait');
+var r=rows.find(function(x){return x.id===id;});
+if(r)r.st=tipo;
+upCnt();
+}
+
+function upCnt(){
+var tot=rows.length,ok=0,run=0,err=0;
+rows.forEach(function(r){
+if(r.st==='ok')ok++;
+else if(r.st==='run'||r.st==='queue')run++;
+else if(r.st==='err')err++;
+});
+g('cTot').textContent=tot;
+g('cOk').textContent=ok;
+g('cRun').textContent=run;
+g('cErr').textContent=err;
+g('cnt').style.display=tot?'flex':'none';
+}
+
+function disRow(id,dis){
+['ref','syn','mar','mdo','mat','qty','rcs','clf'].forEach(function(f){
+var e=g(f+id);
+if(e)e.disabled=dis;
+});
+}
+
+function avvia(){
+if(busy)return;
+var da=rows.filter(function(r){
+return r.st!=='run'&&r.st!=='queue'&&gv('mar'+r.id)&&gv('mdo'+r.id)&&(gv('rcs'+r.id)||(gv('clf'+r.id)&&gv('mar'+r.id).toLowerCase().indexOf('lf')>-1));
+}).map(function(r){return r.id;});
+if(!da.length){alert('Compila Marca, Modello e Ricambio!');return;}
+busy=true;
+g('btnStart').disabled=true;
+g('btnAdd').disabled=true;
+da.forEach(function(id){setStato(id,'queue','In coda...',5);});
+seq(da,0);
+}
+
+function seq(ids,i){
+if(i>=ids.length){
+busy=false;
+g('btnStart').disabled=false;
+g('btnAdd').disabled=false;
+return;
+}
+cerca(ids[i],function(){seq(ids,i+1);});
+}
+
 function cerca(id,cb){
-var marca=gv('mar'+id),modello=gv('mdo'+id),matricola=gv('mat'+id),qty=gv('qty'+id)||'1',rc=gv('rcs'+id),rif=gv('ref'+id),syn=gv('syn'+id),codiceLF=gv('clf'+id);
-var marcaLow=(marca||'').toLowerCase();var isLF=marcaLow==='lf'||marcaLow==='lf ricambi'||marcaLow==='repa'||marcaLow==='lf ricambi / repa';
+var marca=gv('mar'+id),modello=gv('mdo'+id),matricola=gv('mat'+id),qty=gv('qty'+id)||'1';
+var rc=gv('rcs'+id),rif=gv('ref'+id),syn=gv('syn'+id),codiceLF=gv('clf'+id);
+var marcaLow=(marca||'').toLowerCase();
+var isLF=marcaLow.indexOf('lf')>-1||marcaLow.indexOf('repa')>-1;
 var rcOk=rc||(isLF&&codiceLF);
 if(!marca||!modello||!rcOk){setStato(id,'err','Compila tutto',100);if(cb)cb();return;}
-setStato(id,'run','Ricerca...',15);disRow(id,true);salva(marca,modello,rc);
+setStato(id,'run','Ricerca...',15);
+disRow(id,true);
+salva(marca,modello,rc);
 var msg=marca.toLowerCase()==='orla'?'Ricerca Verzolla...':matricola?'Matricola '+matricola+'...':modello+'...';
 setStato(id,'run',msg,30);
-fetch(BASE+'/functions/cercaRicambio',{method:'POST',headers:hdr(),body:JSON.stringify({marca:marca,modello:modello,matricola:matricola||'',ricambio:rc||codiceLF,codice_lf:codiceLF||'',richiesta_da:rif||'Cesana Service',syncrogest:syn||'',foto_base64:(rows.find(function(x){return x.id===id;})||{}).foto_base64||[]})})
-.then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-.then(function(data){if(!data.ok)throw new Error(data.error||'Errore');setStato(id,'ok','Completata',100);mostraRes(id,data,qty);disRow(id,false);if(cb)cb();})
-.catch(function(e){setStato(id,'err','Errore: '+String(e.message||''),100);disRow(id,false);if(cb)cb();});
+fetch(BASE+'/functions/cercaRicambio',{
+method:'POST',headers:hdr(),
+body:JSON.stringify({marca:marca,modello:modello,matricola:matricola||'',ricambio:rc||codiceLF,codice_lf:codiceLF||'',richiesta_da:rif||'Cesana Service',syncrogest:syn||'',foto_base64:(rows.find(function(x){return x.id===id;})||{}).foto_base64||[]})
+}).then(function(r){
+if(!r.ok)throw new Error('HTTP '+r.status);
+return r.json();
+}).then(function(data){
+if(!data.ok)throw new Error(data.error||'Errore');
+setStato(id,'ok','Completata',100);
+mostraRes(id,data,qty);
+disRow(id,false);
+if(cb)cb();
+}).catch(function(e){
+setStato(id,'err','Errore: '+String(e.message||''),100);
+disRow(id,false);
+if(cb)cb();
+});
 }
+
 function mostraRes(id,data,qty){
-var el=g('res'+id);if(!el)return;el.style.display='block';
+var el=g('res'+id);
+if(!el)return;
+el.style.display='block';
 var best=data.best||(data.risultati&&data.risultati[0])||null;
 var rr=best?[best]:[];
 if(!rr.length){el.innerHTML='<div style="padding:8px;color:var(--slate-l);font-size:12px;">Nessun risultato.</div>';return;}
 rr=rr.map(function(r){if(!r.prezzo||r.prezzo==='N/D')r.prezzo='Vedere portale';return r;});
-var fonte=(data.fonte||'').toLowerCase();var isOrla=fonte==='verzolla';var isSelmi=fonte==='selmi';var isSama=fonte==='supersama';var isLF=fonte==='lf ricambi'||data.lfMode===true;
+var fonte=(data.fonte||'').toLowerCase();
+var isOrla=fonte==='verzolla';
+var isSelmi=fonte==='selmi';
+var isSama=fonte==='supersama';
+var isLF=fonte==='lf ricambi'||data.lfMode===true;
 var h='';
-if(isOrla){h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo</th><th>Qty</th></tr>';rr.forEach(function(r){h+='<tr><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(r.disponibilita==='Disponibile'?'var(--green)':'var(--red)')+'">'+esc(r.disponibilita)+'</td><td style="font-weight:700">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
-else if(isLF){h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo Netto</th><th>Qty</th></tr>';rr.forEach(function(r){var dn=parseInt((r.disponibilita||'0').replace(/\D/g,''))||0;h+='<tr class="best-row"><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(dn>0?'var(--green)':'var(--red)')+'">'+esc(r.disponibilita||'Verificare')+'</td><td style="font-weight:700;color:#0369a1">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
-else if(isSama){h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo</th><th>Qty</th></tr>';rr.forEach(function(r){h+='<tr class="best-row"><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(r.disponibile!==false?'var(--green)':'var(--red)')+'">'+(r.disponibile!==false?'Disp.':'Non disp.')+'</td><td style="font-weight:700">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
-else{var thCode=isSelmi?'Codice Selmi':'Codice';h='<table class="rt"><tr><th>'+thCode+'</th><th>Descrizione</th><th>Prezzo</th><th>Disp.</th><th>Qty</th></tr>';rr.forEach(function(r,i){h+='<tr'+(i===0?' class="best-row"':'')+'><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="font-weight:700;color:#1d4ed8">'+esc(r.prezzo)+'</td><td>'+esc(r.disponibilita)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
+if(isOrla){
+h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo</th><th>Qty</th></tr>';
+rr.forEach(function(r){h+='<tr><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(r.disponibilita==='Disponibile'?'var(--green)':'var(--red)')+'">'+esc(r.disponibilita)+'</td><td style="font-weight:700">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});
+h+='</table>';
+}else if(isLF){
+h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo Netto</th><th>Qty</th></tr>';
+rr.forEach(function(r){var dn=parseInt((r.disponibilita||'0').replace(/\D/g,''))||0;h+='<tr class="best-row"><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(dn>0?'var(--green)':'var(--red)')+'">'+esc(r.disponibilita||'Verificare')+'</td><td style="font-weight:700;color:#0369a1">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});
+h+='</table>';
+}else if(isSama){
+h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo</th><th>Qty</th></tr>';
+rr.forEach(function(r){h+='<tr class="best-row"><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(r.disponibile!==false?'var(--green)':'var(--red)')+'">'+(r.disponibile!==false?'Disp.':'Non disp.')+'</td><td style="font-weight:700">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});
+h+='</table>';
+}else{
+var thCode=isSelmi?'Codice Selmi':'Codice';
+h='<table class="rt"><tr><th>'+thCode+'</th><th>Descrizione</th><th>Prezzo</th><th>Disp.</th><th>Qty</th></tr>';
+rr.forEach(function(r,i){h+='<tr'+(i===0?' class="best-row"':'')+'><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="font-weight:700;color:#1d4ed8">'+esc(r.prezzo)+'</td><td>'+esc(r.disponibilita)+'</td><td>x'+qty+'</td></tr>';});
+h+='</table>';
+}
 el.innerHTML=h;
 }
-function salva(m,mo,r){function post(ent,body){fetch(BASE+'/api/apps/'+AID+'/entities/'+ent,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});}if(m&&!mrc.find(function(x){return(x.nome||x)===m;})){post('MarcaSalvata',{nome:m});mrc.push({nome:m});}if(mo&&!mod.find(function(x){return(x.nome||x)===mo;})){post('ModelloSalvato',{nome:mo,marca:m});mod.push({nome:mo,marca:m});}if(r&&!ric.find(function(x){return(x.nome||x)===r;})){post('RicambioSalvato',{nome:r,marca:m,modello:mo});ric.push({nome:r,marca:m,modello:mo});}}
-function loadSugg(){['Elettrobar','Selmi','Orla','LF Ricambi / REPA','SuperSama'].forEach(function(n){if(!mrc.find(function(x){return(x.nome||x)===n;}))mrc.push({nome:n});});function get(ent,arr){fetch(BASE+'/api/apps/'+AID+'/entities/'+ent+'?limit=500').then(function(r){return r.json();}).then(function(d){var list=Array.isArray(d)?d:(d.records||[]);list.forEach(function(x){arr.push(x);});if(ent==='MarcaSalvata')rows.forEach(function(r){fillDL('lmar'+r.id,mrc);});}).catch(function(){});}get('MarcaSalvata',mrc);get('ModelloSalvato',mod);get('RicambioSalvato',ric);}
-function loadSt(){g('stList').innerHTML='<div class="empty">Caricamento...</div>';fetch(BASE+'/functions/cercaRicambio?limit=300',{headers:hdr()}).then(function(r){return r.json();}).then(function(d){stData=Array.isArray(d)?d:(d.records||[]);renderSt(stData);}).catch(function(e){g('stList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});}
-function filtSt(){var q=gv('stF').toLowerCase();renderSt(q?stData.filter(function(r){return[r.marca,r.modello,r.ricambio_cercato,r.descrizione,r.codice_eurotec].some(function(v){return v&&v.toLowerCase().includes(q);});}):stData);}
-function renderSt(list){if(!list.length){g('stList').innerHTML='<div class="empty">Nessun risultato</div>';return;}var h='<table><tr><th>Data</th><th>Marca</th><th>Modello</th><th>Ricambio</th><th>Codice</th><th>Descrizione</th><th>Prezzo</th><th>Stato</th></tr>';list.forEach(function(r){h+='<tr><td style="white-space:nowrap">'+fmtDate(r.created_date)+'</td><td>'+esc(r.marca)+'</td><td>'+esc(r.modello)+'</td><td>'+esc(r.ricambio_cercato)+'</td><td style="font-family:monospace;font-weight:700">'+esc(r.codice_eurotec)+'</td><td>'+esc(r.descrizione)+'</td><td style="font-weight:700;color:#1d4ed8">'+esc(r.prezzo_eurotec)+'</td><td><span class="badge '+(r.stato==='completata'?'badge-ok':r.stato==='errore'?'badge-err':'badge-wait')+'">'+esc(r.stato)+'</span></td></tr>';});h+='</table>';g('stList').innerHTML=h;}
+
+function salva(m,mo,r){
+function post(ent,body){
+fetch(BASE+'/api/apps/'+AID+'/entities/'+ent,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});
+}
+if(m&&!mrc.find(function(x){return(x.nome||x)===m;})){post('MarcaSalvata',{nome:m});mrc.push({nome:m});}
+if(mo&&!mod.find(function(x){return(x.nome||x)===mo;})){post('ModelloSalvato',{nome:mo,marca:m});mod.push({nome:mo,marca:m});}
+if(r&&!ric.find(function(x){return(x.nome||x)===r;})){post('RicambioSalvato',{nome:r,marca:m,modello:mo});ric.push({nome:r,marca:m,modello:mo});}
+}
+
+function loadSugg(){
+['Elettrobar','Selmi','Orla','LF Ricambi / REPA','SuperSama'].forEach(function(n){if(!mrc.find(function(x){return(x.nome||x)===n;}))mrc.push({nome:n});});
+function get(ent,arr){
+fetch(BASE+'/api/apps/'+AID+'/entities/'+ent+'?limit=500').then(function(r){return r.json();}).then(function(d){
+var list=Array.isArray(d)?d:(d.records||[]);
+list.forEach(function(x){arr.push(x);});
+if(ent==='MarcaSalvata')rows.forEach(function(r){fillDL('lmar'+r.id,mrc);});
+}).catch(function(){});
+}
+get('MarcaSalvata',mrc);get('ModelloSalvato',mod);get('RicambioSalvato',ric);
+}
+
+// === STORICO ===
+function loadSt(){
+g('stList').innerHTML='<div class="empty">Caricamento...</div>';
+fetch(BASE+'/functions/cercaRicambio?limit=300',{headers:hdr()}).then(function(r){return r.json();}).then(function(d){
+stData=Array.isArray(d)?d:(d.records||[]);
+renderSt(stData);
+}).catch(function(e){g('stList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
+}
+
+function filtSt(){
+var q=gv('stF').toLowerCase();
+renderSt(q?stData.filter(function(r){return[r.marca,r.modello,r.ricambio_cercato,r.descrizione,r.codice_eurotec].some(function(v){return v&&v.toLowerCase().indexOf(q)>-1;});}):stData);
+}
+
+function renderSt(list){
+if(!list.length){g('stList').innerHTML='<div class="empty">Nessun risultato</div>';return;}
+var h='<table><tr><th>Data</th><th>Marca</th><th>Modello</th><th>Ricambio</th><th>Codice</th><th>Descrizione</th><th>Prezzo</th><th>Stato</th></tr>';
+list.forEach(function(r){
+h+='<tr><td style="white-space:nowrap">'+fmtDate(r.created_date)+'</td><td>'+esc(r.marca)+'</td><td>'+esc(r.modello)+'</td><td>'+esc(r.ricambio_cercato)+'</td><td style="font-family:monospace;font-weight:700">'+esc(r.codice_eurotec)+'</td><td>'+esc(r.descrizione)+'</td><td style="font-weight:700;color:#1d4ed8">'+esc(r.prezzo_eurotec)+'</td><td><span class="badge '+(r.stato==='completata'?'badge-ok':r.stato==='errore'?'badge-err':'badge-wait')+'">'+esc(r.stato)+'</span></td></tr>';
+});
+h+='</table>';
+g('stList').innerHTML=h;
+}
+
+// === CONTATTI ===
 function loadContatti(){renderUfficio();loadTecnici();}
-function renderUfficio(){var h='';ufficioContacts.forEach(function(c){h+='<div class="contact-row"><div class="contact-info"><div class="contact-avatar">'+c.nome[0]+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(c.nome)+'</div><div style="font-size:11px;color:var(--slate)">'+esc(c.ruolo)+'</div></div></div><div class="contact-phone">'+esc(c.whatsapp)+'</div></div>';});g('ufficioList').innerHTML=h;}
-function loadTecnici(){g('tecList').innerHTML='<div class="empty">Caricamento...</div>';fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico?limit=100').then(function(r){return r.json();}).then(function(d){var list=Array.isArray(d)?d:(d.records||[]);renderTecnici(list);}).catch(function(e){g('tecList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});}
-function renderTecnici(list){if(!list.length){g('tecList').innerHTML='<div class="empty">Nessun tecnico.</div>';return;}var h='';list.forEach(function(t){var wa=t.whatsapp_number||'';var initials=(t.nome||'?').split(' ').map(function(w){return w[0];}).join('').substring(0,2);h+='<div class="contact-row"><div class="contact-info"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(t.nome||'senza nome')+'</div>'+(t.syncrogest_uid?'<div style="font-size:11px;color:var(--slate)">UID: '+esc(t.syncrogest_uid)+'</div>':'')+'</div></div><div style="display:flex;align-items:center;gap:8px;"><span class="contact-phone'+(wa?'':' missing')+'">'+(wa?esc(wa):' mancante')+'</span><div class="contact-actions"><button onclick="editTec(&quot;'+esc(t.id)+'&quot;,&quot;'+esc(t.nome||'')+'&quot;,&quot;'+esc(t.syncrogest_uid||'')+'&quot;,&quot;'+esc(wa)+'&quot;)" title="Modifica">edit</button><button class="del-btn" onclick="delTec(&quot;'+esc(t.id)+'&quot;,&quot;'+esc(t.nome||'')+'&quot;)" title="Elimina">del</button></div></div></div>';});g('tecList').innerHTML=h;}
-function showTecForm(){g('tecForm').style.display='block';g('tecFormTitle').textContent='Nuovo tecnico';g('tecNome').value='';g('tecUid').value='';g('tecWhatsapp').value='';editingTecId=null;}
-function editTec(id,nome,uid,wa){g('tecForm').style.display='block';g('tecFormTitle').textContent='Modifica tecnico';g('tecNome').value=nome;g('tecUid').value=uid;g('tecWhatsapp').value=wa;editingTecId=id;g('tecForm').scrollIntoView({behavior:'smooth'});}
-function saveTec(){var nome=gv('tecNome'),uid=gv('tecUid'),wa=gv('tecWhatsapp');if(!nome){alert('Inserisci il nome');return;}var body={nome:nome,syncrogest_uid:uid,whatsapp_number:wa};var url=BASE+'/api/apps/'+AID+'/entities/Tecnico';var method='POST';if(editingTecId){url+='/'+editingTecId;method='PUT';}fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(){g('tecForm').style.display='none';loadTecnici();}).catch(function(e){alert('Errore: '+e.message);});}
-function delTec(id,nome){if(!confirm('Eliminare "'+nome+'"?'))return;fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico/'+id,{method:'DELETE',headers:{'Content-Type':'application/json'}}).then(function(){loadTecnici();}).catch(function(e){alert('Errore: '+e.message);});}
-function loadChat(){g('chatList').innerHTML='<div class="empty">Caricamento...</div>';fetch(BASE+'/api/apps/'+AID+'/entities/ChatLog?limit=500&sort=-data').then(function(r){return r.json();}).then(function(d){chatData=Array.isArray(d)?d:(d.records||[]);var nomi={};chatData.forEach(function(m){nomi[m.contatto_nome]=true;});var sel=g('chatFilter');sel.innerHTML='<option value="">Tutti i contatti</option>';Object.keys(nomi).sort().forEach(function(n){sel.innerHTML+='<option value="'+esc(n)+'">'+esc(n)+'</option>';});renderChat();}).catch(function(e){g('chatList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});}
-function renderChat(){var filter=g('chatFilter')?g('chatFilter').value:'';var msgs=filter?chatData.filter(function(m){return m.contatto_nome===filter;}):chatData;if(!msgs.length){g('chatList').innerHTML='<div class="empty">Nessuna conversazione registrata. Le chat con i tecnici appariranno qui automaticamente.</div>';return;}var groups={};msgs.forEach(function(m){if(!groups[m.contatto_nome])groups[m.contatto_nome]=[];groups[m.contatto_nome].push(m);});var h='';Object.keys(groups).sort().forEach(function(nome){var conv=groups[nome].sort(function(a,b){return new Date(a.data)-new Date(b.data);});var initials=nome.split(' ').map(function(w){return w[0];}).join('').substring(0,2);h+='<div class="card" style="margin-bottom:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(nome)+'</div><div style="font-size:11px;color:var(--slate)">'+conv.length+' messaggi</div></div></div>';conv.forEach(function(m){h+='<div class="chat-msg '+(m.direzione==='inviato'?'sent':'received')+'"><div class="chat-bubble">'+esc(m.messaggio)+'<div class="chat-meta">'+(m.direzione==='inviato'?'Inviato':'Ricevuto')+' - '+fmtDate(m.data)+'</div></div></div>';});h+='</div>';});g('chatList').innerHTML=h;}
 
-// ============ FORNITORI ============
-var editingForId=null;
-document.getElementById('btnAddFor').addEventListener('click',showForForm);
-document.getElementById('btnSaveFor').addEventListener('click',saveFor);
-document.getElementById('btnCancelFor').addEventListener('click',function(){g('forForm').style.display='none';});
+function renderUfficio(){
+var h='';
+ufficioContacts.forEach(function(c){
+h+='<div class="contact-row"><div class="contact-info"><div class="contact-avatar">'+c.nome[0]+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(c.nome)+'</div><div style="font-size:11px;color:var(--slate)">'+esc(c.ruolo)+'</div></div></div><div class="contact-phone">'+esc(c.whatsapp)+'</div></div>';
+});
+g('ufficioList').innerHTML=h;
+}
 
+function loadTecnici(){
+g('tecList').innerHTML='<div class="empty">Caricamento...</div>';
+fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico?limit=100').then(function(r){return r.json();}).then(function(d){
+var list=Array.isArray(d)?d:(d.records||[]);
+renderTecnici(list);
+}).catch(function(e){g('tecList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
+}
+
+function renderTecnici(list){
+if(!list.length){g('tecList').innerHTML='<div class="empty">Nessun tecnico.</div>';return;}
+var h='';
+list.forEach(function(t){
+var wa=t.whatsapp_number||'';
+var initials=(t.nome||'?').substring(0,2).toUpperCase();
+h+='<div class="contact-row" data-tec-id="'+esc(t.id)+'" data-tec-nome="'+esc(t.nome||'')+'" data-tec-uid="'+esc(t.syncrogest_uid||'')+'" data-tec-wa="'+esc(wa)+'">';
+h+='<div class="contact-info"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(t.nome||'senza nome')+'</div>'+(t.syncrogest_uid?'<div style="font-size:11px;color:var(--slate)">UID: '+esc(t.syncrogest_uid)+'</div>':'')+'</div></div>';
+h+='<div style="display:flex;align-items:center;gap:8px;"><span class="contact-phone'+(wa?'':' missing')+'">'+(wa?esc(wa):'mancante')+'</span><div class="contact-actions"><button class="btn-edit-tec" title="Modifica">mod</button><button class="contact-actions del-btn btn-del-tec" title="Elimina">del</button></div></div>';
+h+='</div>';
+});
+var container=g('tecList');
+container.innerHTML=h;
+container.querySelectorAll('.btn-edit-tec').forEach(function(btn){
+btn.addEventListener('click',function(){
+var row=btn.closest('[data-tec-id]');
+editTec(row.getAttribute('data-tec-id'),row.getAttribute('data-tec-nome'),row.getAttribute('data-tec-uid'),row.getAttribute('data-tec-wa'));
+});
+});
+container.querySelectorAll('.btn-del-tec').forEach(function(btn){
+btn.addEventListener('click',function(){
+var row=btn.closest('[data-tec-id]');
+delTec(row.getAttribute('data-tec-id'),row.getAttribute('data-tec-nome'));
+});
+});
+}
+
+function showTecForm(){
+g('tecForm').style.display='block';
+g('tecFormTitle').textContent='Nuovo tecnico';
+g('tecNome').value='';g('tecUid').value='';g('tecWhatsapp').value='';
+editingTecId=null;
+}
+
+function editTec(id,nome,uid,wa){
+g('tecForm').style.display='block';
+g('tecFormTitle').textContent='Modifica tecnico';
+g('tecNome').value=nome;g('tecUid').value=uid;g('tecWhatsapp').value=wa;
+editingTecId=id;
+g('tecForm').scrollIntoView({behavior:'smooth'});
+}
+
+function saveTec(){
+var nome=gv('tecNome'),uid=gv('tecUid'),wa=gv('tecWhatsapp');
+if(!nome){alert('Inserisci il nome');return;}
+var body={nome:nome,syncrogest_uid:uid,whatsapp_number:wa};
+var url2=BASE+'/api/apps/'+AID+'/entities/Tecnico';
+var method='POST';
+if(editingTecId){url2+='/'+editingTecId;method='PUT';}
+fetch(url2,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(){
+g('tecForm').style.display='none';loadTecnici();
+}).catch(function(e){alert('Errore: '+e.message);});
+}
+
+function delTec(id,nome){
+if(!confirm('Eliminare "'+nome+'"?'))return;
+fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico/'+id,{method:'DELETE',headers:{'Content-Type':'application/json'}}).then(function(){loadTecnici();}).catch(function(e){alert('Errore: '+e.message);});
+}
+
+// === CHAT ===
+function loadChat(){
+g('chatList').innerHTML='<div class="empty">Caricamento...</div>';
+fetch(BASE+'/api/apps/'+AID+'/entities/ChatLog?limit=500&sort=-data').then(function(r){return r.json();}).then(function(d){
+chatData=Array.isArray(d)?d:(d.records||[]);
+var nomi={};
+chatData.forEach(function(m){nomi[m.contatto_nome]=true;});
+var sel=g('chatFilter');
+sel.innerHTML='<option value="">Tutti</option>';
+Object.keys(nomi).sort().forEach(function(n){sel.innerHTML+='<option value="'+esc(n)+'">'+esc(n)+'</option>';});
+renderChat();
+}).catch(function(e){g('chatList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
+}
+
+function renderChat(){
+var filter=g('chatFilter')?g('chatFilter').value:'';
+var msgs=filter?chatData.filter(function(m){return m.contatto_nome===filter;}):chatData;
+if(!msgs.length){g('chatList').innerHTML='<div class="empty">Nessuna conversazione. Le chat appariranno qui automaticamente.</div>';return;}
+var groups={};
+msgs.forEach(function(m){if(!groups[m.contatto_nome])groups[m.contatto_nome]=[];groups[m.contatto_nome].push(m);});
+var h='';
+Object.keys(groups).sort().forEach(function(nome){
+var conv=groups[nome].sort(function(a,b){return new Date(a.data)-new Date(b.data);});
+var initials=nome.substring(0,2).toUpperCase();
+h+='<div class="card" style="margin-bottom:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(nome)+'</div><div style="font-size:11px;color:var(--slate)">'+conv.length+' messaggi</div></div></div>';
+conv.forEach(function(m){
+h+='<div class="chat-msg '+(m.direzione==='inviato'?'sent':'received')+'"><div class="chat-bubble">'+esc(m.messaggio)+'<div class="chat-meta">'+(m.direzione==='inviato'?'Inviato':'Ricevuto')+' - '+fmtDate(m.data)+'</div></div></div>';
+});
+h+='</div>';
+});
+g('chatList').innerHTML=h;
+}
+
+// === FORNITORI ===
 function loadFornitori(){
 g('forList').innerHTML='<div class="empty">Caricamento...</div>';
-fetch(BASE+'/api/apps/'+AID+'/entities/Fornitore?limit=200').then(function(r){return r.json();}).then(function(d){var list=Array.isArray(d)?d:(d.records||[]);renderFornitori(list);}).catch(function(e){g('forList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
+fetch(BASE+'/api/apps/'+AID+'/entities/Fornitore?limit=200').then(function(r){return r.json();}).then(function(d){
+var list=Array.isArray(d)?d:(d.records||[]);
+renderFornitori(list);
+}).catch(function(e){g('forList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
 }
 
 function renderFornitori(list){
-if(!list.length){g('forList').innerHTML='<div class="empty">Nessun fornitore. Clicca "+ Aggiungi fornitore".</div>';return;}
+if(!list.length){g('forList').innerHTML='<div class="empty">Nessun fornitore.</div>';return;}
 var h='';
 list.forEach(function(f){
 var initials=(f.nome||'?').substring(0,2).toUpperCase();
 var url=f.url_sito||'';
 var email=f.email||'';
 var attivo=f.attivo!==false;
-var h2='<div class="contact-row" style="flex-direction:column;align-items:stretch;padding:14px;">';
-h2+='<div style="display:flex;align-items:center;justify-content:space-between;">';
-h2+='<div class="contact-info"><div class="contact-avatar" style="background:'+(attivo?'var(--green)':'var(--slate-l)')+'">'+esc(initials)+'</div>';
-h2+='<div><div style="font-weight:700;font-size:14px;">'+esc(f.nome||'senza nome');
-h2+=' '+(attivo?'<span class="badge badge-ok">Attivo</span>':'<span class="badge badge-wait">Disattivato</span>')+'</div>';
-if(f.note)h2+='<div style="font-size:11px;color:var(--slate);margin-top:2px;">'+esc(f.note)+'</div>';
-h2+='</div></div>';
-h2+='<div class="contact-actions"><button onclick="editFor(&quot;'+esc(f.id)+'&quot;,&quot;'+esc(f.nome||'')+'&quot;,&quot;'+esc(url)+'&quot;,&quot;'+esc(email)+'&quot;,&quot;'+esc(f.username||'')+'&quot;,&quot;'+esc(f.note||'')+'&quot;,'+(attivo?'true':'false')+')" title="Modifica">edit</button><button class="del-btn" onclick="delFor(&quot;'+esc(f.id)+'&quot;,&quot;'+esc(f.nome||'')+'&quot;)" title="Elimina">del</button></div>';
-h2+='</div>';
-h2+='<div style="display:flex;gap:12px;margin-top:8px;font-size:12px;flex-wrap:wrap;">';
-if(url)h2+='<a href="'+esc(url)+'" target="_blank" style="color:var(--blue-l);font-weight:600;text-decoration:none;">site</a>';
-if(email)h2+='<a href="mailto:'+esc(email)+'" style="color:var(--purple);font-weight:600;text-decoration:none;">email</a>';
-if(f.username)h2+='<span style="color:var(--slate);">user: '+esc(f.username)+'</span>';
-h2+='</div></div>';
-h+=h2;
+h+='<div class="contact-row" style="flex-direction:column;align-items:stretch;padding:14px;" data-for-id="'+esc(f.id)+'" data-for-nome="'+esc(f.nome||'')+'" data-for-url="'+esc(url)+'" data-for-email="'+esc(email)+'" data-for-user="'+esc(f.username||'')+'" data-for-note="'+esc(f.note||'')+'" data-for-attivo="'+(attivo?'1':'0')+'">';
+h+='<div style="display:flex;align-items:center;justify-content:space-between;">';
+h+='<div class="contact-info"><div class="contact-avatar" style="background:'+(attivo?'var(--green)':'var(--slate-l)')+'">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(f.nome||'senza nome')+(attivo?' <span class="badge badge-ok">Attivo</span>':' <span class="badge badge-wait">Off</span>')+'</div>';
+if(f.note)h+='<div style="font-size:11px;color:var(--slate);margin-top:2px;">'+esc(f.note)+'</div>';
+h+='</div></div>';
+h+='<div class="contact-actions"><button class="btn-edit-for">mod</button><button class="contact-actions del-btn btn-del-for">del</button></div>';
+h+='</div>';
+h+='<div style="display:flex;gap:12px;margin-top:8px;font-size:12px;flex-wrap:wrap;">';
+if(url)h+='<a href="'+esc(url)+'" target="_blank" style="color:var(--blue-l);font-weight:600;text-decoration:none;">sito</a>';
+if(email)h+='<a href="mailto:'+esc(email)+'" style="color:var(--purple);font-weight:600;text-decoration:none;">email</a>';
+if(f.username)h+='<span style="color:var(--slate);">user: '+esc(f.username)+'</span>';
+h+='</div></div>';
 });
-g('forList').innerHTML=h;
+var container=g('forList');
+container.innerHTML=h;
+container.querySelectorAll('.btn-edit-for').forEach(function(btn){
+btn.addEventListener('click',function(){
+var row=btn.closest('[data-for-id]');
+editFor(row.getAttribute('data-for-id'),row.getAttribute('data-for-nome'),row.getAttribute('data-for-url'),row.getAttribute('data-for-email'),row.getAttribute('data-for-user'),row.getAttribute('data-for-note'),row.getAttribute('data-for-attivo')==='1');
+});
+});
+container.querySelectorAll('.btn-del-for').forEach(function(btn){
+btn.addEventListener('click',function(){
+var row=btn.closest('[data-for-id]');
+delFor(row.getAttribute('data-for-id'),row.getAttribute('data-for-nome'));
+});
+});
 }
 
 function showForForm(){
-g('forForm').style.display='block';g('forFormTitle').textContent='Nuovo fornitore';
-g('forNome').value='';g('forUrl').value='';g('forEmail').value='';g('forUser').value='';g('forNote').value='';g('forAttivo').checked=true;editingForId=null;
+g('forForm').style.display='block';
+g('forFormTitle').textContent='Nuovo fornitore';
+g('forNome').value='';g('forUrl').value='';g('forEmail').value='';g('forUser').value='';g('forNote').value='';g('forAttivo').checked=true;
+editingForId=null;
 }
 
 function editFor(id,nome,url,email,user,note,attivo){
-g('forForm').style.display='block';g('forFormTitle').textContent='Modifica fornitore';
-g('forNome').value=nome;g('forUrl').value=url;g('forEmail').value=email;g('forUser').value=user;g('forNote').value=note;g('forAttivo').checked=attivo;editingForId=id;
+g('forForm').style.display='block';
+g('forFormTitle').textContent='Modifica fornitore';
+g('forNome').value=nome;g('forUrl').value=url;g('forEmail').value=email;g('forUser').value=user;g('forNote').value=note;g('forAttivo').checked=attivo;
+editingForId=id;
 g('forForm').scrollIntoView({behavior:'smooth'});
 }
 
 function saveFor(){
-var nome=gv('forNome');if(!nome){alert('Inserisci il nome');return;}
+var nome=gv('forNome');
+if(!nome){alert('Inserisci il nome');return;}
 var body={nome:nome,url_sito:gv('forUrl'),email:gv('forEmail'),username:gv('forUser'),note:gv('forNote'),attivo:g('forAttivo').checked};
-var url2=BASE+'/api/apps/'+AID+'/entities/Fornitore';var method='POST';
+var url2=BASE+'/api/apps/'+AID+'/entities/Fornitore';
+var method='POST';
 if(editingForId){url2+='/'+editingForId;method='PUT';}
-fetch(url2,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(){g('forForm').style.display='none';loadFornitori();}).catch(function(e){alert('Errore: '+e.message);});
+fetch(url2,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(){
+g('forForm').style.display='none';loadFornitori();
+}).catch(function(e){alert('Errore: '+e.message);});
 }
 
 function delFor(id,nome){
@@ -369,6 +680,18 @@ if(!confirm('Eliminare "'+nome+'"?'))return;
 fetch(BASE+'/api/apps/'+AID+'/entities/Fornitore/'+id,{method:'DELETE',headers:{'Content-Type':'application/json'}}).then(function(){loadFornitori();}).catch(function(e){alert('Errore: '+e.message);});
 }
 
+// === EVENT BINDINGS ===
+g('btnAdd').addEventListener('click',addRow);
+g('btnStart').addEventListener('click',avvia);
+g('btnReset').addEventListener('click',reset);
+g('btnAddTec').addEventListener('click',showTecForm);
+g('btnSaveTec').addEventListener('click',saveTec);
+g('btnCancelTec').addEventListener('click',function(){g('tecForm').style.display='none';});
+g('btnAddFor').addEventListener('click',showForForm);
+g('btnSaveFor').addEventListener('click',saveFor);
+g('btnCancelFor').addEventListener('click',function(){g('forForm').style.display='none';});
+loadSugg();
+addRow();
 </script>
 </body>
 </html>
