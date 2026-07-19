@@ -89,7 +89,7 @@ tr:hover{background:#f8fafc;}
 </head>
 <body>
 <header>
-<div class="logo"><span>&#128295;</span><div><h1>Cesana Service</h1><sub>Gaetano - Ricerca &amp; Ordine Ricambi v13</sub></div></div>
+<div class="logo"><span>&#128295;</span><div><h1>Cesana Service</h1><sub>Gaetano - Ricerca &amp; Ordine Ricambi v14</sub></div></div>
 <div class="nav">
 <button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
 <button id="tS" onclick="tab('S')">&#128203; Storico</button>
@@ -136,6 +136,13 @@ tr:hover{background:#f8fafc;}
 </div>
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+<h3 class="section-title" style="margin:0;">&#128100; Amministratori</h3>
+<button class="btn btn-blue" id="btnAddAdm">+ Aggiungi</button>
+</div>
+<div id="admList"></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
 <h3 class="section-title" style="margin:0;">&#128119; Tecnici</h3>
 <button class="btn btn-blue" id="btnAddTec">+ Aggiungi</button>
 </div>
@@ -144,9 +151,10 @@ tr:hover{background:#f8fafc;}
 <h4 style="font-size:14px;color:var(--blue);margin-bottom:12px;" id="tecFormTitle">Nuovo tecnico</h4>
 <div class="form-group"><label>Nome</label><input id="tecNome" placeholder="Mario Rossi"></div>
 <div class="form-row">
+<div class="form-group"><label>Ruolo</label><select id="tecRuolo"><option value="tecnico">Tecnico</option><option value="amministratore">Amministratore</option></select></div>
 <div class="form-group"><label>Syncrogest UID</label><input id="tecUid" placeholder="5378"></div>
-<div class="form-group"><label>WhatsApp</label><input id="tecWhatsapp" placeholder="+39 333..."></div>
 </div>
+<div class="form-group"><label>WhatsApp</label><input id="tecWhatsapp" placeholder="+39 333..."></div>
 <div style="display:flex;gap:8px;">
 <button class="btn btn-green" id="btnSaveTec">Salva</button>
 <button class="btn btn-gray" id="btnCancelTec">Annulla</button>
@@ -510,22 +518,27 @@ renderTecnici(list);
 }
 
 function renderTecnici(list){
-if(!list.length){g('tecList').innerHTML='<div class="empty">Nessun tecnico.</div>';return;}
+var adm=list.filter(function(t){return t.ruolo==='amministratore';});
+var tec=list.filter(function(t){return t.ruolo!=='amministratore';});
+renderContattiGroup(adm,g('admList'),'Nessun amministratore.');
+renderContattiGroup(tec,g('tecList'),'Nessun tecnico.');
+}
+function renderContattiGroup(list,container,emptyMsg){
+if(!list.length){container.innerHTML='<div class="empty">'+emptyMsg+'</div>';return;}
 var h='';
 list.forEach(function(t){
 var wa=t.whatsapp_number||'';
 var initials=(t.nome||'?').substring(0,2).toUpperCase();
-h+='<div class="contact-row" data-tec-id="'+esc(t.id)+'" data-tec-nome="'+esc(t.nome||'')+'" data-tec-uid="'+esc(t.syncrogest_uid||'')+'" data-tec-wa="'+esc(wa)+'">';
+h+='<div class="contact-row" data-tec-id="'+esc(t.id)+'" data-tec-nome="'+esc(t.nome||'')+'" data-tec-uid="'+esc(t.syncrogest_uid||'')+'" data-tec-wa="'+esc(wa)+'" data-tec-ruolo="'+esc(t.ruolo||'tecnico')+'">';
 h+='<div class="contact-info"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(t.nome||'senza nome')+'</div>'+(t.syncrogest_uid?'<div style="font-size:11px;color:var(--slate)">UID: '+esc(t.syncrogest_uid)+'</div>':'')+'</div></div>';
 h+='<div style="display:flex;align-items:center;gap:8px;"><span class="contact-phone'+(wa?'':' missing')+'">'+(wa?esc(wa):'mancante')+'</span><div class="contact-actions"><button class="btn-edit-tec" title="Modifica">mod</button><button class="contact-actions del-btn btn-del-tec" title="Elimina">del</button></div></div>';
 h+='</div>';
 });
-var container=g('tecList');
 container.innerHTML=h;
 container.querySelectorAll('.btn-edit-tec').forEach(function(btn){
 btn.addEventListener('click',function(){
 var row=btn.closest('[data-tec-id]');
-editTec(row.getAttribute('data-tec-id'),row.getAttribute('data-tec-nome'),row.getAttribute('data-tec-uid'),row.getAttribute('data-tec-wa'));
+editTec(row.getAttribute('data-tec-id'),row.getAttribute('data-tec-nome'),row.getAttribute('data-tec-uid'),row.getAttribute('data-tec-wa'),row.getAttribute('data-tec-ruolo'));
 });
 });
 container.querySelectorAll('.btn-del-tec').forEach(function(btn){
@@ -538,8 +551,8 @@ delTec(row.getAttribute('data-tec-id'),row.getAttribute('data-tec-nome'));
 
 function showTecForm(){
 g('tecForm').style.display='block';
-g('tecFormTitle').textContent='Nuovo tecnico';
-g('tecNome').value='';g('tecUid').value='';g('tecWhatsapp').value='';
+g('tecFormTitle').textContent='Nuovo contatto';
+g('tecNome').value='';g('tecUid').value='';g('tecWhatsapp').value='';g('tecRuolo').value='tecnico';
 editingTecId=null;
 }
 
@@ -554,7 +567,7 @@ g('tecForm').scrollIntoView({behavior:'smooth'});
 function saveTec(){
 var nome=gv('tecNome'),uid=gv('tecUid'),wa=gv('tecWhatsapp');
 if(!nome){alert('Inserisci il nome');return;}
-var body={nome:nome,syncrogest_uid:uid,whatsapp_number:wa};
+var ruolo=gv('tecRuolo');var body={nome:nome,syncrogest_uid:uid,whatsapp_number:wa,ruolo:ruolo};
 var url2=BASE+'/functions/dashboardApi?action=create_tecnico';
 var method='POST';
 if(editingTecId){url2=BASE+'/functions/dashboardApi?action=update_tecnico&id='+editingTecId;method='PUT';}
@@ -683,7 +696,8 @@ fetch(BASE+'/functions/dashboardApi?action=delete_fornitore&id='+id,{method:'DEL
 g('btnAdd').addEventListener('click',addRow);
 g('btnStart').addEventListener('click',avvia);
 g('btnReset').addEventListener('click',reset);
-g('btnAddTec').addEventListener('click',showTecForm);
+g('btnAddTec').addEventListener('click',function(){showTecForm();g('tecRuolo').value='tecnico';});
+g('btnAddAdm')&&g('btnAddAdm').addEventListener('click',function(){showTecForm();g('tecRuolo').value='amministratore';g('tecFormTitle').textContent='Nuovo amministratore';});
 g('btnSaveTec').addEventListener('click',saveTec);
 g('btnCancelTec').addEventListener('click',function(){g('tecForm').style.display='none';});
 g('btnAddFor').addEventListener('click',showForForm);
