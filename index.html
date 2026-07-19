@@ -238,14 +238,14 @@ tr:hover{background:#f8fafc;}
 <div id="TA" style="display:none;">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px;" id="analisiCards"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;" id="analisiCharts">
-<div class="card"><h3 class="section-title" style="margin-bottom:12px;">&#128176; Spesa Stimata per Marca</h3><canvas id="chartMarca" height="200"></canvas></div>
-<div class="card"><h3 class="section-title" style="margin-bottom:12px;">&#128269; Ricambi Più Ricercati</h3><canvas id="chartTop" height="200"></canvas></div>
-<div class="card" style="grid-column:1/-1;"><h3 class="section-title" style="margin-bottom:12px;">&#128197; Andamento Ricerche nel Tempo</h3><canvas id="chartTime" height="100"></canvas></div>
+<div class="card"><h3 class="section-title" style="margin-bottom:12px;">&#128176; Spesa Stimata per Marca</h3><div style="height:300px;position:relative;"><canvas id="chartMarca"></canvas></div></div>
+<div class="card"><h3 class="section-title" style="margin-bottom:12px;">&#128269; Ricambi Più Ricercati</h3><div style="height:300px;position:relative;"><canvas id="chartTop"></canvas></div></div>
+<div class="card" style="grid-column:1/-1;"><h3 class="section-title" style="margin-bottom:12px;">&#128197; Andamento Ricerche nel Tempo</h3><div style="height:180px;position:relative;"><canvas id="chartTime"></canvas></div></div>
 </div>
 <div class="card" style="margin-bottom:20px;">
 <h3 class="section-title" style="margin-bottom:14px;">&#128230; Ricambi Ricorrenti con Prezzo</h3>
 <p style="font-size:13px;color:var(--slate);margin-bottom:14px;">I ricambi cercati più spesso, con prezzo medio e suggerimento di stockaggio.</p>
-<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;" id="tabRicorrenti">
+<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;" id="tabRicorrenti">
 <thead><tr style="background:var(--blue-l);"><th style="text-align:left;padding:8px 10px;border-radius:8px 0 0 0;">Ricambio</th><th style="text-align:left;padding:8px 10px;">Marca</th><th style="text-align:center;padding:8px 10px;">Ricerche</th><th style="text-align:right;padding:8px 10px;">Prezzo Medio</th><th style="text-align:right;padding:8px 10px;">Spesa Totale Stimata</th><th style="text-align:center;padding:8px 10px;border-radius:0 8px 0 0;">Suggerimento</th></tr></thead>
 <tbody id="ricorrentiBody"></tbody></table></div>
 </div>
