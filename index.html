@@ -95,12 +95,13 @@ tr:hover{background:#f8fafc;}
 </head>
 <body>
 <header>
-<div class="logo"><span>🔧</span><div><h1>Cesana Service</h1><sub>Gaetano — Ricerca & Ordine Ricambi v9</sub></div></div>
+<div class="logo"><span>🔧</span><div><h1>Cesana Service</h1><sub>Gaetano — Ricerca & Ordine Ricambi v10</sub></div></div>
 <div class="nav">
 <button class="on" id="tR" onclick="tab('R')">🔍 Ricerca</button>
 <button id="tS" onclick="tab('S')">📋 Storico</button>
 <button id="tC" onclick="tab('C')">📞 Contatti</button>
 <button id="tT" onclick="tab('T')">💬 Chat</button>
+    <button id="tF" onclick="tab('F')">🏭 Fornitori</button>
 </div>
 </header>
 <main>
@@ -168,6 +169,33 @@ tr:hover{background:#f8fafc;}
 <div id="chatList"></div>
 </div>
 </div>
+<div id="TF" style="display:none;">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+<h3 class="section-title" style="margin:0;">🏭 Fornitori</h3>
+<button class="btn btn-blue" id="btnAddFor">+ Aggiungi fornitore</button>
+</div>
+<div id="forList"></div>
+<div id="forForm" style="display:none;margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid var(--blue-l);">
+<h4 style="font-size:14px;color:var(--blue);margin-bottom:12px;" id="forFormTitle">Nuovo fornitore</h4>
+<div class="form-group"><label>Nome fornitore</label><input id="forNome" placeholder="es. LF Ricambi / REPA"></div>
+<div class="form-row">
+<div class="form-group"><label>Sito web (ricerca)</label><input id="forUrl" placeholder="https://..."></div>
+<div class="form-group"><label>Email contatti/ordini</label><input id="forEmail" placeholder="ordini@fornitore.it"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>Username portale (opz.)</label><input id="forUser" placeholder="se richiede login"></div>
+<div class="form-group"><label>Note</label><input id="forNote" placeholder="note varie"></div>
+</div>
+<div style="display:flex;gap:8px;align-items:center;">
+<button class="btn btn-green" id="btnSaveFor">Salva</button>
+<button class="btn btn-gray" id="btnCancelFor">Annulla</button>
+<label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--slate);margin-left:auto;cursor:pointer;"><input type="checkbox" id="forAttivo" checked style="width:auto;"> Attivo</label>
+</div>
+</div>
+</div>
+</div>
+
 </main>
 <script>
 var BASE='https://superagent-244159cc.base44.app';
@@ -193,10 +221,10 @@ document.getElementById('btnSaveTec').addEventListener('click',saveTec);
 document.getElementById('btnCancelTec').addEventListener('click',function(){g('tecForm').style.display='none';});
 loadSugg();addRow();
 function tab(t){
-['TR','TS','TC','TT'].forEach(function(s){g(s).style.display='none';});
-['tR','tS','tC','tT'].forEach(function(b){g(b).className='';});
+['TR','TS','TC','TT','TF'].forEach(function(s){g(s).style.display='none';});
+['tR','tS','tC','tT','tF'].forEach(function(b){g(b).className='';});
 g('T'+t).style.display='block';g('t'+t).className='on';
-if(t==='S')loadSt();if(t==='C')loadContatti();if(t==='T')loadChat();
+if(t==='S')loadSt();if(t==='C')loadContatti();if(t==='T')loadChat();if(t==='F')loadFornitori();
 }
 function addRow(){
 var id=++N;rows.push({id:id,st:'idle'});
@@ -278,6 +306,69 @@ function saveTec(){var nome=gv('tecNome'),uid=gv('tecUid'),wa=gv('tecWhatsapp');
 function delTec(id,nome){if(!confirm('Eliminare "'+nome+'"?'))return;fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico/'+id,{method:'DELETE',headers:{'Content-Type':'application/json'}}).then(function(){loadTecnici();}).catch(function(e){alert('Errore: '+e.message);});}
 function loadChat(){g('chatList').innerHTML='<div class="empty">Caricamento...</div>';fetch(BASE+'/api/apps/'+AID+'/entities/ChatLog?limit=500&sort=-data').then(function(r){return r.json();}).then(function(d){chatData=Array.isArray(d)?d:(d.records||[]);var nomi={};chatData.forEach(function(m){nomi[m.contatto_nome]=true;});var sel=g('chatFilter');sel.innerHTML='<option value="">Tutti i contatti</option>';Object.keys(nomi).sort().forEach(function(n){sel.innerHTML+='<option value="'+esc(n)+'">'+esc(n)+'</option>';});renderChat();}).catch(function(e){g('chatList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});}
 function renderChat(){var filter=g('chatFilter')?g('chatFilter').value:'';var msgs=filter?chatData.filter(function(m){return m.contatto_nome===filter;}):chatData;if(!msgs.length){g('chatList').innerHTML='<div class="empty">Nessuna conversazione registrata. Le chat con i tecnici appariranno qui automaticamente.</div>';return;}var groups={};msgs.forEach(function(m){if(!groups[m.contatto_nome])groups[m.contatto_nome]=[];groups[m.contatto_nome].push(m);});var h='';Object.keys(groups).sort().forEach(function(nome){var conv=groups[nome].sort(function(a,b){return new Date(a.data)-new Date(b.data);});var initials=nome.split(' ').map(function(w){return w[0];}).join('').substring(0,2);h+='<div class="card" style="margin-bottom:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(nome)+'</div><div style="font-size:11px;color:var(--slate)">'+conv.length+' messaggi</div></div></div>';conv.forEach(function(m){h+='<div class="chat-msg '+(m.direzione==='inviato'?'sent':'received')+'"><div class="chat-bubble">'+esc(m.messaggio)+'<div class="chat-meta">'+(m.direzione==='inviato'?'Inviato':'Ricevuto')+' - '+fmtDate(m.data)+'</div></div></div>';});h+='</div>';});g('chatList').innerHTML=h;}
+
+// ============ FORNITORI ============
+var editingForId=null;
+document.getElementById('btnAddFor').addEventListener('click',showForForm);
+document.getElementById('btnSaveFor').addEventListener('click',saveFor);
+document.getElementById('btnCancelFor').addEventListener('click',function(){g('forForm').style.display='none';});
+
+function loadFornitori(){
+g('forList').innerHTML='<div class="empty">Caricamento...</div>';
+fetch(BASE+'/api/apps/'+AID+'/entities/Fornitore?limit=200').then(function(r){return r.json();}).then(function(d){var list=Array.isArray(d)?d:(d.records||[]);renderFornitori(list);}).catch(function(e){g('forList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
+}
+
+function renderFornitori(list){
+if(!list.length){g('forList').innerHTML='<div class="empty">Nessun fornitore. Clicca "+ Aggiungi fornitore".</div>';return;}
+var h='';
+list.forEach(function(f){
+var initials=(f.nome||'?').substring(0,2).toUpperCase();
+var url=f.url_sito||'';
+var email=f.email||'';
+var attivo=f.attivo!==false;
+var h2='<div class="contact-row" style="flex-direction:column;align-items:stretch;padding:14px;">';
+h2+='<div style="display:flex;align-items:center;justify-content:space-between;">';
+h2+='<div class="contact-info"><div class="contact-avatar" style="background:'+(attivo?'var(--green)':'var(--slate-l)')+'">'+esc(initials)+'</div>';
+h2+='<div><div style="font-weight:700;font-size:14px;">'+esc(f.nome||'senza nome');
+h2+=' '+(attivo?'<span class="badge badge-ok">Attivo</span>':'<span class="badge badge-wait">Disattivato</span>')+'</div>';
+if(f.note)h2+='<div style="font-size:11px;color:var(--slate);margin-top:2px;">'+esc(f.note)+'</div>';
+h2+='</div></div>';
+h2+='<div class="contact-actions"><button onclick="editFor(&quot;'+esc(f.id)+'&quot;,&quot;'+esc(f.nome||'')+'&quot;,&quot;'+esc(url)+'&quot;,&quot;'+esc(email)+'&quot;,&quot;'+esc(f.username||'')+'&quot;,&quot;'+esc(f.note||'')+'&quot;,'+(attivo?'true':'false')+')" title="Modifica">edit</button><button class="del-btn" onclick="delFor(&quot;'+esc(f.id)+'&quot;,&quot;'+esc(f.nome||'')+'&quot;)" title="Elimina">del</button></div>';
+h2+='</div>';
+h2+='<div style="display:flex;gap:12px;margin-top:8px;font-size:12px;flex-wrap:wrap;">';
+if(url)h2+='<a href="'+esc(url)+'" target="_blank" style="color:var(--blue-l);font-weight:600;text-decoration:none;">site</a>';
+if(email)h2+='<a href="mailto:'+esc(email)+'" style="color:var(--purple);font-weight:600;text-decoration:none;">email</a>';
+if(f.username)h2+='<span style="color:var(--slate);">user: '+esc(f.username)+'</span>';
+h2+='</div></div>';
+h+=h2;
+});
+g('forList').innerHTML=h;
+}
+
+function showForForm(){
+g('forForm').style.display='block';g('forFormTitle').textContent='Nuovo fornitore';
+g('forNome').value='';g('forUrl').value='';g('forEmail').value='';g('forUser').value='';g('forNote').value='';g('forAttivo').checked=true;editingForId=null;
+}
+
+function editFor(id,nome,url,email,user,note,attivo){
+g('forForm').style.display='block';g('forFormTitle').textContent='Modifica fornitore';
+g('forNome').value=nome;g('forUrl').value=url;g('forEmail').value=email;g('forUser').value=user;g('forNote').value=note;g('forAttivo').checked=attivo;editingForId=id;
+g('forForm').scrollIntoView({behavior:'smooth'});
+}
+
+function saveFor(){
+var nome=gv('forNome');if(!nome){alert('Inserisci il nome');return;}
+var body={nome:nome,url_sito:gv('forUrl'),email:gv('forEmail'),username:gv('forUser'),note:gv('forNote'),attivo:g('forAttivo').checked};
+var url2=BASE+'/api/apps/'+AID+'/entities/Fornitore';var method='POST';
+if(editingForId){url2+='/'+editingForId;method='PUT';}
+fetch(url2,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(){g('forForm').style.display='none';loadFornitori();}).catch(function(e){alert('Errore: '+e.message);});
+}
+
+function delFor(id,nome){
+if(!confirm('Eliminare "'+nome+'"?'))return;
+fetch(BASE+'/api/apps/'+AID+'/entities/Fornitore/'+id,{method:'DELETE',headers:{'Content-Type':'application/json'}}).then(function(){loadFornitori();}).catch(function(e){alert('Errore: '+e.message);});
+}
+
 </script>
 </body>
 </html>
