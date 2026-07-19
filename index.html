@@ -3,1151 +3,281 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>Cesana Service — Ricerca Ricambi v6</title>
+<title>Cesana Service — Gaetano Ricambi</title>
 <style>
+:root{--blue:#1e40af;--blue-l:#3b82f6;--green:#16a34a;--red:#dc2626;--amber:#f59e0b;--purple:#7c3aed;--slate:#64748b;--slate-l:#94a3b8;--bg:#f1f5f9;--card:#fff;--border:#e2e8f0;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:Arial,sans-serif;background:#f1f5f9;min-height:100vh;}
-header{background:#1e3a8a;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
-h1{font-size:16px;font-weight:700;}
-sub{color:#93c5fd;font-size:11px;display:block;}
-.nav button{padding:7px 14px;border-radius:6px;border:none;color:#93c5fd;background:transparent;font-size:13px;cursor:pointer;}
-.nav button.on{background:#1e40af;color:#fff;}
-main{max-width:1100px;margin:0 auto;padding:16px;}
-.bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;}
-.barl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-button.add{padding:8px 16px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
-button.add:hover{background:#1e40af;}
-button.go{padding:8px 18px;background:#0f172a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
-button.go:hover{background:#1e293b;}
-button.go:disabled,button.add:disabled{opacity:.4;cursor:not-allowed;}
-button.rst{padding:8px 14px;background:#fff;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;cursor:pointer;}
-.cnt{display:flex;gap:14px;align-items:center;}
-.cni{text-align:center;}
-.cnn{font-size:20px;font-weight:800;}
-.cnl{font-size:10px;color:#94a3b8;text-transform:uppercase;}
-.card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.rrow{border-bottom:2px solid #f1f5f9;transition:background .2s;}
-.rrow:last-child{border-bottom:none;}
-/* Riga A: # | Rif | Syn | Marca | Modello | Matricola | Qty | X */
-.rA{display:grid;grid-template-columns:28px 1fr 90px 1fr 1.1fr 110px 56px 28px;gap:6px;align-items:end;padding:10px 14px 4px;}
-/* Riga B: (gap) | Ricambio | Stato | (gap) */
-.rB{display:grid;grid-template-columns:28px 1fr 220px 28px;gap:6px;align-items:center;padding:4px 14px 10px;}
-.lbl{font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:2px;letter-spacing:.4px;}
-.lbl.violet{color:#6366f1;}
-.lbl.green{color:#10b981;}
-.inp{width:100%;padding:6px 8px;border:1.5px solid #cbd5e1;border-radius:7px;font-size:12px;outline:none;background:#fff;transition:border .15s;}
-.inp:focus{border-color:#3b82f6;box-shadow:0 0 0 2px #dbeafe;}
-.inp.mat{border-color:#a5b4fc;background:#eef2ff;}
-.inp.mat::placeholder{color:#a5b4fc;}
-.inp.mat:focus{border-color:#6366f1;box-shadow:0 0 0 2px #e0e7ff;}
-.inp.qty{border-color:#d1fae5;background:#f0fdf4;text-align:center;font-weight:700;}
-.inp.qty:focus{border-color:#10b981;box-shadow:0 0 0 2px #d1fae5;}
-.inp:disabled{background:#f8fafc;color:#94a3b8;}
-.slbl{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pw{height:4px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-top:3px;}
-.pb{height:100%;border-radius:999px;transition:width .4s;}
-.del{width:26px;height:26px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:16px;cursor:pointer;align-self:end;}
-.del:hover{background:#fecaca;}
-.numcol{color:#94a3b8;font-size:12px;font-weight:700;text-align:center;padding-bottom:6px;}
-.empty{text-align:center;padding:40px;color:#94a3b8;}
-.rres{display:none;padding:0 14px 12px;overflow-x:auto;}
-table.rt{width:100%;border-collapse:collapse;font-size:11px;}
-table.rt th{background:#1e3a8a;color:#fff;padding:5px 8px;font-size:10px;text-align:left;}
-table.rt td{padding:5px 8px;border-bottom:1px solid #f1f5f9;}
-table.rt tr:last-child td{border-bottom:none;}
-table.rt tr:nth-child(even) td{background:#f8fafc;}
-.bg-wait{background:#fff;}
-.bg-queue{background:#fffbeb;}
-.bg-run{background:#eff6ff;}
-.bg-ok{background:#f0fdf4;}
-.bg-err{background:#fef2f2;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);min-height:100vh;color:#1e293b;}
+header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:16px 24px;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+header .logo{display:flex;align-items:center;gap:12px;}
+header h1{font-size:20px;font-weight:700;}
+header .logo span{font-size:28px;}
+header sub{font-size:11px;opacity:.8;display:block;margin-top:2px;}
+.nav{display:flex;gap:4px;margin-top:14px;}
+.nav button{background:rgba(255,255,255,.1);color:#fff;border:none;padding:10px 18px;border-radius:8px 8px 0 0;cursor:pointer;font-size:14px;font-weight:600;transition:all .2s;}
+.nav button:hover{background:rgba(255,255,255,.2);}
+.nav button.on{background:var(--bg);color:#1e3a8a;}
+main{padding:20px 24px;max-width:1400px;margin:0 auto;}
+.card{background:var(--card);border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--border);}
+.section-title{font-size:16px;font-weight:700;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.btn{padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;}
+.btn-blue{background:var(--blue-l);color:#fff;}.btn-blue:hover{background:#2563eb;}
+.btn-green{background:var(--green);color:#fff;}.btn-green:hover{background:#15803d;}
+.btn-red{background:var(--red);color:#fff;}.btn-red:hover{background:#b91c1c;}
+.btn-gray{background:#e5e7eb;color:#374151;}.btn-gray:hover{background:#d1d5db;}
+.btn-purple{background:var(--purple);color:#fff;}.btn-purple:hover{background:#6d28d9;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border .15s;}
+input:focus{border-color:var(--blue-l);box-shadow:0 0 0 3px rgba(59,130,246,.15);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:10px 12px;background:#f8fafc;border-bottom:2px solid var(--border);color:var(--slate);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.5px;}
+td{padding:10px 12px;border-bottom:1px solid var(--border);}
+tr:hover{background:#f8fafc;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge-ok{background:#dcfce7;color:var(--green);}
+.badge-wait{background:#fef3c7;color:var(--amber);}
+.badge-err{background:#fee2e2;color:var(--red);}
+.badge-run{background:#dbeafe;color:var(--blue-l);}
+.empty{text-align:center;padding:40px;color:var(--slate-l);font-size:14px;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #dbeafe;border-top-color:var(--blue-l);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.spinner{display:inline-block;width:11px;height:11px;border:2px solid #bfdbfe;border-top-color:#1d4ed8;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
-.thA{display:grid;grid-template-columns:28px 1fr 90px 1fr 1.1fr 110px 56px 28px;gap:6px;padding:7px 14px 3px;background:#f8fafc;border-bottom:1px solid #e8edf2;}
-.thB{display:grid;grid-template-columns:28px 1fr 220px 28px;gap:6px;padding:3px 14px 7px;background:#f8fafc;border-bottom:1px solid #e2e8f0;}
-.thA span,.thB span{font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.4px;}
-.best-row td{background:#f0fdf4!important;font-weight:700;}
-.star{color:#f59e0b;}
-.row-order-btn{padding:6px 14px;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;margin-top:8px;display:inline-block;}
-.row-order-btn:hover{opacity:.85;}
-.row-order-btn:disabled{opacity:.4;cursor:not-allowed;}
-.row-order-area{padding:0 14px 12px;}
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;justify-content:center;align-items:center;}
-.modal-overlay.show{display:flex;}
-.modal-box{background:#fff;border-radius:14px;padding:28px 28px 20px;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);}
-.modal-box h2{font-size:17px;font-weight:700;margin-bottom:14px;color:#1e3a8a;}
-.modal-box .items{max-height:220px;overflow-y:auto;margin-bottom:14px;}
-.modal-box .item-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f1f5f9;}
-.modal-box .item-code{font-family:monospace;font-weight:700;font-size:12px;color:#1d4ed8;min-width:120px;}
-.modal-box .item-desc{font-size:12px;color:#374151;flex:1;}
-.modal-box .item-qty{font-size:12px;font-weight:700;color:#059669;}
-.modal-note{width:100%;padding:8px;border:1.5px solid #cbd5e1;border-radius:7px;font-size:12px;margin-bottom:14px;resize:vertical;}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
-.modal-actions button{padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;}
-.btn-cancel{background:#f1f5f9;color:#374151;}
-.btn-cancel:hover{background:#e2e8f0;}
-.btn-confirm{background:#059669;color:#fff;}
-.btn-confirm:hover{background:#047857;}
-.btn-confirm:disabled{opacity:.5;cursor:not-allowed;}
-
-
-.foto-area{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px;}
-.foto-thumb{width:52px;height:52px;object-fit:cover;border-radius:6px;border:1px solid #334155;cursor:pointer;}
-.foto-add{width:52px;height:52px;border-radius:6px;border:2px dashed #475569;background:#1e293b;color:#94a3b8;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s;}
-.foto-add:hover{border-color:#7c3aed;color:#a78bfa;}
-.foto-label{font-size:10px;color:#64748b;margin-top:2px;}
-.lbl.orange{color:#fb923c;font-weight:700;}
-.inp.codlf{font-family:monospace;font-size:12px;letter-spacing:1px;}
+.rrow{border-radius:10px;padding:16px;margin-bottom:10px;border:1px solid var(--border);background:#fff;transition:all .2s;}
+.bg-wait{border-left:4px solid var(--slate-l);}
+.bg-queue{border-left:4px solid var(--amber);background:#fffbeb;}
+.bg-run{border-left:4px solid var(--blue-l);background:#eff6ff;}
+.bg-ok{border-left:4px solid var(--green);background:#f0fdf4;}
+.bg-err{border-left:4px solid var(--red);background:#fef2f2;}
+.lbl{font-size:10px;color:var(--slate);font-weight:600;text-transform:uppercase;margin-bottom:3px;}
+.rA{display:grid;grid-template-columns:40px 1fr 120px 1fr 1fr 140px 60px 36px;gap:8px;align-items:end;}
+.rB{display:grid;grid-template-columns:40px 1fr 1fr 200px 60px;gap:8px;margin-top:8px;align-items:end;}
+.numcol{font-size:18px;font-weight:700;color:var(--slate-l);padding-top:8px;}
+.del{background:#fee2e2;color:var(--red);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:18px;font-weight:700;}
+.del:hover{background:var(--red);color:#fff;}
+.pw{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin-top:4px;}
+.pb{height:100%;border-radius:3px;transition:width .3s;}
+.rres{margin-top:10px;display:none;}
+.rt{width:100%;font-size:12px;margin-top:4px;}
+.rt th{font-size:10px;}
+.star{color:var(--amber);}
+.best-row{background:#eff6ff;}
+.row-order-area{margin-top:10px;text-align:right;}
+.row-order-btn{padding:8px 16px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;}
+.foto-area{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.foto-add{font-size:24px;cursor:pointer;padding:4px 10px;border:2px dashed var(--border);border-radius:8px;background:#f8fafc;}
+.foto-label{font-size:11px;color:var(--slate);}
+.foto-thumb{width:50px;height:50px;border-radius:6px;object-fit:cover;border:1px solid var(--border);}
+.stat-row{display:flex;gap:12px;margin-bottom:16px;}
+.stat-card{flex:1;background:#fff;border-radius:10px;padding:14px;text-align:center;border:1px solid var(--border);}
+.stat-card .num{font-size:24px;font-weight:700;}
+.stat-card .lbl{font-size:11px;color:var(--slate);margin-top:2px;}
+.chat-msg{display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;}
+.chat-msg.sent{flex-direction:row-reverse;}
+.chat-bubble{max-width:70%;padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.4;}
+.chat-msg.sent .chat-bubble{background:var(--blue-l);color:#fff;border-bottom-right-radius:4px;}
+.chat-msg.received .chat-bubble{background:#f1f5f9;color:#1e293b;border-bottom-left-radius:4px;}
+.chat-meta{font-size:10px;color:var(--slate-l);margin-top:4px;}
+.contact-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border);margin-bottom:6px;transition:all .15s;}
+.contact-row:hover{border-color:var(--blue-l);}
+.contact-info{display:flex;align-items:center;gap:10px;}
+.contact-avatar{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
+.contact-phone{font-family:monospace;font-size:14px;color:var(--green);font-weight:600;}
+.contact-phone.missing{color:var(--red);}
+.contact-actions{display:flex;gap:4px;}
+.contact-actions button{padding:6px 8px;border:none;border-radius:6px;cursor:pointer;font-size:14px;background:#e5e7eb;}
+.contact-actions button:hover{background:#d1d5db;}
+.contact-actions .del-btn{background:#fee2e2;}
+.contact-actions .del-btn:hover{background:var(--red);color:#fff;}
+.form-group{margin-bottom:12px;}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--slate);margin-bottom:4px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:900px){.rA,.rB{grid-template-columns:1fr;}.stat-row{flex-direction:column;}}
 </style>
 </head>
 <body>
 <header>
-  <div>
-    <h1>&#128295; Cesana Service</h1>
-    <sub>Ricerca Ricambi — v8</sub>
-  </div>
-  <div class="nav">
-    <button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
-    <button id="tS" onclick="tab('S')">&#128203; Storico</button>
-    <button id="tC" onclick="tab('C')">&#128222; Contatti</button>
-  </div>
+<div class="logo"><span>🔧</span><div><h1>Cesana Service</h1><sub>Gaetano — Ricerca & Ordine Ricambi v9</sub></div></div>
+<div class="nav">
+<button class="on" id="tR" onclick="tab('R')">🔍 Ricerca</button>
+<button id="tS" onclick="tab('S')">📋 Storico</button>
+<button id="tC" onclick="tab('C')">📞 Contatti</button>
+<button id="tT" onclick="tab('T')">💬 Chat</button>
+</div>
 </header>
-
 <main>
 <div id="TR">
-  <div class="bar">
-    <div class="barl">
-      <button class="add" id="btnAdd">+ Aggiungi riga</button>
-      <span style="font-size:11px;color:#64748b;">
-        <span style="color:#6366f1;font-weight:700;">&#128197; Matricola</span> = listino preciso &nbsp;|&nbsp;
-        <span style="color:#10b981;font-weight:700;">Qty</span> = quantità
-      </span>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <div class="cnt" id="cnt" style="display:none;">
-        <div class="cni"><div class="cnn" id="cTot" style="color:#1d4ed8;">0</div><div class="cnl">Tot</div></div>
-        <div class="cni"><div class="cnn" id="cOk"  style="color:#16a34a;">0</div><div class="cnl">OK</div></div>
-        <div class="cni"><div class="cnn" id="cRun" style="color:#f59e0b;">0</div><div class="cnl">Corso</div></div>
-        <div class="cni"><div class="cnn" id="cErr" style="color:#dc2626;">0</div><div class="cnl">Err</div></div>
-      </div>
-      <button class="go" id="btnStart">&#9654; Avvia</button>
-      <button class="rst" id="btnReset">&#8635; Reset</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="thA">
-      <span>#</span><span>Riferimento</span><span>Syncrogest</span>
-      <span>Marca</span><span>Modello</span>
-      <span style="color:#6366f1;">&#128197; Matricola</span>
-      <span style="color:#10b981;">Qty</span><span></span>
-    </div>
-    <div class="thB">
-      <span></span><span>Ricambio cercato</span><span>Stato</span><span></span>
-    </div>
-    <div id="list"></div>
-    <div class="empty" id="empty">
-      <div style="font-size:32px;">&#128203;</div>
-      <div style="margin-top:6px;font-weight:600;">Nessuna riga</div>
-      <div style="font-size:12px;margin-top:4px;color:#cbd5e1;">Clicca <b>+ Aggiungi riga</b> per iniziare</div>
-    </div>
-  </div>
+<div class="stat-row" id="cnt" style="display:none;">
+<div class="stat-card"><div class="num" id="cTot">0</div><div class="lbl">Totali</div></div>
+<div class="stat-card"><div class="num" style="color:var(--blue-l)" id="cRun">0</div><div class="lbl">In corso</div></div>
+<div class="stat-card"><div class="num" style="color:var(--green)" id="cOk">0</div><div class="lbl">Completate</div></div>
+<div class="stat-card"><div class="num" style="color:var(--red)" id="cErr">0</div><div class="lbl">Errori</div></div>
 </div>
-
-<!-- TAB STORICO -->
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+<h3 class="section-title" style="margin:0;">🔍 Ricerca Ricambi</h3>
+<div style="display:flex;gap:8px;">
+<button class="btn btn-blue" id="btnAdd">+ Riga</button>
+<button class="btn btn-green" id="btnStart">▶ Avvia ricerca</button>
+<button class="btn btn-gray" id="btnReset">↻ Reset</button>
+</div>
+</div>
+<div id="list"></div>
+<div id="empty" class="empty">Clicca "+ Riga" per iniziare una ricerca.</div>
+</div>
+</div>
 <div id="TS" style="display:none;">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
-    <b style="font-size:15px;">&#128203; Storico ricerche</b>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <input class="inp" id="stF" placeholder="Cerca..." style="width:200px;" oninput="filtSt()">
-      <button onclick="esportaExcel()" style="padding:8px 16px;background:#16a34a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">&#128190; Esporta Excel</button>
-    </div>
-  </div>
-  <div id="stList"><div class="empty">Caricamento...</div></div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+<h3 class="section-title" style="margin:0;">📋 Storico Ricerche</h3>
+<input id="stF" placeholder="🔍 Filtra..." style="max-width:350px;" oninput="filtSt()">
 </div>
-
-<!-- Modal Ordine Selmi -->
-<div class="modal-overlay" id="ordineModal">
-  <div class="modal-box">
-    <h2>&#128722; Invia Ordine Selmi</h2>
-    <div style="font-size:12px;color:#64748b;margin-bottom:10px;">Prodotto che verrà aggiunto al carrello Selmi:</div>
-    <div class="items" id="ordineItems"></div>
-    <div id="ordineRifInfo" style="font-size:11px;color:#6366f1;margin-bottom:8px;min-height:16px;"></div>
-    <div style="font-size:12px;color:#64748b;margin-bottom:6px;">Informazioni aggiuntive (pre-compilate automaticamente):</div>
-    <textarea class="modal-note" id="ordineNote" rows="2" placeholder="es. Urgente / Riferimento intervento..."></textarea>
-    <div id="ordineStatus" style="font-size:12px;min-height:20px;margin-bottom:10px;font-weight:600;"></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" id="ordineCancel">Annulla</button>
-      <button class="btn-confirm" id="ordineConfirm">&#9989; Conferma e Invia</button>
-    </div>
-  </div>
+<div id="stList"></div>
 </div>
-<div id="TC" style="display:none">
-  <div class="bar"><div class="barl"><h3>&#128222; Contatti WhatsApp</h3></div></div>
-  
-  <div style="max-width:800px;margin:20px auto;padding:0 16px;">
-    
-    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
-      <h4 style="color:#1e3a8a;margin-bottom:12px;font-size:15px;">&#127970; Ufficio Cesana (fissi)</h4>
-      <div id="ufficioList" style="display:grid;gap:8px;"></div>
-    </div>
-    
-    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h4 style="color:#1e3a8a;font-size:15px;">&#128736; Tecnici (gestione)</h4>
-        <button id="btnAddTec" style="background:#6366f1;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">+ Aggiungi tecnico</button>
-      </div>
-      <div id="tecList" style="display:grid;gap:8px;"></div>
-    </div>
-    
-    <div id="tecForm" style="display:none;background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.1);border:2px solid #6366f1;">
-      <h4 style="color:#1e3a8a;margin-bottom:12px;font-size:15px;" id="tecFormTitle">Nuovo tecnico</h4>
-      <div style="display:grid;gap:10px;">
-        <input id="tecNome" placeholder="Nome completo" style="padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;">
-        <input id="tecUid" placeholder="Syncrogest UID (es. 5378)" style="padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;">
-        <input id="tecWhatsapp" placeholder="WhatsApp (es. +393331234567)" style="padding:10px;border:1px solid #ddd;border-radius:8px;font-size:14px;">
-        <div style="display:flex;gap:8px;">
-          <button id="btnSaveTec" style="background:#10b981;color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;">Salva</button>
-          <button id="btnCancelTec" style="background:#e5e7eb;color:#333;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;">Annulla</button>
-        </div>
-      </div>
-    </div>
-    
-  </div>
 </div>
-
+<div id="TC" style="display:none;">
+<div class="card">
+<h3 class="section-title">🏢 Ufficio Cesana</h3>
+<p style="font-size:13px;color:var(--slate);margin-bottom:14px;">Contatti fissi per notifiche ordini, conferme sopra soglia e alert pagamento.</p>
+<div id="ufficioList"></div>
+</div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+<h3 class="section-title" style="margin:0;">👷 Tecnici</h3>
+<button class="btn btn-blue" id="btnAddTec">+ Aggiungi tecnico</button>
+</div>
+<div id="tecList"></div>
+<div id="tecForm" style="display:none;margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:2px solid var(--blue-l);">
+<h4 style="font-size:14px;color:var(--blue);margin-bottom:12px;" id="tecFormTitle">Nuovo tecnico</h4>
+<div class="form-group"><label>Nome completo</label><input id="tecNome" placeholder="es. Mario Rossi"></div>
+<div class="form-row">
+<div class="form-group"><label>Syncrogest UID</label><input id="tecUid" placeholder="es. 5378"></div>
+<div class="form-group"><label>WhatsApp</label><input id="tecWhatsapp" placeholder="+39 333 1234567"></div>
+</div>
+<div style="display:flex;gap:8px;">
+<button class="btn btn-green" id="btnSaveTec">Salva</button>
+<button class="btn btn-gray" id="btnCancelTec">Annulla</button>
+</div>
+</div>
+</div>
+</div>
+<div id="TT" style="display:none;">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+<h3 class="section-title" style="margin:0;">💬 Conversazioni</h3>
+<select id="chatFilter" onchange="renderChat()" style="max-width:300px;"><option value="">Tutti i contatti</option></select>
+</div>
+<div id="chatList"></div>
+</div>
+</div>
 </main>
-
 <script>
-var BASE    = 'https://superagent-244159cc.base44.app';
-var AID     = '6a132bbd6bdcb07f244159cc';
-var API_KEY = 'public-cesana-2026';
-var N=0, rows=[], busy=false, stData=[];
-var mrc=[], mod=[], ric=[];
-
-// ── HEADERS con API KEY ──────────────────────────────────────────────────────
-function hdr(){
-  return {
-    'Content-Type':'application/json',
-    'X-Cesana-Key': API_KEY
-  };
-}
-
-document.getElementById('btnAdd').addEventListener('click', addRow);
-document.getElementById('btnStart').addEventListener('click', avvia);
-document.getElementById('btnReset').addEventListener('click', reset);
-loadSugg();
-addRow(); // Parte con una riga già pronta
-
-function tab(t){
-  g('TR').style.display = t==='R' ? 'block' : 'none';
-  g('TS').style.display = t==='S' ? 'block' : 'none';
-  g('TC').style.display = t==='C' ? 'block' : 'none';
-  g('tR').className = t==='R' ? 'on' : '';
-  g('tS').className = t==='S' ? 'on' : '';
-  g('tC').className = t==='C' ? 'on' : '';
-  if(t==='S') loadSt();
-  if(t==='C') loadContatti();
-}
-
-function addRow(){
-  var id = ++N;
-  rows.push({id:id, st:'idle'});
-  var d = document.createElement('div');
-  d.className = 'rrow bg-wait';
-  d.id = 'row'+id;
-  d.innerHTML =
-    '<div class="rA">'+
-      '<div class="numcol">#'+id+'</div>'+
-      '<div><div class="lbl">Riferimento</div>'+
-        '<input class="inp" id="ref'+id+'" placeholder="es. Rossi / Intervento 22"></div>'+
-      '<div><div class="lbl">Syncrogest</div>'+
-        '<input class="inp" id="syn'+id+'" placeholder="SG-001"></div>'+
-      '<div><div class="lbl">Marca</div>'+
-        '<input class="inp" id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar / Selmi / Orla / LF / SuperSama">'+
-        '<datalist id="lmar'+id+'"></datalist></div>'+
-      '<div><div class="lbl">Modello</div>'+
-        '<input class="inp" id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441 CDE">'+
-        '<datalist id="lmdo'+id+'"></datalist></div>'+
-      '<div><div class="lbl violet">&#128197; Matricola</div>'+
-        '<input class="inp mat" id="mat'+id+'" placeholder="facoltativa"></div>'+
-      '<div><div class="lbl green">Qty</div>'+
-        '<input class="inp qty" id="qty'+id+'" type="number" min="1" value="1"></div>'+
-      '<button class="del" id="del'+id+'">&times;</button>'+
-    '</div>'+
-    '<div class="rB">'+
-      '<div></div>'+
-      '<div><div class="lbl">Ricambio cercato</div>'+
-        '<input class="inp" id="rcs'+id+'" list="lrcs'+id+'" placeholder="es. resistenza vasca, pompa lavaggio, scheda...">'+
-        '<datalist id="lrcs'+id+'"></datalist></div>'+
-      '<div><div class="lbl orange">&#128246; Codice LF/REPA (opz.)</div>'+
-        '<input class="inp codlf" id="clf'+id+'" placeholder="es. 5164351 — ricerca diretta per codice"></div>'+
-      '<div>'+
-        '<div class="slbl" id="slbl'+id+'" style="color:#94a3b8;">&#9744; In attesa</div>'+
-        '<div class="pw"><div class="pb" id="pb'+id+'" style="width:0%;background:#e2e8f0;"></div></div>'+
-      '</div>'+
-      '<div></div>'+
-    '</div>'+
-    '<div class="foto-area" id="fotos'+id+'">'+
-      '<label class="foto-add" title="Aggiungi foto ricambio (max 3)" onclick="addFoto('+id+')">&#128247;</label>'+
-      '<span class="foto-label">Foto ricambio (max 3)</span>'+
-      '<input type="file" id="finp'+id+'" accept="image/*" style="display:none" multiple onchange="handleFoto('+id+',this)">'+
-    '</div>'+
-    '<div class="rres" id="res'+id+'"></div>';
-
-  document.getElementById('list').appendChild(d);
-  document.getElementById('empty').style.display = 'none';
-  document.getElementById('del'+id).addEventListener('click', function(){ if(!busy) delRow(id); });
-
-  // Autocomplete Marca→Modello→Ricambio
-  document.getElementById('mar'+id).addEventListener('change', function(){
-    var m = this.value.trim();
-    fillDL('lmdo'+id, mod.filter(function(x){ return !m || (x.marca||'').toLowerCase()===m.toLowerCase(); }));
-    fillDL('lrcs'+id, ric.filter(function(x){ return !m || (x.marca||'').toLowerCase()===m.toLowerCase(); }));
-  });
-  document.getElementById('mdo'+id).addEventListener('change', function(){
-    var mo = this.value.trim();
-    var ma = gv('mar'+id);
-    fillDL('lrcs'+id, ric.filter(function(x){ return (!ma || (x.marca||'').toLowerCase()===ma.toLowerCase()) && (!mo || (x.modello||'').toLowerCase()===mo.toLowerCase()); }));
-  });
-
-  fillDL('lmar'+id, mrc);
-}
-
-function delRow(id){
-  var el = document.getElementById('row'+id);
-  if(el) el.remove();
-  rows = rows.filter(function(r){ return r.id!==id; });
-  if(!rows.length) document.getElementById('empty').style.display = '';
-}
-
-function reset(){
-  if(busy) return;
-  rows.forEach(function(r){ delRow(r.id); });
-  rows = []; N = 0;
-  document.getElementById('empty').style.display = '';
-  document.getElementById('cnt').style.display = 'none';
-  // nessun pulsante globale da aggiornare
-}
-
-function g(id){ return document.getElementById(id); }
-function gv(id){ var e=g(id); return e ? e.value.trim() : ''; }
-
-function fillDL(id, arr){
-  var dl = g(id); if(!dl) return; dl.innerHTML='';
-  arr.forEach(function(x){
-    var o=document.createElement('option');
-    o.value = x.nome||x;
-    dl.appendChild(o);
-  });
-}
-
-function setStato(id, tipo, txt, pct){
-  var el = g('slbl'+id), pb = g('pb'+id), rw = g('row'+id);
-  if(el){
-    var icons = {idle:'&#9744;',queue:'&#9203;',run:'<span class="spinner"></span>',ok:'&#9989;',err:'&#10060;'};
-    el.innerHTML = (icons[tipo]||'') + ' ' + txt;
-    el.style.color = {idle:'#94a3b8',queue:'#d97706',run:'#2563eb',ok:'#16a34a',err:'#dc2626'}[tipo]||'#333';
-  }
-  if(pb){
-    pb.style.width = pct+'%';
-    pb.style.background = {idle:'#e2e8f0',queue:'#fcd34d',run:'#60a5fa',ok:'#4ade80',err:'#f87171'}[tipo]||'#e2e8f0';
-  }
-  if(rw) rw.className = 'rrow '+({idle:'bg-wait',queue:'bg-queue',run:'bg-run',ok:'bg-ok',err:'bg-err'}[tipo]||'bg-wait');
-  var r = rows.find(function(x){return x.id===id;}); if(r) r.st=tipo;
-  upCnt();
-}
-
-function upCnt(){
-  var tot=rows.length, ok=0, run=0, err=0;
-  rows.forEach(function(r){
-    if(r.st==='ok') ok++;
-    else if(r.st==='run'||r.st==='queue') run++;
-    else if(r.st==='err') err++;
-  });
-  g('cTot').textContent=tot; g('cOk').textContent=ok;
-  g('cRun').textContent=run; g('cErr').textContent=err;
-  g('cnt').style.display = tot ? 'flex' : 'none';
-}
-
-function disRow(id, dis){
-  ['ref','syn','mar','mdo','mat','qty','rcs'].forEach(function(f){
-    var e = g(f+id); if(e) e.disabled=dis;
-  });
-}
-
-function avvia(){
-  if(busy) return;
-  var da = rows.filter(function(r){
-    return r.st!=='run' && r.st!=='queue' && gv('mar'+r.id) && gv('mdo'+r.id) && gv('rcs'+r.id);
-  }).map(function(r){return r.id;});
-  if(!da.length){ alert('Compila almeno Marca, Modello e Ricambio in una riga!'); return; }
-  busy=true;
-  g('btnStart').disabled=true; g('btnAdd').disabled=true;
-  da.forEach(function(id){ setStato(id,'queue','In coda...',5); });
-  seq(da, 0);
-}
-
-function seq(ids, i){
-  if(i>=ids.length){
-    busy=false;
-    g('btnStart').disabled=false; g('btnAdd').disabled=false;
-    return;
-  }
-  cerca(ids[i], function(){ seq(ids, i+1); });
-}
-
-function cerca(id, cb){
-  var marca     = gv('mar'+id);
-  var modello   = gv('mdo'+id);
-  var matricola = gv('mat'+id);
-  var qty       = gv('qty'+id)||'1';
-  var rc        = gv('rcs'+id);
-  var rif       = gv('ref'+id);
-  var syn       = gv('syn'+id);
-  var codiceLF  = gv('clf'+id);  // codice diretto LF/REPA
-
-  // Per LF/REPA: se c'è codice diretto, non serve descrizione
-  var marcaLow = (marca||'').toLowerCase();
-  var isLFMarca = marcaLow==='lf' || marcaLow==='lf ricambi' || marcaLow==='repa' || marcaLow==='lf ricambi / repa';
-  var rcOk = rc || (isLFMarca && codiceLF);
-
-  if(!marca||!modello||!rcOk){
-    setStato(id,'err','Compila Marca, Modello, Ricambio (o Codice LF)',100);
-    if(cb)cb(); return;
-  }
-
-  setStato(id,'run','Connessione Eurotec...',15);
-  disRow(id, true);
-  salva(marca, modello, rc);
-
-  var ml = marca.toLowerCase();
-  var msg = ml==='orla' ? 'Ricerca Verzolla...' : matricola ? 'Ricerca matricola '+matricola+'...' : 'Ricerca Eurotec '+modello+'...';
-  setStato(id,'run',msg,30);
-
-  // ── CHIAMATA API con X-Cesana-Key ────────────────────────────────────────
-  fetch(BASE+'/functions/cercaRicambio', {
-    method: 'POST',
-    headers: hdr(),
-    body: JSON.stringify({
-      marca: marca,
-      modello: modello,
-      matricola: matricola||'',
-      ricambio: rc || codiceLF,
-      codice_lf: codiceLF||'',
-      richiesta_da: rif||'Cesana Service',
-      syncrogest: syn||'',
-      foto_base64: (rows.find(function(x){return x.id===id;})||{}).foto_base64||[]
-    })
-  })
-  .then(function(r){
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return r.json();
-  })
-  .then(function(data){
-    if(!data.ok) throw new Error(data.error||'Errore ricerca');
-    setStato(id,'ok','Completata ✓',100);
-    mostraRes(id, data, qty);
-    // Salva dati Selmi per ordine
-    var rr = rows.find(function(x){return x.id===id;});
-    if(rr && data.fonte && data.fonte.toLowerCase()==='selmi' && data.best && data.best.idProduct){
-      rr.selmiData = Object.assign({}, data.best);
-    }
-    if(rr && data.best){ rr._best = Object.assign({}, data.best); }
-    disRow(id, false);
-    if(cb)cb();
-  })
-  .catch(function(e){
-    setStato(id,'err','Errore: '+String(e.message||'connessione'),100);
-    disRow(id, false);
-    if(cb)cb();
-  });
-}
-
-function mostraRes(id, data, qty){
-  var el = g('res'+id); if(!el){ console.error('div res'+id+' non trovato'); return; }
-  el.style.display = 'block';
-  var best = data.best || (data.risultati && data.risultati[0]) || null;
-  var rr = best ? [best] : [];
-  if(!rr.length){ el.innerHTML='<div style="padding:8px;color:#94a3b8;font-size:12px;">Nessun risultato trovato.</div>'; return; }
-  // REGOLA: prezzo SEMPRE visibile — se N/D mostra info
-  rr = rr.map(function(r){
-    if(!r.prezzo || r.prezzo==='N/D' || r.prezzo==='') r.prezzo = 'Vedere portale fornitore';
-    return r;
-  });
-
-  var fonte = (data.fonte||'').toLowerCase();
-  var isOrla = fonte==='verzolla';
-  var isSelmi = fonte==='selmi';
-  var isSama = fonte==='supersama';
-  var isLF = fonte==='lf ricambi' || data.lfMode===true;
-  var h = '';
-
-  if(isOrla){
-    h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponibilità</th><th>Prezzo unitario</th><th>Qty</th></tr>';
-    rr.forEach(function(r){
-      var dc = r.disponibilita==='Disponibile'?'#16a34a':'#dc2626';
-      h += '<tr><td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
-           '<td>'+(r.descrizione||'-')+'</td>'+
-           '<td style="color:'+dc+';font-weight:600">'+(r.disponibilita||'-')+'</td>'+
-           '<td style="font-weight:700">'+(r.prezzo||'N/D')+'</td>'+
-           '<td style="font-weight:700;color:#10b981;">×'+qty+'</td></tr>';
-    });
-    h += '</table>';
-  } else if(isLF){
-    // LF Ricambi: tabella con Codice, Descrizione, Disponibilità, Prezzo
-    h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponibilità</th><th>Prezzo Netto</th><th>Qty</th></tr>';
-    rr.forEach(function(r){
-      var dispNum = parseInt((r.disponibilita||'0').replace(/\D/g,'')) || 0;
-      var dc = dispNum>0 ? '#16a34a' : '#dc2626';
-      var dispTxt = r.disponibilita || (dispNum>0 ? 'Disponibile' : 'Verificare');
-      h += '<tr class="best-row">'+
-           '<td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
-           '<td>'+(r.descrizione||'-')+'</td>'+
-           '<td style="color:'+dc+';font-weight:600">'+dispTxt+'</td>'+
-           '<td style="font-weight:700;color:#0369a1">'+(r.prezzo||'N/D')+'</td>'+
-           '<td style="font-weight:700;color:#10b981;">\u00d7'+qty+'</td></tr>';
-    });
-    h += '</table>';
-  } else if(isSama){
-    // SuperSama: tabella con Codice, Descrizione, Disponibilità, Prezzo, Fonte
-    h = '<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disponib.</th><th>Prezzo</th><th>Fonte</th><th>Qty</th></tr>';
-    rr.forEach(function(r){
-      var dc = r.disponibile!==false ? '#16a34a' : '#dc2626';
-      var dispTxt = r.disponibile!==false ? 'Disponibile' : 'Non disp.';
-      h += '<tr class="best-row">'+
-           '<td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
-           '<td>'+(r.descrizione||'-')+'</td>'+
-           '<td style="color:'+dc+';font-weight:600">'+dispTxt+'</td>'+
-           '<td style="font-weight:700;color:#1d4ed8">'+(r.prezzo||'N/D')+'</td>'+
-           '<td><a href="'+(r.url||'#')+'" target="_blank" style="color:#7c3aed;font-weight:600;font-size:11px">🔗 SuperSama</a></td>'+
-           '<td style="font-weight:700;color:#10b981;">×'+qty+'</td></tr>';
-    });
-    h += '</table>';
-  } else {
-    var thCode = isSelmi ? 'Codice Selmi' : 'Codice Eurotec';
-    h = '<table class="rt"><tr><th>★</th><th>'+thCode+'</th><th>Descrizione</th><th>Prezzo unitario</th><th>Disp.</th><th>Qty</th></tr>';
-    rr.forEach(function(r, i){
-      var cls = i===0 ? ' class="best-row"' : '';
-      var star = r.consigliato ? '<span class="star">★</span>' : '';
-      var dispColor = (r.disponibilita && parseFloat((r.disponibilita||'0').replace(',','.'))>0) ? '#16a34a' : '#94a3b8';
-      var dispTxt = isSelmi ? (r.disponibilita||'Selmi') : (r.disponibilita ? r.disponibilita+' pz' : '-');
-      h += '<tr'+cls+'>'+
-           '<td>'+star+'</td>'+
-           '<td style="font-family:monospace;font-weight:700">'+(r.codice||'-')+'</td>'+
-           '<td>'+(r.descrizione||'-')+'</td>'+
-           '<td style="font-weight:700;color:#1d4ed8">'+(r.prezzo||'N/D')+'</td>'+
-           '<td style="color:'+dispColor+';font-weight:600">'+dispTxt+'</td>'+
-           '<td style="font-weight:700;color:#10b981;">×'+qty+'</td>'+
-           '</tr>';
-    });
-    h += '</table>';
-    if(data.modello) h += '<div style="font-size:10px;color:#94a3b8;margin-top:4px;">Modello: '+data.modello+(data.matricola?' | Matricola: '+data.matricola:'')+'</div>';
-  }
-
-  // ── Pulsante "Invia Ordine" per riga, marca-specifico ──────────────────
-  var rowObj = rows.find(function(r){ return r.id===id; });
-  var btnArea = '';
-  var marcaRow = rowObj ? (gv('mar'+id)||'').toLowerCase() : '';
-
-  if(marcaRow==='selmi' && best && best.idProduct){
-    btnArea = '<div class="row-order-area">'+
-      '<button class="row-order-btn" style="background:#059669;" '+
-        'onclick="inviaOrdineSelmiRiga('+id+')" id="btnOrd'+id+'">'+
-        '&#128722; Invia Ordine Selmi</button></div>';
-  } else if(marcaRow==='orla'||marcaRow==='verzolla'){
-    btnArea = '<div class="row-order-area">'+
-      '<button class="row-order-btn orla-btn" style="background:#7c3aed;" id="btnOrdOrla'+id+'" onclick="inviaOrdineOrla('+id+')">'+
-        '&#9993;&#65039; Invia Ordine Orla</button></div>';
-  } else if(isLF || marcaRow==='lf' || marcaRow==='lf ricambi' || marcaRow==='repa' || marcaRow==='lf ricambi / repa'){
-    btnArea = '<div class="row-order-area">'+
-      '<button class="row-order-btn" style="background:#0369a1;" id="btnOrd'+id+'" onclick="aggiungiCarrelloLF('+id+')">'+
-      '&#128722; Aggiungi al Carrello LF</button></div>';
-  } else if(isSama || marcaRow==='supersama' || marcaRow==='sama' || marcaRow==='super sama'){
-    btnArea = '<div class="row-order-area">'+
-      '<button class="row-order-btn" style="background:#7c3aed;" id="btnOrd'+id+'" onclick="inviaOrdineSuperSama('+id+')">'+
-      '&#128722; Invia Ordine SuperSama</button></div>';
-  } else if(marcaRow==='elettrobar'){
-    btnArea = '<div class="row-order-area">'+
-      '<button class="row-order-btn" style="background:#0ea5e9;" disabled title="Metodo ordine Elettrobar non ancora configurato">'+
-        '&#128722; Ordine Elettrobar (da configurare)</button></div>';
-  }
-
-  el.innerHTML = h + btnArea;
-}
-
-function salva(m, mo, r){
-  function post(ent, body){
-    fetch(BASE+'/api/apps/'+AID+'/entities/'+ent, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    }).catch(function(){});
-  }
-  if(m  && !mrc.find(function(x){return(x.nome||x)===m;}))  { post('MarcaSalvata',  {nome:m});            mrc.push({nome:m}); }
-  if(mo && !mod.find(function(x){return(x.nome||x)===mo;})) { post('ModelloSalvato',{nome:mo,marca:m});    mod.push({nome:mo,marca:m}); }
-  if(r  && !ric.find(function(x){return(x.nome||x)===r;}))  { post('RicambioSalvato',{nome:r,marca:m,modello:mo}); ric.push({nome:r,marca:m,modello:mo}); }
-}
-
-function loadSugg(){
-  // Marche hardcoded sempre presenti
-  ['Elettrobar','Selmi','Orla','LF Ricambi / REPA','SuperSama'].forEach(function(nome){
-    if(!mrc.find(function(x){return(x.nome||x)===nome;})) mrc.push({nome:nome});
-  });
-  function get(ent, arr){
-    fetch(BASE+'/api/apps/'+AID+'/entities/'+ent+'?limit=500')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var list = Array.isArray(d)?d:(d.records||[]);
-      list.forEach(function(x){arr.push(x);});
-      // Aggiorna datalist già presenti
-      if(ent==='MarcaSalvata') rows.forEach(function(r){ fillDL('lmar'+r.id, mrc); });
-    })
-    .catch(function(){});
-  }
-  get('MarcaSalvata',  mrc);
-  get('ModelloSalvato', mod);
-  get('RicambioSalvato', ric);
-}
-
-// ── TAB STORICO ─────────────────────────────────────────────────────────────
-function loadSt(){
-  g('stList').innerHTML='<div class="empty">Caricamento...</div>';
-  fetch(BASE+'/functions/cercaRicambio?limit=300', { headers: hdr() })
-  .then(function(r){return r.json();})
-  .then(function(d){
-    stData = Array.isArray(d) ? d : (d.records || []);
-    renderSt(stData);
-  })
-  .catch(function(e){ g('stList').innerHTML='<div class="empty">Errore caricamento storico: '+e.message+'</div>'; });
-}
-
-function filtSt(){
-  var q = gv('stF').toLowerCase();
-  renderSt(q ? stData.filter(function(r){
-    return [r.marca,r.modello,r.ricambio_cercato,r.descrizione,r.codice_eurotec].some(function(v){
-      return v && v.toLowerCase().includes(q);
-    });
-  }) : stData);
-}
-
-function renderSt(list){
-  if(!list.length){ g('stList').innerHTML='<div class="empty">Nessun risultato</div>'; return; }
-  var h='<div class="card"><table class="rt">'+
-    '<tr><th>Data</th><th>Riferimento</th><th>Marca</th><th>Modello</th><th>Ricambio</th><th>Codice</th><th>Descrizione</th><th>Prezzo</th><th>Disp.</th><th>Stato</th></tr>';
-  list.forEach(function(r){
-    var dt = r.created_date ? new Date(r.created_date).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}) : '-';
-    var sc = r.stato==='completata'?'#16a34a':r.stato==='errore'?'#dc2626':'#f59e0b';
-    var note = r.note||'';
-    var rif = note.match(/Syncrogest:\s*([^\|]+)/)?.[1]?.trim() || '-';
-    h+='<tr>'+
-      '<td style="white-space:nowrap">'+dt+'</td>'+
-      '<td>'+rif+'</td>'+
-      '<td>'+escH(r.marca||'-')+'</td>'+
-      '<td>'+escH(r.modello||'-')+'</td>'+
-      '<td>'+escH(r.ricambio_cercato||'-')+'</td>'+
-      '<td style="font-family:monospace;font-weight:700">'+escH(r.codice_eurotec||'-')+'</td>'+
-      '<td>'+escH(r.descrizione||'-')+'</td>'+
-      '<td style="font-weight:700;color:#1d4ed8">'+escH(r.prezzo_eurotec||'-')+'</td>'+
-      '<td>'+escH(r.disp_eurotec||'-')+'</td>'+
-      '<td style="color:'+sc+';font-weight:600">'+escH(r.stato||'-')+'</td>'+
-      '</tr>';
-  });
-  h += '</table></div>';
-  g('stList').innerHTML = h;
-}
-
-function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-
-// ── LOGICA ORDINE PER RIGA ──────────────────────────────────────────────────
-var currentOrdineRowId = null;
-
-// Selmi: apre modal per la riga specifica
-function inviaOrdineSelmiRiga(id){
-  var rowObj = rows.find(function(r){ return r.id===id; });
-  if(!rowObj || !rowObj.selmiData){
-    alert('Dati ricambio non trovati. Riavvia la ricerca.');
-    return;
-  }
-  currentOrdineRowId = id;
-  var item = Object.assign({}, rowObj.selmiData, {
-    qty: parseInt(gv('qty'+id)||'1', 10) || 1,
-    riferimento: gv('ref'+id)||'',
-    syncrogest: gv('syn'+id)||''
-  });
-  var h = '<div class="item-row">'+
-    '<span class="item-code">'+(item.codice||'?')+'</span>'+
-    '<span class="item-desc">'+(item.descrizione||'-')+'</span>'+
-    '<span class="item-qty">×'+(item.qty||1)+'</span>'+
-  '</div>';
-  // Mostra info aggiuntive nel modal
-  var infoExtra = '';
-  if(item.riferimento) infoExtra += 'Rif: <b>'+escH(item.riferimento)+'</b> &nbsp;';
-  if(item.syncrogest)  infoExtra += 'SG: <b>'+escH(item.syncrogest)+'</b>';
-  g('ordineItems').innerHTML = h;
-  g('ordineRifInfo').innerHTML = infoExtra;
-  g('ordineNote').value = [item.codice, item.riferimento, item.syncrogest].filter(Boolean).join(' | ');
-  g('ordineStatus').textContent = '';
-  g('ordineStatus').style.color = '';
-  g('ordineConfirm').disabled = false;
-  g('ordineConfirm').textContent = '✅ Conferma e Invia';
-  g('ordineModal').classList.add('show');
-}
-
-document.getElementById('ordineCancel').addEventListener('click', function(){
-  g('ordineModal').classList.remove('show');
-  currentOrdineRowId = null;
-});
-document.getElementById('ordineConfirm').addEventListener('click', inviaOrdineSelmi);
-
-// Selmi: invia ordine per la riga corrente
-function inviaOrdineSelmi(){
-  var btn = g('ordineConfirm');
-  var status = g('ordineStatus');
-  btn.disabled = true;
-  btn.textContent = 'Invio in corso...';
-  status.textContent = '\u23F3 Connessione a selmispareparts.it...';
-  status.style.color = '#1d4ed8';
-
-  var id = currentOrdineRowId;
-  var rowObj = id ? rows.find(function(r){ return r.id===id; }) : null;
-  var item = rowObj && rowObj.selmiData ? Object.assign({}, rowObj.selmiData, {
-    qty: parseInt(gv('qty'+id)||'1', 10) || 1,
-    riferimento: gv('ref'+id)||'',
-    syncrogest: gv('syn'+id)||''
-  }) : null;
-  if(!item){ alert('Errore: dati riga non trovati.'); return; }
-
-  var note = g('ordineNote').value.trim();
-  // Informazioni aggiuntive: CODICE + RIFERIMENTO + SYNCROGEST (inseriti automaticamente)
-  var noteFinale = note || [item.codice, item.riferimento, item.syncrogest].filter(Boolean).join(' | ');
-
-  fetch(BASE+'/functions/selmiOrdine', {
-    method: 'POST',
-    headers: hdr(),
-    body: JSON.stringify({ items: [item], note: noteFinale })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(data){
-    btn.textContent = '\u2705 Conferma e Invia';
-    if(data.ok){
-      status.textContent = data.ordine_messaggio || data.messaggio || '✅ Ordine salvato in bozza su Selmi!';
-      status.style.color = '#059669';
-      // Chiudi modal dopo 2.5 secondi
-      setTimeout(function(){
-        g('ordineModal').classList.remove('show');
-          }, 2500);
-    } else {
-      status.textContent = data.error || data.ordine_messaggio || data.messaggio || '❌ Errore durante l\'invio ordine';
-      status.style.color = '#dc2626';
-      btn.disabled = false;
-    }
-  })
-  .catch(function(e){
-    btn.textContent = '\u2705 Conferma e Invia';
-    btn.disabled = false;
-    status.textContent = '\u274C Connessione fallita: ' + (e.message||'errore di rete');
-    status.style.color = '#dc2626';
-  });
-}
-
-function esportaExcel(){
-  if(!stData || !stData.length){ alert('Nessun dato nello storico da esportare.'); return; }
-
-  // Costruisci CSV con separatore ; (compatibile Excel italiano)
-  var cols = [
-    {k:'created_date', l:'Data/Ora'},
-    {k:'richiesta_da',  l:'Richiesta da'},
-    {k:'_syncrogest',   l:'Syncrogest'},
-    {k:'marca',         l:'Marca'},
-    {k:'modello',       l:'Modello'},
-    {k:'modello_eurotec',l:'Articolo Eurotec'},
-    {k:'ricambio_cercato',l:'Ricambio cercato'},
-    {k:'codice_eurotec', l:'Codice'},
-    {k:'descrizione',    l:'Descrizione'},
-    {k:'prezzo_eurotec', l:'Prezzo Eurotec'},
-    {k:'disp_eurotec',   l:'Disponibilità'},
-    {k:'stato',          l:'Stato'},
-    {k:'_note_clean',    l:'Note'},
-  ];
-
-  var sep = ';';
-  var rows2 = [cols.map(function(c){return '"'+c.l+'"';}).join(sep)];
-
-  stData.forEach(function(r){
-    var dt = r.created_date ? new Date(r.created_date).toLocaleString('it-IT') : '';
-    var note = r.note || '';
-    var syn  = (note.match(/Syncrogest:\s*([^\|]+)/)||[])[1]||'';
-    var noteC = note.replace(/Syncrogest:[^\|]*\|?/,'').replace(/Matricola:[^\|]*\|?/,'').trim();
-    var mat  = (note.match(/Matricola:\s*([^\|]+)/)||[])[1]||'';
-    if(mat) noteC = ('Matricola: '+mat+' '+noteC).trim();
-
-    var row = cols.map(function(c){
-      var v = '';
-      if(c.k==='created_date')  v = dt;
-      else if(c.k==='_syncrogest') v = syn;
-      else if(c.k==='_note_clean') v = noteC;
-      else v = r[c.k]||'';
-      return '"'+String(v).replace(/"/g,'""')+'"';
-    });
-    rows2.push(row.join(sep));
-  });
-
-  var csv = '﻿' + rows2.join('\n'); // BOM per Excel italiano
-  var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  var url  = URL.createObjectURL(blob);
-  var a    = document.createElement('a');
-  var oggi = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  a.href = url;
-  a.download = 'storico_ricambi_'+oggi+'.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-// ── ORDINE ORLA via Outlook ──────────────────────────────────────────────────
-function inviaOrdineOrla(id){
-  // Raccoglie TUTTE le righe Orla/Verzolla con risultato trovato
-  var orlaRows = rows.filter(function(r){
-    var m = (gv('mar'+r.id)||'').toLowerCase();
-    return (m==='orla'||m==='verzolla') && r._best;
-  });
-
-  if(orlaRows.length === 0){
-    alert('Nessun ricambio Orla trovato da ordinare.');
-    return;
-  }
-
-  // Valida ogni riga: tutti i 5 campi obbligatori
-  var mancanti = [];
-  orlaRows.forEach(function(r){
-    var campi = [];
-    if(!gv('ref'+r.id)) campi.push('RIFERIMENTO');
-    if(!gv('syn'+r.id)) campi.push('SYNCROGEST');
-    if(!gv('mdo'+r.id)) campi.push('MODELLO');
-    var best = r._best;
-    var desc = best ? (best.descrizione || best.codice || gv('rcs'+r.id) || '') : gv('rcs'+r.id) || '';
-    if(!desc) campi.push('RICAMBIO');
-    if(!gv('qty'+r.id)) campi.push('QUANTITÀ');
-    if(campi.length > 0) mancanti.push('Riga '+r.id+': mancano '+campi.join(', '));
-  });
-
-  if(mancanti.length > 0){
-    alert('Impossibile inviare — campi mancanti:\n\n' + mancanti.join('\n'));
-    return;
-  }
-
-  // Costruisce array righe ordinate per RIFERIMENTO
-  var righe = orlaRows.map(function(r){
-    var best = r._best;
-    return {
-      riferimento: gv('ref'+r.id) || '',
-      syncrogest:  gv('syn'+r.id) || '',
-      modello:     gv('mdo'+r.id) || '',
-      ricambio:    best ? (best.descrizione || best.codice || gv('rcs'+r.id) || '') : (gv('rcs'+r.id) || ''),
-      qty:         parseInt(gv('qty'+r.id)||'1',10)||1
-    };
-  }).sort(function(a,b){ return a.riferimento.localeCompare(b.riferimento); });
-
-  // Disabilita TUTTI i pulsanti Orla durante l'invio
-  orlaRows.forEach(function(r){
-    var b = g('btnOrdOrla'+r.id);
-    if(b){ b.disabled=true; b.textContent='⏳ Invio...'; b.style.background='#6b7280'; }
-  });
-
-  fetch(BASE+'/functions/selmiOrdine', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json','X-Cesana-Key': API_KEY},
-    body: JSON.stringify({ action: 'inviaOrla', righe: righe })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    orlaRows.forEach(function(r){
-      var b = g('btnOrdOrla'+r.id);
-      if(!b) return;
-      if(d.ok){
-        b.textContent = '✅ Email inviata!';
-        b.style.background = '#16a34a';
-        setTimeout(function(){ b.textContent='✉️ Invia Ordine Orla'; b.style.background='#7c3aed'; b.disabled=false; }, 5000);
-      } else {
-        b.textContent = '❌ '+(d.error||'Errore');
-        b.style.background = '#dc2626';
-        setTimeout(function(){ b.textContent='✉️ Invia Ordine Orla'; b.style.background='#7c3aed'; b.disabled=false; }, 5000);
-      }
-    });
-  })
-  .catch(function(){
-    orlaRows.forEach(function(r){
-      var b = g('btnOrdOrla'+r.id);
-      if(!b) return;
-      b.textContent = '❌ Errore rete';
-      b.style.background = '#dc2626';
-      setTimeout(function(){ b.textContent='✉️ Invia Ordine Orla'; b.style.background='#7c3aed'; b.disabled=false; }, 5000);
-    });
-  });
-}
-
-function inviaOrdineSuperSama(id) {
-  var rowObj = rows.find(function(r){ return r.id === id; });
-  if (!rowObj || !rowObj._best) { alert("Nessun risultato SuperSama per questa riga."); return; }
-  var best = rowObj._best;
-  var rif = gv('ref' + id) || '';
-  var syn = gv('syn' + id) || '';
-  var mdo = gv('mdo' + id) || '';
-  var qty = parseInt(gv('qty' + id) || '1') || 1;
-  if (!rif) { alert("Inserisci il RIFERIMENTO prima di inviare l'ordine."); return; }
-  var btn = document.getElementById('btnOrd' + id);
-  if (btn) { btn.disabled = true; btn.textContent = 'Invio in corso...'; }
-  fetch(BASE + '/functions/selmiOrdine', {
-    method: 'POST',
-    headers: hdr(),
-    body: JSON.stringify({
-      action: 'inviaSuperSama',
-      riferimento: rif, syncrogest: syn, modello: mdo,
-      ricambio: best.descrizione || '', codice: best.codice || '',
-      prezzo: best.prezzo || '', qty: qty, url_prodotto: best.url || ''
-    })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    if (d.ok) {
-      if (btn) { btn.textContent = 'Ordine inviato!'; btn.style.background = '#16a34a'; }
-      alert("Email ordine inviata a SuperSama (info@supersamastore.it)");
-    } else {
-      if (btn) { btn.disabled = false; btn.textContent = 'Invia Ordine SuperSama'; }
-      alert("Errore: " + (d.error || "Risposta non valida"));
-    }
-  })
-  .catch(function(e){
-    if (btn) { btn.disabled = false; btn.textContent = 'Invia Ordine SuperSama'; }
-    alert("Errore di rete: " + e.message);
-  });
-}
-
-function aggiungiCarrelloLF(id) {
-  var rowObj = rows.find(function(r){ return r.id === id; });
-  var rif = gv('ref' + id) || '';
-  var mdo = gv('mdo' + id) || '';
-  var rcs = gv('rcs' + id) || '';
-  var qty = parseInt(gv('qty' + id) || '1') || 1;
-  var codice = (rowObj && rowObj._best && rowObj._best.codice) ? rowObj._best.codice : rcs;
-  if (!codice) { alert('Inserisci il codice ricambio prima di aggiungere al carrello.'); return; }
-  var btn = document.getElementById('btnOrd' + id);
-  if (btn) { btn.disabled = true; btn.textContent = 'Aggiunta in corso...'; }
-  fetch(BASE + '/functions/lfOrdine', {
-    method: 'POST',
-    headers: hdr(),
-    body: JSON.stringify({ codice: codice, qty: qty, riferimento: rif, modello: mdo })
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    if (d.ok) {
-      if (btn) { btn.textContent = 'Apri Carrello LF'; btn.style.background = '#16a34a'; btn.disabled = false; }
-      btn.onclick = function(){ window.open(d.carrelloUrl, '_blank'); };
-      alert('Prodotto aggiunto al carrello LF!\nClicca "Apri Carrello LF" per completare l\'acquisto.');
-    } else {
-      if (btn) { btn.disabled = false; btn.textContent = 'Aggiungi al Carrello LF'; }
-      var url = d.prodottoUrl || d.fallbackUrl || d.carrelloUrl || '';
-      if (url) {
-        if (confirm('Aggiunta automatica non riuscita.\nVuoi aprire LF Ricambi manualmente?')) {
-          window.open(url, '_blank');
-        }
-      } else {
-        alert('Errore: ' + (d.error || 'Impossibile aggiungere al carrello'));
-      }
-    }
-  })
-  .catch(function(e){
-    if (btn) { btn.disabled = false; btn.textContent = 'Aggiungi al Carrello LF'; }
-    alert('Errore di rete: ' + e.message);
-  });
-}
-
-
-// ── GESTIONE FOTO ─────────────────────────────────────────────────────────────
-function addFoto(id){
-  var inp = document.getElementById('finp'+id);
-  if(inp) inp.click();
-}
-function handleFoto(id, inp){
-  var files = Array.from(inp.files||[]);
-  var rowObj = rows.find(function(r){ return r.id===id; });
-  if(!rowObj) return;
-  if(!rowObj.foto_base64) rowObj.foto_base64 = [];
-  if(!rowObj.foto_urls)   rowObj.foto_urls   = [];
-  var slot = 3 - rowObj.foto_base64.length;
-  if(slot<=0){ alert('Massimo 3 foto per riga.'); inp.value=''; return; }
-  files.slice(0, slot).forEach(function(f){
-    var reader = new FileReader();
-    reader.onload = function(ev){
-      var b64 = ev.target.result; // data:image/...;base64,...
-      rowObj.foto_base64.push(b64);
-      rowObj.foto_urls.push(b64);
-      renderFoto(id);
-    };
-    reader.readAsDataURL(f);
-  });
-  inp.value = '';
-}
-function renderFoto(id){
-  var area = document.getElementById('fotos'+id);
-  if(!area) return;
-  var rowObj = rows.find(function(r){ return r.id===id; });
-  if(!rowObj) return;
-  var urls = rowObj.foto_urls||[];
-  var h = '';
-  urls.forEach(function(u, i){
-    h += '<div style="position:relative;display:inline-block;">' +
-         '<img src="'+u+'" class="foto-thumb" onclick="viewFoto(''+encodeURIComponent(u)+'')">' +
-         '<span onclick="removeFoto('+id+','+i+')" style="position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:16px;">&#215;</span>' +
-         '</div>';
-  });
-  if(urls.length<3){
-    h += '<label class="foto-add" title="Aggiungi foto (max 3)" onclick="addFoto('+id+')">&#128247;</label>';
-  }
-  h += '<span class="foto-label">'+urls.length+'/3 foto</span>';
-  h += '<input type="file" id="finp'+id+'" accept="image/*" style="display:none" multiple onchange="handleFoto('+id+',this)">';
-  area.innerHTML = h;
-}
-function removeFoto(id, idx){
-  var rowObj = rows.find(function(r){ return r.id===id; });
-  if(!rowObj) return;
-  rowObj.foto_base64.splice(idx,1);
-  rowObj.foto_urls.splice(idx,1);
-  renderFoto(id);
-}
-function viewFoto(enc){
-  var url = decodeURIComponent(enc);
-  var w = window.open('','_blank');
-  w.document.write('<body style="margin:0;background:#000"><img src="'+url+'" style="max-width:100%;max-height:100vh;display:block;margin:auto"></body>');
-}
-
-// ── TAB CONTATTI ─────────────────────────────────────────────────────────────
-var editingTecId = null;
-var ufficioContacts = [
-  {nome:'Paola', whatsapp:'+39 375 875 6949', ruolo:'Approvazione ordini >100€'},
-  {nome:'Sara', whatsapp:'+39 345 148 5097', ruolo:'Alert pagamento anticipato'}
+var BASE='https://superagent-244159cc.base44.app';
+var AID='6a132bbd6bdcb07f244159cc';
+var API_KEY='public-cesana-2026';
+var N=0,rows=[],busy=false,stData=[];
+var mrc=[],mod=[],ric=[];
+var chatData=[],editingTecId=null;
+var ufficioContacts=[
+{nome:'Paola',whatsapp:'+39 375 875 6949',ruolo:'Approvazione ordini >100€'},
+{nome:'Sara',whatsapp:'+39 345 148 5097',ruolo:'Alert pagamento anticipato'}
 ];
-
-function loadContatti(){
-  renderUfficio();
-  loadTecnici();
+function hdr(){return{'Content-Type':'application/json','X-Cesana-Key':API_KEY};}
+function g(id){return document.getElementById(id);}
+function gv(id){var e=g(id);return e?e.value.trim():'';}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+function fmtDate(d){return d?new Date(d).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'-';}
+document.getElementById('btnAdd').addEventListener('click',addRow);
+document.getElementById('btnStart').addEventListener('click',avvia);
+document.getElementById('btnReset').addEventListener('click',reset);
+document.getElementById('btnAddTec').addEventListener('click',showTecForm);
+document.getElementById('btnSaveTec').addEventListener('click',saveTec);
+document.getElementById('btnCancelTec').addEventListener('click',function(){g('tecForm').style.display='none';});
+loadSugg();addRow();
+function tab(t){
+['TR','TS','TC','TT'].forEach(function(s){g(s).style.display='none';});
+['tR','tS','tC','tT'].forEach(function(b){g(b).className='';});
+g('T'+t).style.display='block';g('t'+t).className='on';
+if(t==='S')loadSt();if(t==='C')loadContatti();if(t==='T')loadChat();
 }
-
-function renderUfficio(){
-  var h = '';
-  ufficioContacts.forEach(function(c){
-    h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f8fafc;border-radius:8px;">';
-    h += '<div><span style="font-weight:600;color:#1e3a8a;">'+c.nome+'</span>';
-    h += '<span style="color:#64748b;margin-left:8px;font-size:12px;">('+c.ruolo+')</span></div>';
-    h += '<span style="font-family:monospace;font-size:14px;color:#10b981;">'+c.whatsapp+'</span>';
-    h += '</div>';
-  });
-  g('ufficioList').innerHTML = h;
+function addRow(){
+var id=++N;rows.push({id:id,st:'idle'});
+var d=document.createElement('div');d.className='rrow bg-wait';d.id='row'+id;
+d.innerHTML='<div class="rA"><div class="numcol">#'+id+'</div>'+
+'<div><div class="lbl">Riferimento</div><input id="ref'+id+'" placeholder="Cliente/intervento"></div>'+
+'<div><div class="lbl">Syncrogest</div><input id="syn'+id+'" placeholder="SG-001"></div>'+
+'<div><div class="lbl">Marca</div><input id="mar'+id+'" list="lmar'+id+'" placeholder="Elettrobar/Selmi/Orla/LF"><datalist id="lmar'+id+'"></datalist></div>'+
+'<div><div class="lbl">Modello</div><input id="mdo'+id+'" list="lmdo'+id+'" placeholder="Ocean 441 CDE"><datalist id="lmdo'+id+'"></datalist></div>'+
+'<div><div class="lbl">Matricola</div><input id="mat'+id+'" placeholder="opz."></div>'+
+'<div><div class="lbl">Qty</div><input id="qty'+id+'" type="number" min="1" value="1"></div>'+
+'<button class="del" onclick="delRow('+id+')">&times;</button></div>'+
+'<div class="rB"><div></div>'+
+'<div><div class="lbl">Ricambio</div><input id="rcs'+id+'" list="lrcs'+id+'" placeholder="resistenza,pompa,scheda..."><datalist id="lrcs'+id+'"></datalist></div>'+
+'<div><div class="lbl">Codice LF/REPA</div><input id="clf'+id+'" placeholder="opz."></div>'+
+'<div><div class="lbl" id="slbl'+id+'" style="color:var(--slate-l);">In attesa</div><div class="pw"><div class="pb" id="pb'+id+'" style="width:0%;background:#e2e8f0;"></div></div></div>'+
+'<div></div></div>'+
+'<div class="foto-area"><label class="foto-add" onclick="g(\'finp'+id+'\').click()">📷</label><span class="foto-label">Foto (max 3)</span><input type="file" id="finp'+id+'" accept="image/*" style="display:none" multiple onchange="handleFoto('+id+',this)"></div>'+
+'<div class="rres" id="res'+id+'"></div>';
+g('list').appendChild(d);g('empty').style.display='none';
+g('mar'+id).addEventListener('change',function(){var m=this.value;fillDL('lmdo'+id,mod.filter(function(x){return!m||(x.marca||'').toLowerCase()===m.toLowerCase();}));fillDL('lrcs'+id,ric.filter(function(x){return!m||(x.marca||'').toLowerCase()===m.toLowerCase();}));});
+g('mdo'+id).addEventListener('change',function(){var mo=this.value,ma=gv('mar'+id);fillDL('lrcs'+id,ric.filter(function(x){return(!ma||(x.marca||'').toLowerCase()===ma.toLowerCase())&&(!mo||(x.modello||'').toLowerCase()===mo.toLowerCase();}));});
+fillDL('lmar'+id,mrc);
 }
-
-function loadTecnici(){
-  g('tecList').innerHTML = '<div style="color:#64748b;padding:12px;">Caricamento...</div>';
-  fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico?limit=100')
-  .then(function(r){return r.json();})
-  .then(function(d){
-    var list = Array.isArray(d)?d:(d.records||[]);
-    renderTecnici(list);
-  })
-  .catch(function(e){
-    g('tecList').innerHTML = '<div style="color:#ef4444;padding:12px;">Errore: '+e.message+'</div>';
-  });
+function handleFoto(id,input){
+var rowObj=rows.find(function(r){return r.id===id;});if(!rowObj){rowObj={id:id};rows.push(rowObj);}
+if(!rowObj.foto_base64)rowObj.foto_base64=[];if(!rowObj.foto_urls)rowObj.foto_urls=[];
+var files=Array.from(input.files).slice(0,3-rowObj.foto_base64.length);
+files.forEach(function(f){var reader=new FileReader();reader.onload=function(e){rowObj.foto_base64.push(e.target.result.split(',')[1]);rowObj.foto_urls.push(e.target.result);renderFoto(id);};reader.readAsDataURL(f);});
 }
-
-function renderTecnici(list){
-  if(!list.length){
-    g('tecList').innerHTML = '<div style="color:#64748b;padding:12px;">Nessun tecnico. Clicca "Aggiungi tecnico" per inserirne uno.</div>';
-    return;
-  }
-  var h = '';
-  list.forEach(function(t){
-    var wa = t.whatsapp_number || '<span style="color:#ef4444;">❌ mancante</span>';
-    h += '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f8fafc;border-radius:8px;">';
-    h += '<div>';
-    h += '<span style="font-weight:600;">'+(t.nome||'senza nome')+'</span>';
-    if(t.syncrogest_uid) h += '<span style="color:#64748b;margin-left:8px;font-size:12px;">UID: '+t.syncrogest_uid+'</span>';
-    h += '</div>';
-    h += '<div style="display:flex;align-items:center;gap:8px;">';
-    h += '<span style="font-family:monospace;font-size:14px;">'+wa+'</span>';
-    h += '<button onclick="editTec(\''+t.id+'\','+JSON.stringify(t.nome||'').replace(/"/g,'&quot;')+',\''+(t.syncrogest_uid||'')+'\','+JSON.stringify(t.whatsapp_number||'').replace(/"/g,'&quot;')+')" style="background:#e5e7eb;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;">✏️</button>';
-    h += '<button onclick="delTec(\''+t.id+'\','+JSON.stringify(t.nome||'').replace(/"/g,'&quot;')+')" style="background:#fee2e2;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:12px;">🗑️</button>';
-    h += '</div>';
-    h += '</div>';
-  });
-  g('tecList').innerHTML = h;
+function renderFoto(id){var rowObj=rows.find(function(r){return r.id===id;});if(!rowObj||!rowObj.foto_urls)return;var area=g('fotos'+id)||g('row'+id).querySelector('.foto-area');var thumbs=area.querySelectorAll('.foto-thumb');thumbs.forEach(function(t){t.remove();});rowObj.foto_urls.forEach(function(url){var img=document.createElement('img');img.className='foto-thumb';img.src=url;img.onclick=function(){window.open(url,'_blank');};area.appendChild(img);});}
+function delRow(id){var el=g('row'+id);if(el)el.remove();rows=rows.filter(function(r){return r.id!==id;});if(!rows.length)g('empty').style.display='';}
+function reset(){if(busy)return;rows.forEach(function(r){delRow(r.id);});rows=[];N=0;g('empty').style.display='';g('cnt').style.display='none';}
+function fillDL(id,arr){var dl=g(id);if(!dl)return;dl.innerHTML='';arr.forEach(function(x){var o=document.createElement('option');o.value=x.nome||x;dl.appendChild(o);});}
+function setStato(id,tipo,txt,pct){var el=g('slbl'+id),pb=g('pb'+id),rw=g('row'+id);if(el){el.innerHTML=txt;el.style.color={idle:'var(--slate-l)',queue:'var(--amber)',run:'var(--blue-l)',ok:'var(--green)',err:'var(--red)'}[tipo]||'#333';}if(pb){pb.style.width=pct+'%';pb.style.background={idle:'#e2e8f0',queue:'#fcd34d',run:'#60a5fa',ok:'#4ade80',err:'#f87171'}[tipo]||'#e2e8f0';}if(rw)rw.className='rrow '+({idle:'bg-wait',queue:'bg-queue',run:'bg-run',ok:'bg-ok',err:'bg-err'}[tipo]||'bg-wait');var r=rows.find(function(x){return x.id===id;});if(r)r.st=tipo;upCnt();}
+function upCnt(){var tot=rows.length,ok=0,run=0,err=0;rows.forEach(function(r){if(r.st==='ok')ok++;else if(r.st==='run'||r.st==='queue')run++;else if(r.st==='err')err++;});g('cTot').textContent=tot;g('cOk').textContent=ok;g('cRun').textContent=run;g('cErr').textContent=err;g('cnt').style.display=tot?'flex':'none';}
+function disRow(id,dis){['ref','syn','mar','mdo','mat','qty','rcs','clf'].forEach(function(f){var e=g(f+id);if(e)e.disabled=dis;});}
+function avvia(){if(busy)return;var da=rows.filter(function(r){return r.st!=='run'&&r.st!=='queue'&&gv('mar'+r.id)&&gv('mdo'+r.id)&&(gv('rcs'+r.id)||(gv('clf'+r.id)&&gv('mar'+r.id).toLowerCase().includes('lf')));}).map(function(r){return r.id;});if(!da.length){alert('Compila Marca, Modello e Ricambio!');return;}busy=true;g('btnStart').disabled=true;g('btnAdd').disabled=true;da.forEach(function(id){setStato(id,'queue','In coda...',5);});seq(da,0);}
+function seq(ids,i){if(i>=ids.length){busy=false;g('btnStart').disabled=false;g('btnAdd').disabled=false;return;}cerca(ids[i],function(){seq(ids,i+1);});}
+function cerca(id,cb){
+var marca=gv('mar'+id),modello=gv('mdo'+id),matricola=gv('mat'+id),qty=gv('qty'+id)||'1',rc=gv('rcs'+id),rif=gv('ref'+id),syn=gv('syn'+id),codiceLF=gv('clf'+id);
+var marcaLow=(marca||'').toLowerCase();var isLF=marcaLow==='lf'||marcaLow==='lf ricambi'||marcaLow==='repa'||marcaLow==='lf ricambi / repa';
+var rcOk=rc||(isLF&&codiceLF);
+if(!marca||!modello||!rcOk){setStato(id,'err','Compila tutto',100);if(cb)cb();return;}
+setStato(id,'run','Ricerca...',15);disRow(id,true);salva(marca,modello,rc);
+var msg=marca.toLowerCase()==='orla'?'Ricerca Verzolla...':matricola?'Matricola '+matricola+'...':modello+'...';
+setStato(id,'run',msg,30);
+fetch(BASE+'/functions/cercaRicambio',{method:'POST',headers:hdr(),body:JSON.stringify({marca:marca,modello:modello,matricola:matricola||'',ricambio:rc||codiceLF,codice_lf:codiceLF||'',richiesta_da:rif||'Cesana Service',syncrogest:syn||'',foto_base64:(rows.find(function(x){return x.id===id;})||{}).foto_base64||[]})})
+.then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+.then(function(data){if(!data.ok)throw new Error(data.error||'Errore');setStato(id,'ok','Completata',100);mostraRes(id,data,qty);disRow(id,false);if(cb)cb();})
+.catch(function(e){setStato(id,'err','Errore: '+String(e.message||''),100);disRow(id,false);if(cb)cb();});
 }
-
-function showTecForm(){
-  g('tecForm').style.display = 'block';
-  g('tecFormTitle').textContent = 'Nuovo tecnico';
-  g('tecNome').value = '';
-  g('tecUid').value = '';
-  g('tecWhatsapp').value = '';
-  editingTecId = null;
+function mostraRes(id,data,qty){
+var el=g('res'+id);if(!el)return;el.style.display='block';
+var best=data.best||(data.risultati&&data.risultati[0])||null;
+var rr=best?[best]:[];
+if(!rr.length){el.innerHTML='<div style="padding:8px;color:var(--slate-l);font-size:12px;">Nessun risultato.</div>';return;}
+rr=rr.map(function(r){if(!r.prezzo||r.prezzo==='N/D')r.prezzo='Vedere portale';return r;});
+var fonte=(data.fonte||'').toLowerCase();var isOrla=fonte==='verzolla';var isSelmi=fonte==='selmi';var isSama=fonte==='supersama';var isLF=fonte==='lf ricambi'||data.lfMode===true;
+var h='';
+if(isOrla){h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo</th><th>Qty</th></tr>';rr.forEach(function(r){h+='<tr><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(r.disponibilita==='Disponibile'?'var(--green)':'var(--red)')+'">'+esc(r.disponibilita)+'</td><td style="font-weight:700">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
+else if(isLF){h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo Netto</th><th>Qty</th></tr>';rr.forEach(function(r){var dn=parseInt((r.disponibilita||'0').replace(/\D/g,''))||0;h+='<tr class="best-row"><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(dn>0?'var(--green)':'var(--red)')+'">'+esc(r.disponibilita||'Verificare')+'</td><td style="font-weight:700;color:#0369a1">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
+else if(isSama){h='<table class="rt"><tr><th>Codice</th><th>Descrizione</th><th>Disp.</th><th>Prezzo</th><th>Qty</th></tr>';rr.forEach(function(r){h+='<tr class="best-row"><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="color:'+(r.disponibile!==false?'var(--green)':'var(--red)')+'">'+(r.disponibile!==false?'Disp.':'Non disp.')+'</td><td style="font-weight:700">'+esc(r.prezzo)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
+else{var thCode=isSelmi?'Codice Selmi':'Codice';h='<table class="rt"><tr><th>'+thCode+'</th><th>Descrizione</th><th>Prezzo</th><th>Disp.</th><th>Qty</th></tr>';rr.forEach(function(r,i){h+='<tr'+(i===0?' class="best-row"':'')+'><td style="font-family:monospace;font-weight:700">'+esc(r.codice)+'</td><td>'+esc(r.descrizione)+'</td><td style="font-weight:700;color:#1d4ed8">'+esc(r.prezzo)+'</td><td>'+esc(r.disponibilita)+'</td><td>x'+qty+'</td></tr>';});h+='</table>';}
+el.innerHTML=h;
 }
-
-function editTec(id, nome, uid, wa){
-  g('tecForm').style.display = 'block';
-  g('tecFormTitle').textContent = 'Modifica tecnico';
-  g('tecNome').value = nome;
-  g('tecUid').value = uid;
-  g('tecWhatsapp').value = wa;
-  editingTecId = id;
-  g('tecForm').scrollIntoView({behavior:'smooth'});
-}
-
-function saveTec(){
-  var nome = gv('tecNome').trim();
-  var uid = gv('tecUid').trim();
-  var wa = gv('tecWhatsapp').trim();
-  if(!nome){ alert('Inserisci il nome'); return; }
-  
-  var body = {nome:nome, syncrogest_uid:uid, whatsapp_number:wa};
-  var url = BASE+'/api/apps/'+AID+'/entities/Tecnico';
-  var method = 'POST';
-  
-  if(editingTecId){
-    url += '/'+editingTecId;
-    method = 'PUT';
-  }
-  
-  fetch(url, {
-    method: method,
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(body)
-  })
-  .then(function(r){return r.json();})
-  .then(function(){
-    g('tecForm').style.display = 'none';
-    loadTecnici();
-  })
-  .catch(function(e){ alert('Errore: '+e.message); });
-}
-
-function delTec(id, nome){
-  if(!confirm('Eliminare il tecnico "'+nome+'"?')) return;
-  fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico/'+id, {
-    method: 'DELETE',
-    headers: {'Content-Type':'application/json'}
-  })
-  .then(function(){ loadTecnici(); })
-  .catch(function(e){ alert('Errore: '+e.message); });
-}
-
-document.getElementById('btnAddTec').addEventListener('click', showTecForm);
-document.getElementById('btnSaveTec').addEventListener('click', saveTec);
-document.getElementById('btnCancelTec').addEventListener('click', function(){ g('tecForm').style.display='none'; });
-
+function salva(m,mo,r){function post(ent,body){fetch(BASE+'/api/apps/'+AID+'/entities/'+ent,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});}if(m&&!mrc.find(function(x){return(x.nome||x)===m;})){post('MarcaSalvata',{nome:m});mrc.push({nome:m});}if(mo&&!mod.find(function(x){return(x.nome||x)===mo;})){post('ModelloSalvato',{nome:mo,marca:m});mod.push({nome:mo,marca:m});}if(r&&!ric.find(function(x){return(x.nome||x)===r;})){post('RicambioSalvato',{nome:r,marca:m,modello:mo});ric.push({nome:r,marca:m,modello:mo});}}
+function loadSugg(){['Elettrobar','Selmi','Orla','LF Ricambi / REPA','SuperSama'].forEach(function(n){if(!mrc.find(function(x){return(x.nome||x)===n;}))mrc.push({nome:n});});function get(ent,arr){fetch(BASE+'/api/apps/'+AID+'/entities/'+ent+'?limit=500').then(function(r){return r.json();}).then(function(d){var list=Array.isArray(d)?d:(d.records||[]);list.forEach(function(x){arr.push(x);});if(ent==='MarcaSalvata')rows.forEach(function(r){fillDL('lmar'+r.id,mrc);});}).catch(function(){});}get('MarcaSalvata',mrc);get('ModelloSalvato',mod);get('RicambioSalvato',ric);}
+function loadSt(){g('stList').innerHTML='<div class="empty">Caricamento...</div>';fetch(BASE+'/functions/cercaRicambio?limit=300',{headers:hdr()}).then(function(r){return r.json();}).then(function(d){stData=Array.isArray(d)?d:(d.records||[]);renderSt(stData);}).catch(function(e){g('stList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});}
+function filtSt(){var q=gv('stF').toLowerCase();renderSt(q?stData.filter(function(r){return[r.marca,r.modello,r.ricambio_cercato,r.descrizione,r.codice_eurotec].some(function(v){return v&&v.toLowerCase().includes(q);});}):stData);}
+function renderSt(list){if(!list.length){g('stList').innerHTML='<div class="empty">Nessun risultato</div>';return;}var h='<table><tr><th>Data</th><th>Marca</th><th>Modello</th><th>Ricambio</th><th>Codice</th><th>Descrizione</th><th>Prezzo</th><th>Stato</th></tr>';list.forEach(function(r){h+='<tr><td style="white-space:nowrap">'+fmtDate(r.created_date)+'</td><td>'+esc(r.marca)+'</td><td>'+esc(r.modello)+'</td><td>'+esc(r.ricambio_cercato)+'</td><td style="font-family:monospace;font-weight:700">'+esc(r.codice_eurotec)+'</td><td>'+esc(r.descrizione)+'</td><td style="font-weight:700;color:#1d4ed8">'+esc(r.prezzo_eurotec)+'</td><td><span class="badge '+(r.stato==='completata'?'badge-ok':r.stato==='errore'?'badge-err':'badge-wait')+'">'+esc(r.stato)+'</span></td></tr>';});h+='</table>';g('stList').innerHTML=h;}
+function loadContatti(){renderUfficio();loadTecnici();}
+function renderUfficio(){var h='';ufficioContacts.forEach(function(c){h+='<div class="contact-row"><div class="contact-info"><div class="contact-avatar">'+c.nome[0]+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(c.nome)+'</div><div style="font-size:11px;color:var(--slate)">'+esc(c.ruolo)+'</div></div></div><div class="contact-phone">'+esc(c.whatsapp)+'</div></div>';});g('ufficioList').innerHTML=h;}
+function loadTecnici(){g('tecList').innerHTML='<div class="empty">Caricamento...</div>';fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico?limit=100').then(function(r){return r.json();}).then(function(d){var list=Array.isArray(d)?d:(d.records||[]);renderTecnici(list);}).catch(function(e){g('tecList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});}
+function renderTecnici(list){if(!list.length){g('tecList').innerHTML='<div class="empty">Nessun tecnico.</div>';return;}var h='';list.forEach(function(t){var wa=t.whatsapp_number||'';var initials=(t.nome||'?').split(' ').map(function(w){return w[0];}).join('').substring(0,2);h+='<div class="contact-row"><div class="contact-info"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(t.nome||'senza nome')+'</div>'+(t.syncrogest_uid?'<div style="font-size:11px;color:var(--slate)">UID: '+esc(t.syncrogest_uid)+'</div>':'')+'</div></div><div style="display:flex;align-items:center;gap:8px;"><span class="contact-phone'+(wa?'':' missing')+'">'+(wa?esc(wa):' mancante')+'</span><div class="contact-actions"><button onclick="editTec(&quot;'+esc(t.id)+'&quot;,&quot;'+esc(t.nome||'')+'&quot;,&quot;'+esc(t.syncrogest_uid||'')+'&quot;,&quot;'+esc(wa)+'&quot;)" title="Modifica">edit</button><button class="del-btn" onclick="delTec(&quot;'+esc(t.id)+'&quot;,&quot;'+esc(t.nome||'')+'&quot;)" title="Elimina">del</button></div></div></div>';});g('tecList').innerHTML=h;}
+function showTecForm(){g('tecForm').style.display='block';g('tecFormTitle').textContent='Nuovo tecnico';g('tecNome').value='';g('tecUid').value='';g('tecWhatsapp').value='';editingTecId=null;}
+function editTec(id,nome,uid,wa){g('tecForm').style.display='block';g('tecFormTitle').textContent='Modifica tecnico';g('tecNome').value=nome;g('tecUid').value=uid;g('tecWhatsapp').value=wa;editingTecId=id;g('tecForm').scrollIntoView({behavior:'smooth'});}
+function saveTec(){var nome=gv('tecNome'),uid=gv('tecUid'),wa=gv('tecWhatsapp');if(!nome){alert('Inserisci il nome');return;}var body={nome:nome,syncrogest_uid:uid,whatsapp_number:wa};var url=BASE+'/api/apps/'+AID+'/entities/Tecnico';var method='POST';if(editingTecId){url+='/'+editingTecId;method='PUT';}fetch(url,{method:method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json();}).then(function(){g('tecForm').style.display='none';loadTecnici();}).catch(function(e){alert('Errore: '+e.message);});}
+function delTec(id,nome){if(!confirm('Eliminare "'+nome+'"?'))return;fetch(BASE+'/api/apps/'+AID+'/entities/Tecnico/'+id,{method:'DELETE',headers:{'Content-Type':'application/json'}}).then(function(){loadTecnici();}).catch(function(e){alert('Errore: '+e.message);});}
+function loadChat(){g('chatList').innerHTML='<div class="empty">Caricamento...</div>';fetch(BASE+'/api/apps/'+AID+'/entities/ChatLog?limit=500&sort=-data').then(function(r){return r.json();}).then(function(d){chatData=Array.isArray(d)?d:(d.records||[]);var nomi={};chatData.forEach(function(m){nomi[m.contatto_nome]=true;});var sel=g('chatFilter');sel.innerHTML='<option value="">Tutti i contatti</option>';Object.keys(nomi).sort().forEach(function(n){sel.innerHTML+='<option value="'+esc(n)+'">'+esc(n)+'</option>';});renderChat();}).catch(function(e){g('chatList').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});}
+function renderChat(){var filter=g('chatFilter')?g('chatFilter').value:'';var msgs=filter?chatData.filter(function(m){return m.contatto_nome===filter;}):chatData;if(!msgs.length){g('chatList').innerHTML='<div class="empty">Nessuna conversazione registrata. Le chat con i tecnici appariranno qui automaticamente.</div>';return;}var groups={};msgs.forEach(function(m){if(!groups[m.contatto_nome])groups[m.contatto_nome]=[];groups[m.contatto_nome].push(m);});var h='';Object.keys(groups).sort().forEach(function(nome){var conv=groups[nome].sort(function(a,b){return new Date(a.data)-new Date(b.data);});var initials=nome.split(' ').map(function(w){return w[0];}).join('').substring(0,2);h+='<div class="card" style="margin-bottom:12px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><div class="contact-avatar">'+esc(initials)+'</div><div><div style="font-weight:700;font-size:14px;">'+esc(nome)+'</div><div style="font-size:11px;color:var(--slate)">'+conv.length+' messaggi</div></div></div>';conv.forEach(function(m){h+='<div class="chat-msg '+(m.direzione==='inviato'?'sent':'received')+'"><div class="chat-bubble">'+esc(m.messaggio)+'<div class="chat-meta">'+(m.direzione==='inviato'?'Inviato':'Ricevuto')+' - '+fmtDate(m.data)+'</div></div></div>';});h+='</div>';});g('chatList').innerHTML=h;}
 </script>
 </body>
 </html>
