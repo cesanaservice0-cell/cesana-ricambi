@@ -89,7 +89,7 @@ tr:hover{background:#f8fafc;}
 </head>
 <body>
 <header>
-<div class="logo"><span>&#128295;</span><div><h1>Cesana Service</h1><sub>Gaetano - Ricerca &amp; Ordine Ricambi v12</sub></div></div>
+<div class="logo"><span>&#128295;</span><div><h1>Cesana Service</h1><sub>Gaetano - Ricerca &amp; Ordine Ricambi v13</sub></div></div>
 <div class="nav">
 <button class="on" id="tR" onclick="tab('R')">&#128269; Ricerca</button>
 <button id="tS" onclick="tab('S')">&#128203; Storico</button>
@@ -179,8 +179,9 @@ tr:hover{background:#f8fafc;}
 </div>
 <div class="form-row">
 <div class="form-group"><label>Username (opz.)</label><input id="forUser"></div>
-<div class="form-group"><label>Note</label><input id="forNote"></div>
+<div class="form-group"><label>Password (opz.)</label><input id="forPass" type="password"></div>
 </div>
+<div class="form-group"><label>Note</label><input id="forNote"></div>
 <div style="display:flex;gap:8px;align-items:center;">
 <button class="btn btn-green" id="btnSaveFor">Salva</button>
 <button class="btn btn-gray" id="btnCancelFor">Annulla</button>
@@ -635,7 +636,7 @@ container.innerHTML=h;
 container.querySelectorAll('.btn-edit-for').forEach(function(btn){
 btn.addEventListener('click',function(){
 var row=btn.closest('[data-for-id]');
-editFor(row.getAttribute('data-for-id'),row.getAttribute('data-for-nome'),row.getAttribute('data-for-url'),row.getAttribute('data-for-email'),row.getAttribute('data-for-user'),row.getAttribute('data-for-note'),row.getAttribute('data-for-attivo')==='1');
+editFor(row.getAttribute('data-for-id'),row.getAttribute('data-for-nome'),row.getAttribute('data-for-url'),row.getAttribute('data-for-email'),row.getAttribute('data-for-user'),row.getAttribute('data-for-pass'),row.getAttribute('data-for-note'),row.getAttribute('data-for-attivo')==='1');
 });
 });
 container.querySelectorAll('.btn-del-for').forEach(function(btn){
@@ -653,10 +654,10 @@ g('forNome').value='';g('forUrl').value='';g('forEmail').value='';g('forUser').v
 editingForId=null;
 }
 
-function editFor(id,nome,url,email,user,note,attivo){
+function editFor(id,nome,url,email,user,pass,note,attivo){
 g('forForm').style.display='block';
 g('forFormTitle').textContent='Modifica fornitore';
-g('forNome').value=nome;g('forUrl').value=url;g('forEmail').value=email;g('forUser').value=user;g('forNote').value=note;g('forAttivo').checked=attivo;
+g('forNome').value=nome;g('forUrl').value=url;g('forEmail').value=email;g('forUser').value=user;g('forPass').value=pass;g('forNote').value=note;g('forAttivo').checked=attivo;
 editingForId=id;
 g('forForm').scrollIntoView({behavior:'smooth'});
 }
@@ -664,7 +665,7 @@ g('forForm').scrollIntoView({behavior:'smooth'});
 function saveFor(){
 var nome=gv('forNome');
 if(!nome){alert('Inserisci il nome');return;}
-var body={nome:nome,url_sito:gv('forUrl'),email:gv('forEmail'),username:gv('forUser'),note:gv('forNote'),attivo:g('forAttivo').checked};
+var body={nome:nome,url_sito:gv('forUrl'),email:gv('forEmail'),username:gv('forUser'),password:gv('forPass'),note:gv('forNote'),attivo:g('forAttivo').checked};
 var url2=BASE+'/functions/dashboardApi?action=create_fornitore';
 var method='POST';
 if(editingForId){url2=BASE+'/functions/dashboardApi?action=update_fornitore&id='+editingForId;method='PUT';}
