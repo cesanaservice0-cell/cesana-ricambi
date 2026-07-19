@@ -919,14 +919,13 @@ var confrontiTimer=null;
 
 function loadConfronti(){
 g('confrontiBody').innerHTML='<tr><td colspan="11" style="padding:20px;text-align:center;color:var(--slate);">Caricamento...</td></tr>';
-fetch(BASE+'/functions/confrontiApi?action=list').then(function(r){return r.json();}).then(function(d){
-if(d.ok){
-var conf=d.confronti||[];
+fetch(BASE+'/api/apps/'+AID+'/entities/ConfrontoPrezzi?limit=500').then(function(r){return r.json();}).then(function(d){
+var conf=(d.data||d.items||d||[]).map(function(c){
+var r=c.data||c;
+return{codice:r.codice||'-',descrizione:r.descrizione||'-',fornitore_email:r.fornitore_email||'-',prezzo_email:r.prezzo_email||'-',prezzo_nostro:r.prezzo_nostro||'N/A',fonte_nostro:r.fonte_nostro||'-',prezzo_web:r.prezzo_web||'N/A',fonte_web:r.fonte_web||'-',risparmio:r.risparmio||'-',consiglio:r.consiglio||'-',stato:r.stato||'da confrontare'};
+});
 g('confrontiLastUpdate').textContent='Ultimo agg: '+new Date().toLocaleTimeString('it-IT');
 renderConfronti(conf);
-}else{
-g('confrontiBody').innerHTML='<tr><td colspan="11" style="padding:20px;text-align:center;color:var(--slate);">Errore caricamento.</td></tr>';
-}
 }).catch(function(e){
 g('confrontiBody').innerHTML='<tr><td colspan="11" style="padding:20px;text-align:center;color:var(--slate);">Errore: '+e.message+'</td></tr>';
 });
