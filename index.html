@@ -269,14 +269,16 @@ tr:hover{background:#f8fafc;}
 <div style="overflow-x:auto;">
 <table style="width:100%;border-collapse:collapse;font-size:12px;" id="tabConfronti">
 <thead><tr style="background:var(--blue-l);">
-<th style="text-align:left;padding:8px 10px;border-radius:8px 0 0 0;">Codice</th>
-<th style="text-align:left;padding:8px 10px;">Descrizione</th>
-<th style="text-align:left;padding:8px 10px;">Fornitore</th>
-<th style="text-align:right;padding:8px 10px;">Prezzo Email</th>
-<th style="text-align:right;padding:8px 10px;">Prezzo Web</th>
-<th style="text-align:left;padding:8px 10px;">Fonte Web</th>
-<th style="text-align:center;padding:8px 10px;">Risparmio</th>
-<th style="text-align:left;padding:8px 10px;border-radius:0 8px 0 0;">Consiglio</th>
+<th style="text-align:left;padding:8px 8px;border-radius:8px 0 0 0;">Codice</th>
+<th style="text-align:left;padding:8px 8px;">Descrizione</th>
+<th style="text-align:left;padding:8px 8px;">Fornitore Email</th>
+<th style="text-align:right;padding:8px 8px;">Prezzo Fornitore</th>
+<th style="text-align:right;padding:8px 8px;">Prezzo Nostro Forn.</th>
+<th style="text-align:left;padding:8px 8px;">Fonte Nostro</th>
+<th style="text-align:right;padding:8px 8px;">Prezzo Web</th>
+<th style="text-align:left;padding:8px 8px;">Fonte Web</th>
+<th style="text-align:center;padding:8px 8px;">Risparmio</th>
+<th style="text-align:left;padding:8px 8px;border-radius:0 8px 0 0;">Consiglio</th>
 </tr></thead>
 <tbody id="confrontiBody"></tbody></table>
 </div>
@@ -916,17 +918,17 @@ return '<div style="padding:14px;border-radius:10px;border-left:4px solid '+bd+'
 var confrontiTimer=null;
 
 function loadConfronti(){
-g('confrontiBody').innerHTML='<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--slate);">Caricamento...</td></tr>';
+g('confrontiBody').innerHTML='<tr><td colspan="10" style="padding:20px;text-align:center;color:var(--slate);">Caricamento...</td></tr>';
 fetch(BASE+'/functions/confrontiApi?action=list').then(function(r){return r.json();}).then(function(d){
 if(d.ok){
 var conf=d.confronti||[];
 g('confrontiLastUpdate').textContent='Ultimo agg: '+new Date().toLocaleTimeString('it-IT');
 renderConfronti(conf);
 }else{
-g('confrontiBody').innerHTML='<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--slate);">Errore caricamento.</td></tr>';
+g('confrontiBody').innerHTML='<tr><td colspan="10" style="padding:20px;text-align:center;color:var(--slate);">Errore caricamento.</td></tr>';
 }
 }).catch(function(e){
-g('confrontiBody').innerHTML='<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--slate);">Errore: '+e.message+'</td></tr>';
+g('confrontiBody').innerHTML='<tr><td colspan="10" style="padding:20px;text-align:center;color:var(--slate);">Errore: '+e.message+'</td></tr>';
 });
 if(confrontiTimer)clearInterval(confrontiTimer);
 confrontiTimer=setInterval(loadConfronti,60000);
@@ -934,7 +936,7 @@ confrontiTimer=setInterval(loadConfronti,60000);
 
 function renderConfronti(conf){
 if(!conf.length){
-g('confrontiBody').innerHTML='<tr><td colspan="8" style="padding:20px;text-align:center;color:var(--slate);">Nessun confronto disponibile.</td></tr>';
+g('confrontiBody').innerHTML='<tr><td colspan="10" style="padding:20px;text-align:center;color:var(--slate);">Nessun confronto disponibile.</td></tr>';
 g('confrontiStats').innerHTML='';
 return;
 }
