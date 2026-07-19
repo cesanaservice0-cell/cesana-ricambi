@@ -96,6 +96,7 @@ tr:hover{background:#f8fafc;}
 <button id="tC" onclick="tab('C')">&#128222; Contatti</button>
 <button id="tT" onclick="tab('T')">&#128172; Chat</button>
 <button id="tF" onclick="tab('F')">&#127981; Fornitori</button>
+<button id="tM" onclick="tab('M')">&#9993; Mail Standard</button>
 </div>
 </header>
 <main>
@@ -162,6 +163,61 @@ tr:hover{background:#f8fafc;}
 </div>
 </div>
 </div>
+<div id="TM" style="display:none;">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+<h3 class="section-title" style="margin:0;">&#9993; Formato Mail Standard</h3>
+</div>
+<p style="font-size:13px;color:var(--slate);margin-bottom:14px;">Carica qui il layout della mail aziendale che Gaetano userà per le richieste di preventivo ai fornitori. Usa i segnaposto per i dati dinamici.</p>
+
+<div style="background:#f8fafc;border-radius:10px;padding:14px;margin-bottom:16px;">
+<h4 style="font-size:13px;color:var(--blue);margin-bottom:8px;">Segnaposto disponibili</h4>
+<div style="display:flex;flex-wrap:wrap;gap:6px;">
+<span style="background:#dbeafe;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;">{RIFERIMENTO}</span>
+<span style="background:#dbeafe;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;">{SYNCROGEST}</span>
+<span style="background:#dbeafe;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;">{MODELLO}</span>
+<span style="background:#dbeafe;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;">{RICAMBIO}</span>
+<span style="background:#dbeafe;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;">{QUANTITA}</span>
+<span style="background:#dbeafe;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;">{CODICE}</span>
+<span style="background:#dbeafe;padding:4px 10px;border-radius:6px;font-size:12px;font-family:monospace;">{FORNITORE}</span>
+</div>
+<p style="font-size:11px;color:var(--slate);margin-top:8px;">L'oggetto della mail sara sempre: <strong>[Nome Cliente] - [Numero Syncrogest]</strong></p>
+</div>
+
+<div class="form-group">
+<label>Oggetto (modificabile, default: [Nome Cliente] - [Numero Syncrogest])</label>
+<input id="mailOggetto" placeholder="[Nome Cliente] - [Numero Syncrogest]" value="[Nome Cliente] - [Numero Syncrogest]">
+</div>
+
+<div class="form-group">
+<label>Corpo della mail (HTML o testo)</label>
+<textarea id="mailCorpo" rows="14" style="font-family:monospace;font-size:12px;width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:10px;" placeholder="Incolla qui il tuo layout di mail aziendale..."></textarea>
+</div>
+
+<div class="form-row" style="margin-bottom:14px;">
+<div class="form-group">
+<label>Firma aziendale (inserita in fondo alla mail)</label>
+<textarea id="mailFirma" rows="6" style="font-family:monospace;font-size:12px;width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:10px;" placeholder="Cesana Service S.r.l.&#10;Via ...&#10;Tel ...&#10;Email ..."></textarea>
+</div>
+</div>
+
+<div style="display:flex;gap:8px;">
+<button class="btn btn-green" id="btnSaveMail">Salva Layout</button>
+<button class="btn btn-blue" id="btnLoadMail">Carica Layout Salvato</button>
+<button class="btn btn-gray" id="btnPreviewMail">Anteprima</button>
+</div>
+
+<div id="mailPreview" style="display:none;margin-top:16px;padding:16px;background:#fff;border:2px solid var(--blue-l);border-radius:10px;">
+<h4 style="font-size:13px;color:var(--blue);margin-bottom:10px;">Anteprima Email</h4>
+<div style="font-size:12px;color:var(--slate);margin-bottom:8px;"><strong>Oggetto:</strong> <span id="prevOggetto"></span></div>
+<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;background:#fafafa;min-height:200px;" id="prevCorpo"></div>
+<div style="margin-top:10px;font-size:12px;color:var(--slate);"><strong>Firma:</strong></div>
+<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;background:#fafafa;min-height:80px;margin-top:4px;" id="prevFirma"></div>
+</div>
+
+<div id="mailStatus" style="margin-top:10px;"></div>
+</div>
+</div>
 <div id="TT" style="display:none;">
 <div class="card">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
@@ -219,14 +275,14 @@ function fmtDate(d){return d?new Date(d).toLocaleString('it-IT',{day:'2-digit',m
 
 // Tab navigation
 function tab(t){
-['TR','TS','TC','TT','TF'].forEach(function(s){g(s).style.display='none';});
-['tR','tS','tC','tT','tF'].forEach(function(b){g(b).className='';});
+['TR','TS','TC','TT','TF','TM'].forEach(function(s){g(s).style.display='none';});
+['tR','tS','tC','tT','tF','tM'].forEach(function(b){g(b).className='';});
 g('T'+t).style.display='block';
 g('t'+t).className='on';
 if(t==='S')loadSt();
 if(t==='C')loadContatti();
 if(t==='T')loadChat();
-if(t==='F')loadFornitori();
+if(t==='F')loadFornitori();if(t==='M')loadMailLayout();
 }
 
 // === RICERCA ===
@@ -581,6 +637,42 @@ if(!confirm('Eliminare "'+nome+'"?'))return;
 fetch(BASE+'/functions/dashboardApi?action=delete_tecnico&id='+id,{method:'DELETE',headers:{'Content-Type':'application/json'}}).then(function(){loadTecnici();}).catch(function(e){alert('Errore: '+e.message);});
 }
 
+// === MAIL LAYOUT ===
+function loadMailLayout(){
+var st=g('mailStatus');
+st.innerHTML='<span style="color:var(--slate);">Caricamento...</span>';
+fetch(BASE+'/functions/dashboardApi?action=list_impostazioni').then(function(r){return r.json();}).then(function(d){
+var list=Array.isArray(d)?d:[];
+var ogg=list.find(function(x){return x.chiave==='mail_oggetto';});
+var corpo=list.find(function(x){return x.chiave==='mail_corpo';});
+var firma=list.find(function(x){return x.chiave==='mail_firma';});
+g('mailOggetto').value=ogg?ogg.contenuto:'[Nome Cliente] - [Numero Syncrogest]';
+g('mailCorpo').value=corpo?corpo.contenuto:'';
+g('mailFirma').value=firma?firma.contenuto:'';
+st.innerHTML=corpo?'<span style="color:var(--green);">Layout caricato.</span>':'<span style="color:var(--slate);">Nessun layout salvato.</span>';
+}).catch(function(e){st.innerHTML='<span style="color:#dc2626;">Errore: '+e.message+'</span>';});
+}
+
+function saveMailLayout(){
+var ogg=gv('mailOggetto'),corpo=gv('mailCorpo'),firma=gv('mailFirma');
+if(!corpo){alert('Inserisci il corpo della mail');return;}
+var st=g('mailStatus');
+st.innerHTML='<span style="color:var(--slate);">Salvataggio...</span>';
+fetch(BASE+'/functions/dashboardApi?action=save_impostazione',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({oggetto:ogg,corpo:corpo,firma:firma})}).then(function(r){return r.json();}).then(function(d){
+st.innerHTML='<span style="color:var(--green);">&#10003; Layout salvato correttamente!</span>';
+}).catch(function(e){st.innerHTML='<span style="color:#dc2626;">Errore: '+e.message+'</span>';});
+}
+
+function previewMail(){
+g('mailPreview').style.display='block';
+var sample={RIFERIMENTO:'Rossi Mario',SYNCROGEST:'INT-12345',MODELLO:'Elettrobar 461CDE',RICAMBIO:'Guarnizione porta',QUANTITA:'2',CODICE:'ELT-GU461',FORNITORE:'LF Ricambi'};
+var ogg=gv('mailOggetto'),corpo=gv('mailCorpo'),firma=gv('mailFirma');
+Object.keys(sample).forEach(function(k){ogg=ogg.replace('['+k+']',sample[k]);corpo=corpo.replace('{'+k+'}',sample[k]);});
+g('prevOggetto').textContent=ogg;
+g('prevCorpo').innerHTML=corpo||'<em style="color:var(--slate);">Vuoto</em>';
+g('prevFirma').innerHTML=firma||'<em style="color:var(--slate);">Vuoto</em>';
+}
+
 // === CHAT ===
 function loadChat(){
 g('chatList').innerHTML='<div class="empty">Caricamento...</div>';
@@ -697,6 +789,9 @@ g('btnAdd').addEventListener('click',addRow);
 g('btnStart').addEventListener('click',avvia);
 g('btnReset').addEventListener('click',reset);
 g('btnAddTec').addEventListener('click',function(){showTecForm();g('tecRuolo').value='tecnico';});
+g('btnSaveMail')&&g('btnSaveMail').addEventListener('click',saveMailLayout);
+g('btnLoadMail')&&g('btnLoadMail').addEventListener('click',loadMailLayout);
+g('btnPreviewMail')&&g('btnPreviewMail').addEventListener('click',previewMail);
 g('btnAddAdm')&&g('btnAddAdm').addEventListener('click',function(){showTecForm();g('tecRuolo').value='amministratore';g('tecFormTitle').textContent='Nuovo amministratore';});
 g('btnSaveTec').addEventListener('click',saveTec);
 g('btnCancelTec').addEventListener('click',function(){g('tecForm').style.display='none';});
