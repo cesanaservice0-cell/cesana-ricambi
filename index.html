@@ -762,6 +762,37 @@ renderEmails();
 }
 
 
+function extractOrderRef(subj){
+if(!subj)return 'Senza oggetto';
+var s=subj;
+// Strip RE:/R:/Re:/FWD: prefixes
+s=s.replace(/^(RE:\s*|R:\s*|Re:\s*|FWD:\s*|Fw:\s*|Fw\d:\s*)+/i,'').trim();
+// Try to find order number patterns
+var patterns=[
+/(?:conferma\s+(?:d['']?ordine\s+)?(?:cliente\s+)?(?:n[°o]?\.)?\s*)(\d{4,})/i,
+/(?:ord(?:ine|\.?)\s*(?:n[°o]?\.)?\s*)(\d{4,})/i,
+/(?:ord\.?\s*no\.?\s*)(\d{4,})/i,
+/(?:numero\s*)(\d{4,})/i,
+/(?:n[°o]?\.\s*)(\d{4,})/i,
+/(?:OFFER\s*)(\d{2,}\/\d{2,})/i,
+/(?:SALES\s*ORDER\s*NUMBER:\s*)(\d{4,})/i,
+/(?:TME#)(\d{4,})/i,
+/(\d{5,})/  // fallback: any 5+ digit number
+];
+var orderNum=null;
+for(var i=0;i<patterns.length;i++){
+var m=s.match(patterns[i]);
+if(m){
+orderNum=m[1];
+break;
+}
+}
+if(orderNum){
+return 'Ord. '+orderNum;
+}
+// No order number found - use cleaned subject
+return s.length>40?s.substring(0,40)+'...':s;
+}
 function renderEmails(){
 var filter=(g('emailFilter')||{}).value||'';
 var fl=filter.toLowerCase();
@@ -775,7 +806,15 @@ return(e.s||'').toLowerCase().indexOf(fl)>-1||(e.n||'').toLowerCase().indexOf(fl
 }):items;
 if(filtered.length===0)return;
 totalShown+=filtered.length;
-fornitoreCards.push({name:f,count:filtered.length,items:filtered,latest:filtered[0]?filtered[0].d:''});
+// Group emails by order reference
+var orderGroups={};
+filtered.forEach(function(e){
+var ref=extractOrderRef(e.s||'');
+if(!orderGroups[ref])orderGroups[ref]={items:[],latest:e.d||''};
+orderGroups[ref].items.push(e);
+if(e.d&&e.d>orderGroups[ref].latest)orderGroups[ref].latest=e.d;
+});
+fornitoreCards.push({name:f,count:filtered.length,items:filtered,orderGroups:orderGroups,latest:filtered[0]?filtered[0].d:''});
 });
 fornitoreCards.sort(function(a,b){return b.count-a.count;});
 var grid='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px;">';
@@ -787,7 +826,8 @@ grid+='<div style="display:flex;align-items:center;gap:10px;">';
 grid+='<div style="width:40px;height:40px;border-radius:8px;background:var(--blue-l);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">'+initials+'</div>';
 grid+='<div style="flex:1;min-width:0;">';
 grid+='<div style="font-weight:600;font-size:13px;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(fc.name)+'</div>';
-grid+='<div style="font-size:11px;color:var(--slate);">'+fc.count+' email';
+var nOrd=Object.keys(fc.orderGroups).length;
+grid+='<div style="font-size:11px;color:var(--slate);">'+fc.count+' email \u00b7 '+nOrd+' ordini';
 if(lastDate)grid+=' \u00b7 ultima: '+lastDate;
 grid+='</div>';
 grid+='</div></div></div>';
@@ -798,23 +838,46 @@ fornitoreCards.forEach(function(fc,idx){
 panels+='<div id="forPanel-'+idx+'" style="display:none;margin-bottom:16px;">';
 panels+='<div style="background:var(--blue-l);padding:8px 14px;border-radius:8px 8px 0 0;font-weight:600;font-size:14px;color:var(--blue);display:flex;justify-content:space-between;align-items:center;">';
 panels+=esc(fc.name)+' <span style="font-size:12px;color:var(--slate);">'+fc.count+' email</span></div>';
-panels+='<div style="border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;">';
-fc.items.forEach(function(e,idx2){
+panels+='<div style="border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:8px;">';
+// Sort order groups by latest date descending
+var orderKeys=Object.keys(fc.orderGroups);
+orderKeys.sort(function(a,b){return(fc.orderGroups[b].latest||'').localeCompare(fc.orderGroups[a].latest||'');});
+orderKeys.forEach(function(ref){
+var og=fc.orderGroups[ref];
+var ogId='og-'+idx+'-'+ref.replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
+var ogDate=og.latest?new Date(og.latest).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}):'-';
+panels+='<div style="margin-bottom:8px;">';
+panels+='<div onclick="toggleOrder(\''+ogId+'\')" style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#f0f4f8;border-radius:6px;cursor:pointer;" onmouseover="this.style.background=\'#e3eaf2\'" onmouseout="this.style.background=\'#f0f4f8\'">';
+panels+='<div style="display:flex;align-items:center;gap:8px;">';
+panels+='<span style="font-size:14px;">\u{1F4C4}</span>';
+panels+='<span style="font-weight:600;font-size:12px;color:var(--dark);">'+esc(ref)+'</span>';
+panels+='<span style="font-size:10px;color:var(--slate);background:#e0e7ef;padding:2px 6px;border-radius:4px;">'+og.items.length+' email</span>';
+panels+='</div>';
+panels+='<div style="display:flex;align-items:center;gap:8px;">';
+panels+='<span style="font-size:10px;color:var(--slate);">'+ogDate+'</span>';
+panels+='<span style="font-size:10px;color:var(--slate);" id="arrow-'+ogId+'">\u25BC</span>';
+panels+='</div>';
+panels+='</div>';
+panels+='<div id="'+ogId+'" style="display:none;margin-top:4px;border-left:3px solid var(--blue-l);padding-left:8px;">';
+og.items.forEach(function(e,idx2){
 var dt=e.d?new Date(e.d).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}):'-';
 var att=e.a?'<a href="'+ATT_BASE+'?message_id='+encodeURIComponent(e.m||'')+'" target="_blank" title="Apri allegato" style="font-size:16px;text-decoration:none;color:var(--blue);">\u{1F4CE}</a>':'';
 var subj=esc(e.s||'(senza oggetto)');
 var prev=esc((e.b||'').substring(0,150));
 var nm=esc(e.n||'');
-var eid='em-'+idx+'-'+idx2;
-panels+='<div onclick="toggleEmail(\''+eid+'\')" style="padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;" onmouseover="this.style.background=\'#f8f9fa\'" onmouseout="this.style.background=\'\'">';
-panels+='<div style="display:flex;justify-content:space-between;align-items:start;gap:10px;">';
+var eid=ogId+'-'+idx2;
+panels+='<div onclick="toggleEmail(\''+eid+'\')" style="padding:8px 10px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:4px;" onmouseover="this.style.background=\'#f8f9fa\'" onmouseout="this.style.background=\'\'">';
+panels+='<div style="display:flex;justify-content:space-between;align-items:start;gap:8px;">';
 panels+='<div style="flex:1;min-width:0;">';
-panels+='<div style="font-weight:600;font-size:13px;color:var(--dark);">'+subj+' '+att+'</div>';
-panels+='<div style="font-size:11px;color:var(--slate);margin-top:2px;">'+nm+' \u00b7 '+dt+'</div>';
+panels+='<div style="font-weight:500;font-size:12px;color:var(--dark);">'+subj+' '+att+'</div>';
+panels+='<div style="font-size:10px;color:var(--slate);margin-top:2px;">'+nm+' \u00b7 '+dt+'</div>';
 panels+='</div>';
-panels+='<span style="font-size:10px;color:var(--slate);flex-shrink:0;">\u25BC</span>';
+panels+='<span style="font-size:9px;color:var(--slate);flex-shrink:0;">\u25BC</span>';
 panels+='</div>';
-panels+='<div id="'+eid+'" style="display:none;margin-top:8px;padding:8px 10px;background:#f8f9fa;border-radius:6px;font-size:12px;color:var(--slate);line-height:1.5;">'+prev+'</div>';
+panels+='<div id="'+eid+'" style="display:none;margin-top:6px;padding:6px 8px;background:#f8f9fa;border-radius:4px;font-size:11px;color:var(--slate);line-height:1.4;">'+prev+'</div>';
+panels+='</div>';
+});
+panels+='</div>';
 panels+='</div>';
 });
 panels+='</div></div>';
@@ -826,6 +889,7 @@ result='<div style="text-align:center;padding:40px;color:var(--slate);">Nessuna 
 g('emailList').innerHTML=result;
 window._emailCards=fornitoreCards;
 }
+
 function toggleFornitore(idx){
 var p=g('forPanel-'+idx);
 if(p){p.style.display=p.style.display==='none'?'block':'none';}
@@ -833,6 +897,18 @@ if(p){p.style.display=p.style.display==='none'?'block':'none';}
 function toggleEmail(eid){
 var e=g(eid);
 if(e){e.style.display=e.style.display==='none'?'block':'none';}
+function toggleOrder(oid){
+var e=g(oid);
+var a=g('arrow-'+oid);
+if(!e)return;
+if(e.style.display==='none'){
+e.style.display='block';
+if(a)a.innerHTML='\u25B2';
+}else{
+e.style.display='none';
+if(a)a.innerHTML='\u25BC';
+}
+}
 }
 // === ANALISI ===
 var chartM=null,chartT=null,chartTime=null;
