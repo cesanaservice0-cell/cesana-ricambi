@@ -759,6 +759,51 @@ g('emailLastUpdate').textContent='Ultimo agg: '+new Date().toLocaleTimeString('i
 renderEmails();
 }
 
+
+function renderEmails(){
+var filter=(g('emailFilter')||{}).value||'';
+var fl=filter.toLowerCase();
+var html='';
+var totalShown=0;
+emailFornitori.forEach(function(f){
+var items=emailGrouped[f]||[];
+var filtered=fl?items.filter(function(e){
+return(e.s||'').toLowerCase().indexOf(fl)>-1||(e.n||'').toLowerCase().indexOf(fl)>-1;
+}):items;
+if(filtered.length===0)return;
+totalShown+=filtered.length;
+html+='<div style="margin-bottom:16px;">';
+html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;" onclick="var el=this.nextElementSibling;el.style.display=el.style.display==\'none\'?\'\':\'none\';">';
+html+='<span style="background:var(--blue);color:#fff;padding:3px 10px;border-radius:6px;font-size:13px;font-weight:600;">'+esc(f)+'</span>';
+html+='<span style="font-size:12px;color:var(--slate);">'+filtered.length+' email</span>';
+html+='</div>';
+html+='<div style="border-left:3px solid var(--blue-l);padding-left:12px;">';
+filtered.forEach(function(e){
+var dt=e.d?new Date(e.d).toLocaleDateString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'-';
+var att=e.a?'<span style="color:var(--blue);font-size:11px;">\u{1F4CE}</span>':'';
+var subj=esc(e.s||'(senza oggetto)');
+var prev=esc((e.b||'').substring(0,100));
+var nm=esc(e.n||'');
+html+='<div style="padding:8px 0;border-bottom:1px solid var(--border);">';
+html+='<div style="display:flex;justify-content:space-between;align-items:start;">';
+html+='<div style="flex:1;">';
+html+='<div style="font-weight:600;font-size:13px;color:var(--dark);">'+subj+' '+att+'</div>';
+html+='<div style="font-size:11px;color:var(--slate);margin-top:2px;">'+nm+' \u00b7 '+dt+'</div>';
+if(prev)html+='<div style="font-size:11px;color:var(--slate);margin-top:4px;opacity:0.7;">'+prev+'</div>';
+html+='</div>';
+html+='</div>';
+html+='</div>';
+});
+html+='</div>';
+html+='</div>';
+});
+if(totalShown===0){
+html='<div style="text-align:center;padding:40px;color:var(--slate);">Nessuna email trovata.</div>';
+}
+g('emailList').innerHTML=html;
+}
+
+
 // === ANALISI ===
 var chartM=null,chartT=null,chartTime=null;
 
