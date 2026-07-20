@@ -247,7 +247,7 @@ tr:hover{background:#f8fafc;}
 <h3 class="section-title" style="margin-bottom:14px;">&#128230; Ricambi Ricorrenti con Prezzo</h3>
 <p style="font-size:13px;color:var(--slate);margin-bottom:14px;">I ricambi cercati più spesso, con prezzo medio e suggerimento di stockaggio.</p>
 <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;" id="tabRicorrenti">
-<thead><tr style="background:var(--blue-l);"><th style="text-align:left;padding:8px 10px;border-radius:8px 0 0 0;">Ricambio</th><th style="text-align:left;padding:8px 10px;">Marca</th><th style="text-align:center;padding:8px 10px;">Ricerche</th><th style="text-align:right;padding:8px 10px;">Prezzo Medio</th><th style="text-align:right;padding:8px 10px;">Spesa Totale Stimata</th><th style="text-align:center;padding:8px 10px;border-radius:0 8px 0 0;">Suggerimento</th></tr></thead>
+<thead><tr style="background:var(--blue-l);"><th style="text-align:left;padding:8px 10px;border-radius:8px 0 0 0;">Ricambio</th><th style="text-align:left;padding:8px 10px;">Descrizione</th><th style="text-align:left;padding:8px 10px;">Marca</th><th style="text-align:center;padding:8px 10px;">Ricerche</th><th style="text-align:right;padding:8px 10px;">Prezzo Medio</th><th style="text-align:right;padding:8px 10px;">Spesa Totale Stimata</th><th style="text-align:center;padding:8px 10px;border-radius:0 8px 0 0;">Suggerimento</th></tr></thead>
 <tbody id="ricorrentiBody"></tbody></table></div>
 </div>
 <div class="card">
@@ -864,7 +864,7 @@ var ricorrenti={};
 recs.forEach(function(r){
 if(r.prezzo>0){
 var key=r.codice||r.ricambio;
-if(!ricorrenti[key])ricorrenti[key]={codice:r.codice,ricambio:r.ricambio,marca:r.marca,count:0,totPrezzo:0,prezzi:[],modelli:{}};
+if(!ricorrenti[key])ricorrenti[key]={codice:r.codice,ricambio:r.ricambio,descrizione:r.descrizione||r.ricambio_cercato||'',marca:r.marca,count:0,totPrezzo:0,prezzi:[],modelli:{}};
 ricorrenti[key].count++;
 ricorrenti[key].totPrezzo+=r.prezzo;
 ricorrenti[key].prezzi.push(r.prezzo);
@@ -875,7 +875,7 @@ g('ricorrentiBody').innerHTML=ricArr.map(function(r){
 var avg=r.totPrezzo/r.count;
 var tot=r.totPrezzo;
 var sug=r.count>=10?'<span style="background:#dc2626;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">STOCKARE</span>':r.count>=5?'<span style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">MONITORARE</span>':'<span style="background:#16a34a;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;">OK</span>';
-return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;">'+esc(r.codice||r.ricambio)+'</td><td style="padding:8px 10px;">'+esc(r.marca)+'</td><td style="padding:8px 10px;text-align:center;font-weight:700;">'+r.count+'</td><td style="padding:8px 10px;text-align:right;">€'+avg.toFixed(2)+'</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#1d4ed8;">€'+tot.toFixed(2)+'</td><td style="padding:8px 10px;text-align:center;">'+sug+'</td></tr>';
+return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;">'+esc(r.codice||r.ricambio)+'</td><td style="padding:8px 10px;font-size:11px;color:var(--slate);">'+esc(r.descrizione||'-')+'</td><td style="padding:8px 10px;">'+esc(r.marca)+'</td><td style="padding:8px 10px;text-align:center;font-weight:700;">'+r.count+'</td><td style="padding:8px 10px;text-align:right;">€'+avg.toFixed(2)+'</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#1d4ed8;">€'+tot.toFixed(2)+'</td><td style="padding:8px 10px;text-align:center;">'+sug+'</td></tr>';
 }).join('');
 
 // 6. Opportunità di risparmio
