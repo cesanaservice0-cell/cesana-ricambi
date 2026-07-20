@@ -803,7 +803,7 @@ g('analisiCards').innerHTML=[
 ].map(function(c){return '<div class="card" style="padding:16px;text-align:center;"><div style="font-size:24px;margin-bottom:4px;">'+c.i+'</div><div style="font-size:20px;font-weight:700;color:var(--blue);">'+esc(c.v)+'</div><div style="font-size:11px;color:var(--slate);margin-top:4px;">'+esc(c.t)+'</div></div>';}).join('');
 var fKeys=Object.keys(fornitori).sort(function(a,b){return fornitori[b].spesa-fornitori[a].spesa;});
 if(chartM)chartM.destroy();
-chartM=new Chart(g('chartMarca'),{type:'bar',data:{labels:fKeys,datasets:[{label:'Spesa',data:fKeys.map(function(k){return fornitori[k].spesa.toFixed(2);}),backgroundColor:'#1d4ed8',borderWidth:0}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return '\u20AC'+v;}}},x:{ticks:{font:{size:9},maxRotation:45}},responsive:true,maintainAspectRatio:false}});
+chartM=new Chart(g('chartMarca'),{type:'bar',data:{labels:fKeys,datasets:[{label:'Spesa',data:fKeys.map(function(k){return fornitori[k].spesa.toFixed(2);}),backgroundColor:'#1d4ed8',borderWidth:0}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return '\u20AC'+v;}}},x:{ticks:{font:{size:9},maxRotation:45}},responsive:true,maintainAspectRatio:false}}});
 var ricKeys=Object.keys(codici).sort(function(a,b){return codici[b].spesa-codici[a].spesa;}).slice(0,10);
 if(chartT)chartT.destroy();
 chartT=new Chart(g('chartTop'),{type:'bar',data:{labels:ricKeys,datasets:[{label:'Spesa',data:ricKeys.map(function(k){return codici[k].spesa.toFixed(2);}),backgroundColor:'#0891b2',borderWidth:0}]},options:{indexAxis:'y',plugins:{legend:{display:false}},responsive:true,maintainAspectRatio:false}});
@@ -819,9 +819,6 @@ if(totSpesa>0)opps.push({tipo:'info',titolo:'Spesa totale '+periodo,desc:'\u20AC
 fKeys.slice(0,3).forEach(function(k){var pct=Math.round(fornitori[k].spesa/totSpesa*100);if(pct>10)opps.push({tipo:'info',titolo:'Fornitore: '+k,desc:'\u20AC'+fornitori[k].spesa.toFixed(2)+' ('+pct+'%) in '+fornitori[k].count+' articoli.'});});
 ricArr.filter(function(r){return r.count>=3;}).forEach(function(r){opps.push({tipo:'stock',titolo:'Ricorrente: '+r.codice,desc:'Acquistato '+r.count+'x. Spesa \u20AC'+r.spesa.toFixed(2)+'. '+esc(r.descrizione||'')+'. Valutare stock.'});});
 g('opportunita').innerHTML=opps.map(function(o){var bg=o.tipo==='stock'?'#fee2e2':'#d1fae5';var bd=o.tipo==='stock'?'#dc2626':'#16a34a';return '<div style="padding:14px;border-radius:10px;border-left:4px solid '+bd+';background:'+bg+';"><div style="font-weight:700;font-size:14px;color:'+bd+';margin-bottom:4px;">'+esc(o.titolo)+'</div><div style="font-size:13px;color:#334155;">'+esc(o.desc)+'</div></div>';}).join('');
-}
-
-
 }
 
 // === CONFRONTI ===
