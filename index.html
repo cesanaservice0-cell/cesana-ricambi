@@ -90,7 +90,7 @@ tr:hover{background:#f8fafc;}
 @media(max-width:900px){.rA,.rB{grid-template-columns:1fr;}.stat-row{flex-direction:column;}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>if(localStorage.getItem('dv')!=='38'){localStorage.setItem('dv','38');location.reload(true);}</script></head>
+<script>if(localStorage.getItem('dv')!=='39'){localStorage.setItem('dv','38');location.reload(true);}</script></head>
 <body>
 <header>
 <div class="logo"><span>&#128295;</span><div><h1>Gaetano <span style="font-size:0.55em;font-weight:400;color:var(--slate);">by Cesana Service</span></h1><sub>Ricerca Ricambi &amp; Gestione Ordini</sub></div></div>
@@ -762,36 +762,21 @@ renderEmails();
 }
 
 
-function extractOrderRef(subj){
-if(!subj)return 'Senza oggetto';
-var s=subj;
-// Strip RE:/R:/Re:/FWD: prefixes
-s=s.replace(/^(RE:\s*|R:\s*|Re:\s*|FWD:\s*|Fw:\s*|Fw\d:\s*)+/i,'').trim();
-// Try to find order number patterns
-var patterns=[
-/(?:conferma\s+(?:d['']?ordine\s+)?(?:cliente\s+)?(?:n[°o]?\.)?\s*)(\d{4,})/i,
-/(?:ord(?:ine|\.?)\s*(?:n[°o]?\.)?\s*)(\d{4,})/i,
-/(?:ord\.?\s*no\.?\s*)(\d{4,})/i,
-/(?:numero\s*)(\d{4,})/i,
-/(?:n[°o]?\.\s*)(\d{4,})/i,
-/(?:OFFER\s*)(\d{2,}\/\d{2,})/i,
-/(?:SALES\s*ORDER\s*NUMBER:\s*)(\d{4,})/i,
-/(?:TME#)(\d{4,})/i,
-/(\d{5,})/  // fallback: any 5+ digit number
-];
+function extractOrderInfo(subjects, bodies){
+var allText=(subjects.join(' ')+' '+bodies.join(' ')).toUpperCase();
+var syncro=null;
+var sm=allText.match(/(?:SYNCRO|SYNCROGEST)\s*(\d{3,5})/);
+if(sm)syncro=sm[1];
+if(!syncro){var sm2=allText.match(/S\.(\d{4,5})/);if(sm2)syncro=sm2[1];}
+var cliente=null;
+var cm=allText.match(/RIF\.?\s+([A-Z][A-Z\s]{2,25}?)(?:\s*(?:SYNCRO|S\.|INVIO|CO|FT|CONFERMA|\-|$))/);
+if(cm)cliente=cm[1].trim();
+var s=(subjects[0]||'').replace(/^(RE:\s*|R:\s*|Re:\s*|FWD:\s*|Fw:\s*|Fw\d:\s*|I:\s*)+/i,'').trim();
+var patterns=[/(?:conferma\s+(?:d['']?ordine\s+)?(?:cliente\s+)?(?:n[\u00b0o]?\.)?\s*)(\d{4,})/i,/(?:ord(?:ine|\.?)\s*(?:n[\u00b0o]?\.)?\s*)(\d{4,})/i,/(?:ord\.?\s*no\.?\s*)(\d{4,})/i,/(?:numero\s*)(\d{4,})/i,/(?:n[\u00b0o]?\.\s*)(\d{4,})/i,/(?:OFFER\s*)(\d{2,}\/\d{2,})/i,/(?:SALES\s*ORDER\s*NUMBER:\s*)(\d{4,})/i,/(?:TME#)(\d{4,})/i,/(\d{5,})/];
 var orderNum=null;
-for(var i=0;i<patterns.length;i++){
-var m=s.match(patterns[i]);
-if(m){
-orderNum=m[1];
-break;
-}
-}
-if(orderNum){
-return 'Ord. '+orderNum;
-}
-// No order number found - use cleaned subject
-return s.length>40?s.substring(0,40)+'...':s;
+for(var i=0;i<patterns.length;i++){var m=s.match(patterns[i]);if(m){orderNum=m[1];break;}}
+var ref=orderNum?('Ord. '+orderNum):(s.length>45?(s.substring(0,45)+'...'):s);
+return {ref:ref,cliente:cliente,syncro:syncro};
 }
 function renderEmails(){
 var filter=(g('emailFilter')||{}).value||'';
@@ -809,10 +794,15 @@ totalShown+=filtered.length;
 // Group emails by order reference
 var orderGroups={};
 filtered.forEach(function(e){
-var ref=extractOrderRef(e.s||'');
-if(!orderGroups[ref])orderGroups[ref]={items:[],latest:e.d||''};
+var subjects=[e.s||''];
+var bodies=[e.b||''];
+var info=extractOrderInfo(subjects,bodies);
+var ref=info.ref;
+if(!orderGroups[ref])orderGroups[ref]={items:[],latest:e.d||'',cliente:info.cliente,syncro:info.syncro};
 orderGroups[ref].items.push(e);
 if(e.d&&e.d>orderGroups[ref].latest)orderGroups[ref].latest=e.d;
+if(!orderGroups[ref].cliente&&info.cliente)orderGroups[ref].cliente=info.cliente;
+if(!orderGroups[ref].syncro&&info.syncro)orderGroups[ref].syncro=info.syncro;
 });
 fornitoreCards.push({name:f,count:filtered.length,items:filtered,orderGroups:orderGroups,latest:filtered[0]?filtered[0].d:''});
 });
@@ -852,6 +842,8 @@ panels+='<div style="display:flex;align-items:center;gap:8px;">';
 panels+='<span style="font-size:14px;">\u{1F4C4}</span>';
 panels+='<span style="font-weight:600;font-size:12px;color:var(--dark);">'+esc(ref)+'</span>';
 panels+='<span style="font-size:10px;color:var(--slate);background:#e0e7ef;padding:2px 6px;border-radius:4px;">'+og.items.length+' email</span>';
+if(og.cliente)panels+='<span style="font-size:10px;color:#1a7a3a;background:#d4edda;padding:2px 6px;border-radius:4px;">👤 '+esc(og.cliente)+'</span>';
+if(og.syncro)panels+='<span style="font-size:10px;color:#856404;background:#fff3cd;padding:2px 6px;border-radius:4px;">📋 Syncro '+esc(og.syncro)+'</span>';
 panels+='</div>';
 panels+='<div style="display:flex;align-items:center;gap:8px;">';
 panels+='<span style="font-size:10px;color:var(--slate);">'+ogDate+'</span>';
@@ -897,6 +889,7 @@ if(p){p.style.display=p.style.display==='none'?'block':'none';}
 function toggleEmail(eid){
 var e=g(eid);
 if(e){e.style.display=e.style.display==='none'?'block':'none';}
+}
 function toggleOrder(oid){
 var e=g(oid);
 var a=g('arrow-'+oid);
@@ -907,7 +900,6 @@ if(a)a.innerHTML='\u25B2';
 }else{
 e.style.display='none';
 if(a)a.innerHTML='\u25BC';
-}
 }
 }
 // === ANALISI ===
