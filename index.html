@@ -809,121 +809,97 @@ return parseFloat(v)||0;
 }
 
 function loadAnalisi(){
-if(!stData||!stData.length){
-g('analisiCards').innerHTML='<div class="empty">Caricamento dati storico...</div>';
-fetch(BASE+'/functions/dashboardApi?action=list_storico',{headers:hdr()}).then(function(r){return r.json();}).then(function(d){
-stData=Array.isArray(d)?d:(d.records||d.storico||[]);
-if(!stData.length){g('analisiCards').innerHTML='<div class="empty">Nessun dato nello storico.</div>';return;}
-loadAnalisi();
-}).catch(function(e){g('analisiCards').innerHTML='<div class="empty">Errore caricamento: '+e.message+'</div>';});
-return;
+g('analisiCards').innerHTML='<div class="empty">Caricamento acquisti reali...</div>';
+fetch(BASE+'/functions/dashboardApi?action=list_acquisti',{headers:hdr()}).then(function(r){return r.json();}).then(function(d){
+var acquisti=Array.isArray(d)?d:(d.acquisti||d.records||[]);
+if(!acquisti.length){g('analisiCards').innerHTML='<div class="empty">Nessun acquisto registrato.</div>';return;}
+renderAnalisiAcquisti(acquisti);
+}).catch(function(e){g('analisiCards').innerHTML='<div class="empty">Errore: '+e.message+'</div>';});
 }
 
-// Normalize: uppercase marca, lowercase ricambio
-var recs=stData.map(function(r){return{
-marca:(r.marca||'').toUpperCase().replace('ELETTROBAR','Elettrobar').replace('SELMI','Selmi').replace('ORLA','Orla').replace('SUPERSAMA','SuperSama').replace('REPA','LF/REPA').replace('LF RICAMBI / REPA','LF/REPA').replace('LF RICAMBI','LF/REPA').replace('SAMA','SuperSama').replace('LF RICAMBI / SUPERSAMA','LF/SuperSama'),
-ricambio:(r.ricambio_cercato||'').toLowerCase().trim(),
-codice:r.codice_eurotec||'',
-desc:r.descrizione||'',
-prezzo:parsePrice(r.prezzo_eurotec),
-data:r.created_date||'',
-modello:r.modello||''
-};});
+function renderAnalisiAcquisti(acquisti){
+function pp(v){var n=parseFloat(v);return isNaN(n)?0:n;}
 
-// 1. Cards
-var totRicerche=recs.length;
-var marche={};recs.forEach(function(r){marche[r.marca]=(marche[r.marca]||0)+1;});
-var topMarca=Object.keys(marche).sort(function(a,b){return marche[b]-marche[a];})[0];
-var ricambi={};recs.forEach(function(r){ricambi[r.ricambio]=(ricambi[r.ricambio]||0)+1;});
-var topRicambio=Object.keys(ricambi).sort(function(a,b){return ricambi[b]-ricambi[a];})[0];
-var totPrezzati=recs.filter(function(r){return r.prezzo>0;});
-var totSpesa=totPrezzati.reduce(function(s,r){return s+r.prezzo;},0);
-var avgPrezzo=totPrezzati.length?(totSpesa/totPrezzati.length):0;
+var tot=acquisti.length;
+var totSpesa=0,withPrice=0;
+var fornitori={},codici={},perMese={};
 
+acquisti.forEach(function(a){
+var p=pp(a.prezzo_totale)||(pp(a.prezzo_unitario)*(a.quantita||1));
+if(p>0){totSpesa+=p;withPrice++;}
+var f=a.fornitore_nome||a.fornitore_email||'Altro';
+if(f.length>30)f=f.substring(0,30);
+if(!fornitori[f])fornitori[f]={spesa:0,count:0};
+fornitori[f].spesa+=p;fornitori[f].count++;
+var c=a.codice||'';
+var d=a.descrizione||'';
+if(c){
+if(!codici[c])codici[c]={codice:c,descrizione:d,fornitore:f,count:0,spesa:0};
+codici[c].count++;codici[c].spesa+=p;
+if(!codici[c].descrizione&&d)codici[c].descrizione=d;
+}
+var m=(a.data_acquisto||'').substring(0,7);
+if(m){if(!perMese[m])perMese[m]={spesa:0,count:0};perMese[m].spesa+=p;perMese[m].count++;}
+});
+
+var avgPrice=withPrice?(totSpesa/withPrice):0;
+var topForn=Object.keys(fornitori).sort(function(a,b){return fornitori[b].spesa-fornitori[a].spesa;})[0]||'-';
+var mesiKeys=Object.keys(perMese).sort();
+var periodo=mesiKeys.length?(mesiKeys[0]+' → '+mesiKeys[mesiKeys.length-1]):'-';
+
+// Cards
 g('analisiCards').innerHTML=[
-{t:'Ricerche Totali',v:totRicerche,i:'&#128269;'},
-{t:'Marca Top',v:topMarca+' ('+marche[topMarca]+')',i:'&#127941;'},
-{t:'Ricambio Top',v:topRicambio+' ('+ricambi[topRicambio]+'x)',i:'&#128295;'},
-{t:'Spesa Stimata',v:'€'+totSpesa.toFixed(2),i:'&#128176;'},
-{t:'Prezzo Medio',v:'€'+avgPrezzo.toFixed(2),i:'&#128178;'},
-{t:'Ricambi con Prezzo',v:totPrezzati.length+'/'+totRicerche,i:'&#128230;'}
+{t:'Acquisti Totali',v:tot,i:'\u{1F4E6}'},
+{t:'Spesa Totale',v:'\u20AC'+totSpesa.toFixed(2),i:'\u{1F4B0}'},
+{t:'Fornitore Top',v:topForn+' ('+fornitori[topForn].count+')',i:'\u{1F3C6}'},
+{t:'Prezzo Medio',v:'\u20AC'+avgPrice.toFixed(2),i:'\u{1F4B8}'},
+{t:'Periodo',v:periodo,i:'\u{1F4C5}'},
+{t:'Con Prezzo',v:withPrice+'/'+tot,i:'\u{1F4CA}'}
 ].map(function(c){
 return '<div class="card" style="padding:16px;text-align:center;"><div style="font-size:24px;margin-bottom:4px;">'+c.i+'</div><div style="font-size:20px;font-weight:700;color:var(--blue);">'+esc(c.v)+'</div><div style="font-size:11px;color:var(--slate);margin-top:4px;">'+esc(c.t)+'</div></div>';
 }).join('');
 
-// 2. Chart Spesa per Marca
-var spesaMarca={};
-recs.forEach(function(r){if(r.prezzo>0){spesaMarca[r.marca]=(spesaMarca[r.marca]||0)+r.prezzo;}});
-var smKeys=Object.keys(spesaMarca).sort(function(a,b){return spesaMarca[b]-spesaMarca[a];});
+// Chart Spesa per Fornitore
+var fKeys=Object.keys(fornitori).sort(function(a,b){return fornitori[b].spesa-fornitori[a].spesa;});
 if(chartM)chartM.destroy();
-chartM=new Chart(g('chartMarca'),{type:'bar',data:{labels:smKeys,datasets:[{data:smKeys.map(function(k){return spesaMarca[k].toFixed(2);}),backgroundColor:'#1d4ed8',borderWidth:0}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return '€'+v;}}}},responsive:true,maintainAspectRatio:false}});
+chartM=new Chart(g('chartMarca'),{type:'bar',data:{labels:fKeys,datasets:[{label:'Spesa (\u20AC)',data:fKeys.map(function(k){return fornitori[k].spesa.toFixed(2);}),backgroundColor:'#1d4ed8',borderWidth:0}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return '\u20AC'+v;}}},x:{ticks:{font:{size:9},maxRotation:45}},responsive:true,maintainAspectRatio:false}});
 
-// 3. Chart Top Ricambi
-var topRicKeys=Object.keys(ricambi).filter(function(k){return k&&k!=='undefined';}).sort(function(a,b){return ricambi[b]-ricambi[a];}).slice(0,10);
+// Chart Top Ricambi per spesa
+var ricKeys=Object.keys(codici).sort(function(a,b){return codici[b].spesa-codici[a].spesa;}).slice(0,10);
 if(chartT)chartT.destroy();
-chartT=new Chart(g('chartTop'),{type:'bar',data:{labels:topRicKeys,datasets:[{data:topRicKeys.map(function(k){return ricambi[k];}),backgroundColor:'#0891b2',borderWidth:0}]},options:{indexAxis:'y',plugins:{legend:{display:false}},responsive:true,maintainAspectRatio:false}});
+chartT=new Chart(g('chartTop'),{type:'bar',data:{labels:ricKeys,datasets:[{label:'Spesa (\u20AC)',data:ricKeys.map(function(k){return codici[k].spesa.toFixed(2);}),backgroundColor:'#0891b2',borderWidth:0}]},options:{indexAxis:'y',plugins:{legend:{display:false}},responsive:true,maintainAspectRatio:false}});
 
-// 4. Chart Andamento temporale
-var mesi={};
-recs.forEach(function(r){var m=(r.data||'').substring(0,7);if(m)mesi[m]=(mesi[m]||0)+1;});
-var mesiKeys=Object.keys(mesi).sort();
+// Chart Andamento temporale (spesa per mese)
 if(chartTime)chartTime.destroy();
-chartTime=new Chart(g('chartTime'),{type:'line',data:{labels:mesiKeys,datasets:[{data:mesiKeys.map(function(k){return mesi[k];}),borderColor:'#1d4ed8',backgroundColor:'rgba(29,78,216,0.1)',fill:true,tension:0.3,pointRadius:5}]},options:{plugins:{legend:{display:false}},responsive:true,maintainAspectRatio:false}});
+chartTime=new Chart(g('chartTime'),{type:'line',data:{labels:mesiKeys,datasets:[{label:'Spesa (\u20AC)',data:mesiKeys.map(function(k){return perMese[k].spesa.toFixed(2);}),borderColor:'#1d4ed8',backgroundColor:'rgba(29,78,216,0.1)',fill:true,tension:0.3,pointRadius:5}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return '\u20AC'+v;}}}},responsive:true,maintainAspectRatio:false}});
 
-// 5. Tabella ricambi ricorrenti con prezzo
-var ricorrenti={};
-recs.forEach(function(r){
-if(r.prezzo>0){
-var key=r.codice||r.ricambio;
-if(!ricorrenti[key])ricorrenti[key]={codice:r.codice,ricambio:r.ricambio,descrizione:r.desc||r.ricambio||'',marca:r.marca,count:0,totPrezzo:0,prezzi:[],modelli:{}};
-ricorrenti[key].count++;
-ricorrenti[key].totPrezzo+=r.prezzo;
-ricorrenti[key].prezzi.push(r.prezzo);
-if(r.modello)ricorrenti[key].modelli[r.modello]=true;
-}});
-var ricArr=Object.values(ricorrenti).sort(function(a,b){return b.count-a.count;}).slice(0,15);
+// Tabella ricambi per spesa
+var ricArr=Object.values(codici).sort(function(a,b){return b.spesa-a.spesa;}).slice(0,20);
 g('ricorrentiBody').innerHTML=ricArr.map(function(r){
-var avg=r.totPrezzo/r.count;
-var tot=r.totPrezzo;
-var sug=r.count>=10?'<span style="background:#dc2626;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">STOCKARE</span>':r.count>=5?'<span style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">MONITORARE</span>':'<span style="background:#16a34a;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;">OK</span>';
-return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;">'+esc(r.codice||r.ricambio)+'</td><td style="padding:8px 10px;font-size:11px;color:var(--slate);">'+esc(r.descrizione||'-')+'</td><td style="padding:8px 10px;">'+esc(r.marca)+'</td><td style="padding:8px 10px;text-align:center;font-weight:700;">'+r.count+'</td><td style="padding:8px 10px;text-align:right;">€'+avg.toFixed(2)+'</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#1d4ed8;">€'+tot.toFixed(2)+'</td><td style="padding:8px 10px;text-align:center;">'+sug+'</td></tr>';
+var sug=r.count>=5?'<span style="background:#dc2626;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">RIPETUTO</span>':r.count>=3?'<span style="background:#f59e0b;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">MONITORARE</span>':'<span style="background:#16a34a;color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;">OK</span>';
+return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;">'+esc(r.codice)+'</td><td style="padding:8px 10px;font-size:11px;color:var(--slate);">'+esc(r.descrizione||'-')+'</td><td style="padding:8px 10px;">'+esc(r.fornitore)+'</td><td style="padding:8px 10px;text-align:center;font-weight:700;">'+r.count+'</td><td style="padding:8px 10px;text-align:right;">'+(r.spesa/r.count>0?'\u20AC'+(r.spesa/r.count).toFixed(2):'-')+'</td><td style="padding:8px 10px;text-align:right;font-weight:700;color:#1d4ed8;">'+(r.spesa>0?'\u20AC'+r.spesa.toFixed(2):'-')+'</td><td style="padding:8px 10px;text-align:center;">'+sug+'</td></tr>';
 }).join('');
 
-// 6. Opportunità di risparmio
+// Opportunita
 var opps=[];
-// Ricambi altamente ricorrenti
-ricArr.filter(function(r){return r.count>=10;}).forEach(function(r){
-opps.push({tipo:'stock',titolo:'STOCKARE: '+(r.codice||r.ricambio),desc:'Cercato '+r.count+' volte per '+esc(r.marca)+'. Prezzo medio €'+(r.totPrezzo/r.count).toFixed(2)+'. Spesa stimata €'+r.totPrezzo.toFixed(2)+'. Considerareacquisto batch per ridurre costi e tempi.'});
+if(totSpesa>0){
+opps.push({tipo:'info',titolo:'Spesa totale '+mesiKeys[0]+'-'+mesiKeys[mesiKeys.length-1],desc:'\u20AC'+totSpesa.toFixed(2)+' in '+tot+' articoli acquistati da '+Object.keys(fornitori).length+' fornitori. Prezzo medio \u20AC'+avgPrice.toFixed(2)+'.');
+}
+fKeys.slice(0,3).forEach(function(k){
+var pct=Math.round(fornitori[k].spesa/totSpesa*100);
+if(pct>10)opps.push({tipo:'info',titolo:'Fornitore: '+k,desc:'\u20AC'+fornitori[k].spesa.toFixed(2)+' ('+pct+'% del totale) in '+fornitori[k].count+' articoli.'});
 });
-// Cuscinetti economici ricorrenti
-var cusci=ricArr.filter(function(r){return r.ricambio.indexOf('cuscino')>-1||r.codice.match(/^(6203|6206|6302|6008)/);});
-if(cusci.length){
-var totCusci=cusci.reduce(function(s,r){return s+r.totPrezzo;},0);
-var totCount=cusci.reduce(function(s,r){return s+r.count;},0);
-if(totCount>=10)opps.push({tipo:'batch',titolo:'CUSCINETTI: acquisto batch',desc:'Cercati '+totCount+' cuscinetti per totali €'+totCusci.toFixed(2)+'. Cuscinetti economici (€3-€8) con ricorrenza alta: valutare stock di scorta per ogni tipo.'});
-}
-// Resistenze vasca
-var resVasca=ricArr.filter(function(r){return r.ricambio.indexOf('resistenza vasca')>-1||r.ricambio.indexOf('resistenza')>-1;});
-if(resVasca.length>=2){
-var totRes=resVasca.reduce(function(s,r){return s+r.totPrezzo;},0);
-opps.push({tipo:'pattern',titolo:'RESISTENZE VASCA: componente critico',desc:'Le resistenze vasca sono il ricambio più ricercato ('+ricambi['resistenza vasca']+'+ ricerche). Spesa accumulata €'+totRes.toFixed(2)+'. Suggerito: mantenere almeno 2 unità in magazzino per ogni modello Elettrobar/Selmi.'});
-}
-// Moduli scheda
-var schede=ricArr.filter(function(r){return r.ricambio.indexOf('scheda')>-1||r.ricambio.indexOf('modulo')>-1;});
-if(schede.length){
-var costoSchede=schede.reduce(function(s,r){return s+r.totPrezzo;},0);
-if(costoSchede>200)opps.push({tipo:'alert',titolo:'SCHEDE/MODULI: alta spesa',desc:'Costo totale schede/moduli: €'+costoSchede.toFixed(2)+'. Componenti a valore alto: confrontare sempre 2+ fornitori prima dell\'ordine.'});
-}
-// Tempistiche
-var marcatime=Object.keys(marche).sort(function(a,b){return marche[b]-marche[a];});
-if(marcatime.length>=3)opps.push({tipo:'info',titolo:'Distribuzione ricerche',desc:topMarca+' domina con '+marche[topMarca]+' ricerche ('+Math.round(marche[topMarca]/totRicerche*100)+'%). '+(marcatime[1]||'')+' al secondo con '+marche[marcatime[1]||'']+' ricerche. Concentrazione su 2-3 marche: ottimizzare accordi fornitore.'});
+ricArr.filter(function(r){return r.count>=3;}).forEach(function(r){
+opps.push({tipo:'stock',titolo:'Ricambio ricorrente: '+r.codice,desc:'Acquistato '+r.count+' volte. Spesa totale \u20AC'+r.spesa.toFixed(2)+'. '+esc(r.descrizione||'')+'. Valutare stock di scorta.'});
+});
 
 g('opportunita').innerHTML=opps.map(function(o){
-var bg=o.tipo==='stock'?'#fee2e2':o.tipo==='batch'?'#fef3c7':o.tipo==='alert'?'#fee2e2':o.tipo==='pattern'?'#dbeafe':o.tipo==='info'?'#d1fae5':'#f1f5f9';
-var bd=o.tipo==='stock'?'#dc2626':o.tipo==='batch'?'#f59e0b':o.tipo==='alert'?'#dc2626':o.tipo==='pattern'?'#1d4ed8':o.tipo==='info'?'#16a34a':'#64748b';
+var bg=o.tipo==='stock'?'#fee2e2':'#d1fae5';
+var bd=o.tipo==='stock'?'#dc2626':'#16a34a';
 return '<div style="padding:14px;border-radius:10px;border-left:4px solid '+bd+';background:'+bg+';"><div style="font-weight:700;font-size:14px;color:'+bd+';margin-bottom:4px;">'+esc(o.titolo)+'</div><div style="font-size:13px;color:#334155;">'+esc(o.desc)+'</div></div>';
 }).join('');
 }
+
 
 // === CONFRONTI ===
 var confrontiTimer=null;
