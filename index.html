@@ -806,7 +806,15 @@ return parseFloat(v)||0;
 }
 
 function loadAnalisi(){
-if(!stData||!stData.length){g('analisiCards').innerHTML='<div class="empty">Nessun dato nello storico.</div>';return;}
+if(!stData||!stData.length){
+g('analisiCards').innerHTML='<div class="empty">Caricamento dati storico...</div>';
+fetch(BASE+'/functions/dashboardApi?action=list_storico',{headers:hdr()}).then(function(r){return r.json();}).then(function(d){
+stData=Array.isArray(d)?d:(d.records||d.storico||[]);
+if(!stData.length){g('analisiCards').innerHTML='<div class="empty">Nessun dato nello storico.</div>';return;}
+loadAnalisi();
+}).catch(function(e){g('analisiCards').innerHTML='<div class="empty">Errore caricamento: '+e.message+'</div>';});
+return;
+}
 
 // Normalize: uppercase marca, lowercase ricambio
 var recs=stData.map(function(r){return{
