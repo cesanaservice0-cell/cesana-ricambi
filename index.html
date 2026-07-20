@@ -872,7 +872,7 @@ var ricorrenti={};
 recs.forEach(function(r){
 if(r.prezzo>0){
 var key=r.codice||r.ricambio;
-if(!ricorrenti[key])ricorrenti[key]={codice:r.codice,ricambio:r.ricambio,descrizione:r.descrizione||r.ricambio_cercato||'',marca:r.marca,count:0,totPrezzo:0,prezzi:[],modelli:{}};
+if(!ricorrenti[key])ricorrenti[key]={codice:r.codice,ricambio:r.ricambio,descrizione:r.desc||r.ricambio||'',marca:r.marca,count:0,totPrezzo:0,prezzi:[],modelli:{}};
 ricorrenti[key].count++;
 ricorrenti[key].totPrezzo+=r.prezzo;
 ricorrenti[key].prezzi.push(r.prezzo);
