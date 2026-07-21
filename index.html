@@ -936,8 +936,19 @@ return parseFloat(v)||0;
 }
 
 function loadAnalisi(){
-var EMB=JSON.parse(document.getElementById('data-acquisti').textContent);
-renderAnalisi(EMB.map(function(a){return{codice:a.c,descrizione:a.d,quantita:a.q,prezzo_unitario:a.pu,prezzo_totale:a.pt,data_acquisto:a.dt,fornitore_nome:a.f};}));
+// Load acquisti from API (filtered: only confirmed orders)
+fetch(BASE+'/functions/dashboardApi?action=list_acquisti')
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var acquisti = d.data || d.records || [];
+    renderAnalisi(acquisti.map(function(a){return{codice:a.c,descrizione:a.d,quantita:a.q,prezzo_unitario:a.pu,prezzo_totale:a.pt,data_acquisto:a.dt,fornitore_nome:a.f};}));
+  })
+  .catch(function(e){
+    console.error('Errore caricamento acquisti:', e);
+    // Fallback to embedded data
+    var EMB=JSON.parse(document.getElementById('data-acquisti').textContent);
+    renderAnalisi(EMB.map(function(a){return{codice:a.c,descrizione:a.d,quantita:a.q,prezzo_unitario:a.pu,prezzo_totale:a.pt,data_acquisto:a.dt,fornitore_nome:a.f};}));
+  });
 }
 
 function renderAnalisi(acquisti){
