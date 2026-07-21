@@ -116,9 +116,7 @@ Chart.register({
       meta.data.forEach(function(bar, idx) {
         var val = parseFloat(chart.data.datasets[0].data[idx]);
         var label = val >= 1000 ? '\u20AC' + (val/1000).toFixed(1) + 'k' : '\u20AC' + val.toFixed(0);
-        var xPos = bar.x + bar.width + 4;
-        if (xPos > chart.width - 40) xPos = bar.x - 4;
-        ctx.fillText(label, xPos, bar.y);
+        ctx.fillText(label, bar.x + 6, bar.y);
       });
     }
     ctx.restore();
