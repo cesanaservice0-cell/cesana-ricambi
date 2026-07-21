@@ -112,10 +112,13 @@ Chart.register({
       ctx.font = 'bold 9px sans-serif';
       ctx.fillStyle = '#1e293b';
       ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
       meta.data.forEach(function(bar, idx) {
         var val = parseFloat(chart.data.datasets[0].data[idx]);
         var label = val >= 1000 ? '\u20AC' + (val/1000).toFixed(1) + 'k' : '\u20AC' + val.toFixed(0);
-        ctx.fillText(label, bar.x + 4, bar.y + 3);
+        var xPos = bar.x + bar.width + 4;
+        if (xPos > chart.width - 40) xPos = bar.x - 4;
+        ctx.fillText(label, xPos, bar.y);
       });
     }
     ctx.restore();
