@@ -99,26 +99,15 @@ Chart.register({
     var ctx = chart.ctx;
     ctx.save();
     var meta = chart.getDatasetMeta(0);
-    if (chart.canvas.id === 'chartMarca') {
-      ctx.font = 'bold 9px sans-serif';
-      ctx.fillStyle = '#1e293b';
-      ctx.textAlign = 'center';
-      meta.data.forEach(function(bar, idx) {
-        var val = parseFloat(chart.data.datasets[0].data[idx]);
-        var label = val >= 1000 ? '\u20AC' + (val/1000).toFixed(1) + 'k' : '\u20AC' + val.toFixed(0);
-        ctx.fillText(label, bar.x, Math.max(bar.y - 4, 12));
-      });
-    } else if (chart.canvas.id === 'chartTop') {
-      ctx.font = 'bold 9px sans-serif';
-      ctx.fillStyle = '#1e293b';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      meta.data.forEach(function(bar, idx) {
-        var val = parseFloat(chart.data.datasets[0].data[idx]);
-        var label = val >= 1000 ? '\u20AC' + (val/1000).toFixed(1) + 'k' : '\u20AC' + val.toFixed(0);
-        ctx.fillText(label, bar.x + 6, bar.y);
-      });
-    }
+    ctx.font = 'bold 9px sans-serif';
+    ctx.fillStyle = '#1e293b';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    meta.data.forEach(function(bar, idx) {
+      var val = parseFloat(chart.data.datasets[0].data[idx]);
+      var label = val >= 1000 ? '\u20AC' + (val/1000).toFixed(1) + 'k' : '\u20AC' + val.toFixed(0);
+      ctx.fillText(label, bar.x + 6, bar.y);
+    });
     ctx.restore();
   }
 });
