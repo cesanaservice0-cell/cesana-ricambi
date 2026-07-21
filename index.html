@@ -95,7 +95,7 @@ tr:hover{background:#f8fafc;}
 Chart.register({
   id: 'datalabels',
   afterDatasetsDraw: function(chart) {
-    if (chart.canvas.id !== 'chartMarca' && chart.canvas.id !== 'chartTop') return;
+    if (chart.canvas.id !== 'chartTop') return;
     var ctx = chart.ctx;
     ctx.save();
     var meta = chart.getDatasetMeta(0);
