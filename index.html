@@ -98,20 +98,26 @@ Chart.register({
     if (chart.canvas.id !== 'chartMarca' && chart.canvas.id !== 'chartTop') return;
     var ctx = chart.ctx;
     ctx.save();
-    ctx.font = 'bold 9px sans-serif';
-    ctx.fillStyle = '#1e293b';
-    ctx.textAlign = 'center';
     var meta = chart.getDatasetMeta(0);
-    meta.data.forEach(function(bar, idx) {
-      var val = parseFloat(chart.data.datasets[0].data[idx]);
-      if (chart.canvas.id === 'chartMarca') {
+    if (chart.canvas.id === 'chartMarca') {
+      ctx.font = 'bold 9px sans-serif';
+      ctx.fillStyle = '#1e293b';
+      ctx.textAlign = 'center';
+      meta.data.forEach(function(bar, idx) {
+        var val = parseFloat(chart.data.datasets[0].data[idx]);
         var label = val >= 1000 ? '\u20AC' + (val/1000).toFixed(1) + 'k' : '\u20AC' + val.toFixed(0);
-        ctx.fillText(label, bar.x, bar.y - 4);
-      } else {
-        ctx.textAlign = 'left';
-        ctx.fillText('\u20AC' + val.toFixed(0), bar.x + 4, bar.y + 3);
-      }
-    });
+        ctx.fillText(label, bar.x, Math.max(bar.y - 4, 12));
+      });
+    } else if (chart.canvas.id === 'chartTop') {
+      ctx.font = 'bold 9px sans-serif';
+      ctx.fillStyle = '#1e293b';
+      ctx.textAlign = 'left';
+      meta.data.forEach(function(bar, idx) {
+        var val = parseFloat(chart.data.datasets[0].data[idx]);
+        var label = val >= 1000 ? '\u20AC' + (val/1000).toFixed(1) + 'k' : '\u20AC' + val.toFixed(0);
+        ctx.fillText(label, bar.x + 4, bar.y + 3);
+      });
+    }
     ctx.restore();
   }
 });
